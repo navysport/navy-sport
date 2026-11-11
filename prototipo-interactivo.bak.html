@@ -1,0 +1,2718 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAVY SPORT - Colecciones & Uniformes Completos de Futbol</title>
+    <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <!-- SUPABASE JS SDK & CONECTOR OFICIAL NAVY SPORT -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #ffffff;
+      color: #16243e;
+    }
+    .font-jersey {
+      font-family: 'Teko', sans-serif;
+      letter-spacing: 0.05em;
+    }
+    .carbon-pattern {
+      background-color: #ffffff;
+      background-image: radial-gradient(rgba(22, 36, 62, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .glass-panel {
+      background: #ffffff;
+      border: 1px solid rgba(22, 36, 62, 0.12);
+      box-shadow: 0 4px 20px -2px rgba(22, 36, 62, 0.06);
+    }
+    .glass-card {
+      background: #ffffff;
+      border: 1px solid rgba(22, 36, 62, 0.12);
+      box-shadow: 0 4px 20px -2px rgba(22, 36, 62, 0.06);
+    }
+    .glass-card:hover {
+      border-color: rgba(22, 36, 62, 0.35);
+      box-shadow: 0 16px 40px -12px rgba(22, 36, 62, 0.12);
+    }
+
+    /* TRANSICIONES Y HOVERS A 60 FPS */
+    .jersey-card {
+      background: #ffffff;
+      border: 1px solid rgba(22, 36, 62, 0.12);
+      box-shadow: 0 4px 20px -2px rgba(22, 36, 62, 0.06);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                  box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                  border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, box-shadow, border-color;
+    }
+    .jersey-card:hover {
+      transform: translateY(-6px);
+      border-color: #16243e;
+      box-shadow: 0 20px 40px -10px rgba(22, 36, 62, 0.16);
+    }
+
+    /* ANIMACION SUAVE DE TRANSICION ENTRE PORTADA Y CATALOGO (60 FPS) */
+    @keyframes fadeInView {
+      0% {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+            /* ANIMACION SLIDE UP AL VER CATALOGO (SE VA HACIA ARRIBA Y REVELA CATALOGO) */
+    @keyframes slideUpEnter {
+      0% {
+        opacity: 0;
+        transform: translateY(60px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .slide-up-enter {
+      animation: slideUpEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-fadeIn {
+      animation: fadeInView 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* ANIMACION SUAVE DE ENTRADA AL CAMBIAR VISTAS EN MODAL (60 FPS) */
+    @keyframes stageFadeInScale {
+      0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(8px);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+    }
+    .stage-animated {
+      animation: stageFadeInScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      will-change: transform, opacity, filter;
+    }
+
+    /* ANIMACION FLUIDA TIPO LAYOUT GRID AL FILTRAR PRENDAS */
+    @keyframes cardGridEnter {
+      0% {
+        opacity: 0;
+        transform: translateY(16px) scale(0.97);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .card-grid-item {
+      animation: cardGridEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      will-change: transform, opacity;
+    }
+
+    /* SCROLLBAR PREMIUM */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08080a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #23242c;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF007F;
+    }
+    /* ANIMACION AMIGABLE Y MODERNA DEL MODAL DE DETALLE */
+    @keyframes modalSpringIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.88) translateY(24px);
+      }
+      55% {
+        opacity: 1;
+        transform: scale(1.02) translateY(-4px);
+      }
+      80% {
+        transform: scale(0.995) translateY(1px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    @keyframes modalSpringOut {
+      0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.90) translateY(16px);
+      }
+    }
+    @keyframes backdropFadeIn {
+      0% {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+      }
+      100% {
+        opacity: 1;
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+      }
+    }
+    @keyframes backdropFadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+    .modal-backdrop-in {
+      animation: backdropFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .modal-backdrop-out {
+      animation: backdropFadeOut 0.22s ease-in forwards;
+    }
+    .modal-card-in {
+      animation: modalSpringIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .modal-card-out {
+      animation: modalSpringOut 0.22s ease-in forwards;
+    }
+      .font-handwriting {
+      font-family: 'Caveat', 'Segoe Script', cursive;
+    }
+  </style>
+</head>
+<body class="bg-[#ffffff] text-[#16243e] antialiased min-h-screen selection:bg-[#16243e] selection:text-white carbon-pattern">
+  <div id="flowClientView" class="block">
+    
+    <!-- =================================================================== -->
+    <!-- ENCABEZADO SUPERIOR: UNICAMENTE LOGO, BUSCADOR Y MI CARRITO        -->
+    <!-- =================================================================== -->
+    <header id="mainHeader" class="hidden sticky top-0 z-40 bg-[#16243e] border-b border-[#0f1a2c] shadow-md transition-all text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4 sm:gap-6">
+        
+        <!-- 1. LOGO DE NAVYSPORT -->
+        <a href="#" onclick="showLandingView(); return false;" class="flex items-center gap-3 group shrink-0" title="Volver a la Portada">
+          <div class="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-gradient-to-br from-[#1f3358] via-[#16243e] to-[#0f1a2c] p-1.5 shadow-lg shadow-black/80 border border-[#FF007F]/40 flex items-center justify-center overflow-hidden group-hover:scale-105 group-hover:border-[#FF007F] group-hover:shadow-[0_0_20px_rgba(255,0,127,0.4)] transition-all duration-300">
+            <img src="data:image/png;base64,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" alt="Navy Sport Logo" class="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(255,0,127,0.3)]" />
+          </div>
+          <div class="hidden sm:block">
+            <div class="flex items-center gap-2">
+              <span class="text-base sm:text-lg font-black uppercase text-white tracking-tight font-sans">NAVY SPORT</span>
+              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#FF007F]/20 text-[#FF007F] border border-[#FF007F]/30 uppercase tracking-widest font-mono">OFICIAL</span>
+            </div>
+            <span class="text-[10px] text-neutral-400 font-semibold tracking-wider uppercase block">Equipaciones & Uniformes de Futbol</span>
+          </div>
+        </a>
+
+        <!-- 2. BARRA DE BUSQUEDA CENTRAL MODERNA -->
+        <div id="headerSearchContainer" class="hidden flex-1 max-w-xl relative">
+          <div class="relative w-full">
+            <input
+              type="text"
+              id="catalogSearchInput"
+              placeholder="Buscar equipo, seleccion o tecnologia de tela..."
+              oninput="handleSearchInput(this.value)"
+              class="w-full bg-[#1f3358] border border-white/20 rounded-2xl pl-11 pr-10 py-2.5 text-xs sm:text-sm text-white placeholder-slate-300 focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition-all font-medium shadow-inner"
+            />
+            <svg class="w-4 h-4 text-neutral-400 absolute left-4 top-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            
+            <button
+              id="clearSearchBtn"
+              onclick="clearSearch()"
+              class="hidden absolute right-3 top-2.5 text-neutral-500 hover:text-white p-1 rounded-lg"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+
+
+        <!-- 3. MI CARRITO CON CONTADOR FLOTANTE -->
+        <div class="flex items-center gap-3">
+          <button
+            onclick="openCartDrawer()"
+            class="relative flex items-center gap-2.5 bg-[#12131a] hover:bg-[#1a1b24] border border-white/10 hover:border-[#FF007F]/40 px-3.5 sm:px-4 py-2.5 rounded-2xl text-xs font-bold text-white transition-all shadow-md active:scale-95 group"
+          >
+            <div class="relative">
+              <svg class="w-4 h-4 text-neutral-300 group-hover:text-[#FF007F] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              <span id="headerCartCount" class="absolute -top-2.5 -right-2.5 bg-[#FF007F] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-md">0</span>
+            </div>
+            <span class="hidden sm:inline uppercase tracking-wider font-sans font-bold">Mi Carrito</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- CUERPO PRINCIPAL CON PANEL LATERAL IZQUIERDO Y CONTENIDO PRINCIPAL  -->
+    <!-- =================================================================== -->
+    <main class="w-full">
+      <!-- =============================================================== -->
+      <!-- 1. VISTA PORTADA / HOME FULL SCREEN CON MODELOS VISTIENDO ROPA   -->
+      <!-- =============================================================== -->
+      <div id="landingView" class="w-full min-h-screen flex flex-col justify-between relative overflow-hidden bg-[#0c0d14] select-none">
+        
+
+
+        <!-- ESCENARIO CON MODELOS A PANTALLA COMPLETA -->
+        <div class="relative flex-1 w-full min-h-[550px] sm:min-h-[650px] lg:min-h-[750px] flex items-center justify-center overflow-hidden bg-slate-900 group">
+          
+          <!-- Imagen de fondo con las personas modelando las camisetas -->
+          <img
+            src="assets/hero_banner_models.jpg"
+            alt="Modelos Navy Sport vistiendo camisetas y uniformes oficiales"
+            class="absolute inset-0 w-full h-full object-cover object-[center_28%] transition-transform duration-700 group-hover:scale-105 pointer-events-none"
+          />
+
+          <!-- Capa de oscurecimiento suave para resaltar el botÃ³n central y contraste -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/40 pointer-events-none"></div>
+
+
+
+          <!-- ======================================================== -->
+          <!-- BOTON EN EL MEDIO EN GRANDE: "VER CATALOGO"              -->
+          <!-- ======================================================== -->
+          <div class="relative z-30 flex flex-col items-center justify-center p-4 text-center">
+            
+            <!-- LOGO DE LA MARCA EN GRANDE ARRIBA DEL BOTON -->
+            <div class="mb-5 sm:mb-8 flex flex-col items-center">
+              <img
+                src="assets/logo_navy_sport.png"
+                alt="NAVY SPORT"
+                class="w-40 sm:w-56 md:w-64 lg:w-72 h-auto object-contain filter drop-shadow-[0_15px_35px_rgba(0,0,0,0.95)] transition-transform duration-500 hover:scale-105 pointer-events-none select-none"
+              />
+            </div>
+
+            <button
+              type="button"
+              id="btnGiantEnterCatalog"
+              onclick="showCatalogView()"
+              class="group relative px-10 sm:px-16 md:px-24 py-4 sm:py-5 md:py-6 rounded-2xl sm:rounded-3xl bg-white hover:bg-[#FF007F] text-[#16243e] hover:text-white font-black uppercase tracking-[0.22em] text-base sm:text-xl md:text-2xl transition-all duration-300 shadow-[0_20px_60px_rgba(0,0,0,0.65),0_0_40px_rgba(255,255,255,0.4)] hover:shadow-[0_25px_80px_rgba(255,0,127,0.85),0_0_60px_rgba(255,0,127,0.95)] flex items-center gap-4 active:scale-95 cursor-pointer border-2 border-black/20 hover:border-[#FF007F] hover:scale-105"
+            >
+              <span class="font-sans font-black drop-shadow-sm">VER CAT&Aacute;LOGO</span>
+              <span class="text-2xl sm:text-3xl transition-transform duration-300 group-hover:translate-x-3">&rarr;</span>
+            </button>
+
+            <!-- Subtexto explicativo en pastilla -->
+            <div class="mt-4 px-5 py-2 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs sm:text-sm font-bold tracking-widest uppercase shadow-xl flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#FF007F] animate-ping"></span>
+              <span>Haz clic para explorar todas las camisetas y equipaciones</span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- PIE INFERIOR DEL HOME -->
+        <div class="relative z-20 flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-3.5 bg-[#16243e] border-t border-white/10 text-white text-xs gap-2">
+          <span class="font-black uppercase tracking-wider text-neutral-300">
+            ELEVA TU LOOK CON ESTILO &bull; CONFECCI&Oacute;N ECUATORIANA DE ALTA DENSIDAD
+          </span>
+          <span class="font-mono text-[#FF007F] font-bold tracking-widest uppercase">
+            NAVY SPORT OFICIAL &bull; EDICI&Oacute;N 2026
+          </span>
+        </div>
+
+      </div>
+
+      <div id="catalogView" class="hidden w-full max-w-[1700px] mx-auto px-2.5 sm:px-8 py-4 sm:py-8 space-y-4 sm:space-y-8">
+        <!-- =============================================================== -->
+        <!-- BANNER DE LA PAGINA PRINCIPAL (ENTRE BARRA SUPERIOR Y MODELOS)  -->
+        <!-- CONFIGURABLE Y EDITABLE DESDE EL PANEL DE TRABAJADORES          -->
+        <!-- =============================================================== -->
+        <div id="mainStoreBannerWrapper" class="w-full mb-3 sm:mb-6 transition-all duration-300">
+          <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border border-[#16243e]/10 bg-slate-900 group min-h-[160px] sm:min-h-[200px] md:min-h-[230px] flex items-center">
+            
+            <!-- Imagen de fondo con zoom interactivo -->
+            <img 
+              id="mainStoreBannerImg" 
+              src="assets/hero_banner_models.jpg" 
+              alt="Banner Pagina Principal" 
+              class="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              onerror="this.src='assets/hero_banner_models.jpg'"
+            />
+            
+            <!-- Gradiente de superposicion para contraste y legibilidad impecable -->
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0d172b]/95 via-[#0d172b]/80 sm:via-[#0d172b]/60 to-transparent z-10"></div>
+            
+            <!-- Contenido del Banner -->
+            <div class="relative z-20 p-4 sm:p-6 md:p-8 max-w-2xl space-y-1.5 sm:space-y-2.5">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF007F]/20 border border-[#FF007F]/40 backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-[#FF007F] animate-pulse"></span>
+                <span id="mainStoreBannerTag" class="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#FF007F] font-mono">
+                  NUEVA TEMPORADA 2026 &bull; NAVY SPORT
+                </span>
+              </div>
+              
+              <h2 id="mainStoreBannerTitle" class="text-lg sm:text-2xl md:text-3xl font-black uppercase text-white tracking-tight font-sans drop-shadow leading-tight">
+                EQUIPACIONES Y CAMISETAS OFICIALES
+              </h2>
+              
+              <p id="mainStoreBannerSubtitle" class="text-xs sm:text-sm text-slate-200 line-clamp-2 max-w-xl font-medium">
+                Confección de alta densidad en microfibra Dry-Fit Pro con relieve jacquard, sublimación digital HD y personalización oficial de dorsal.
+              </p>
+              
+              <div class="pt-1 sm:pt-2 flex flex-wrap items-center gap-3">
+                <a 
+                  id="mainStoreBannerCta" 
+                  href="https://wa.me/593988898144?text=Hola%20Navy%20Sport,%20deseo%20m%C3%A1s%20informaci%C3%B3n%20sobre%20las%20equipaciones%20de%20la%20p%C3%A1gina%20principal" 
+                  target="_blank"
+                  class="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-[#FF007F] hover:bg-[#e00070] text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-lg shadow-[#FF007F]/30 hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <span id="mainStoreBannerCtaText">VER PROMOCIONES</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+                <span class="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-slate-300 font-mono font-bold bg-black/40 px-3 py-1.5 rounded-xl border border-white/10 backdrop-blur-sm">
+                  <span>🚚 Envíos a todo el Ecuador</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+
+
+            <!-- AREA PRINCIPAL: CATALOGO DE PRODUCTOS (CON BOTON MENU PARA ABRIR CATEGORIAS) -->
+      <div class="w-full space-y-6">
+        <!-- SECCION: CUADRICULA DEL CATALOGO DE PRODUCTOS -->
+        <section id="catalogSection" class="space-y-6">
+          <div class="sticky top-20 sm:static z-30 bg-white/95 backdrop-blur-md pb-3 pt-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:py-0 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 shadow-sm sm:shadow-none transition-all">
+            <div class="flex items-center gap-4">
+              <!-- BOTON MENU ESTILO REFERENCIA (ABRE EL DRAWER DE CATEGORIAS) -->
+              <button
+                type="button"
+                onclick="openCategoryDrawer()"
+                class="flex flex-col items-center justify-center w-16 h-16 bg-white border border-slate-200/90 rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 shrink-0 group cursor-pointer"
+                title="Abrir Men&uacute; de Categor&iacute;as"
+              >
+                <div class="space-y-1 flex flex-col items-center">
+                  <span class="block w-6 h-[2.5px] bg-[#16243e] rounded-full group-hover:bg-[#FF007F] transition-colors"></span>
+                  <span class="block w-6 h-[2.5px] bg-[#16243e] rounded-full group-hover:bg-[#FF007F] transition-colors"></span>
+                  <span class="block w-6 h-[2.5px] bg-[#16243e] rounded-full group-hover:bg-[#FF007F] transition-colors"></span>
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-wider text-[#16243e] group-hover:text-[#FF007F] transition-colors mt-1 leading-none font-sans">MEN&Uacute;</span>
+              </button>
+
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-xl sm:text-2xl font-black uppercase text-[#16243e] tracking-wide font-sans">Modelos Disponibles</h2>
+                  <span id="activeCategoryBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-[#16243e] border border-slate-200 uppercase">Todos</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Toca el bot&oacute;n men&uacute; para filtrar por categor&iacute;as oficiales</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-600 font-bold hidden sm:inline">Ordenar:</span>
+              <select id="sortSelect" onchange="handleSortChange(this.value)" class="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs text-[#16243e] font-semibold focus:outline-none focus:border-[#16243e] shadow-sm">
+                <option value="featured">Destacados</option>
+                <option value="price-asc">Menor Precio</option>
+                <option value="price-desc">Mayor Precio</option>
+                <option value="name-asc">Nombre A-Z</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- GRID DINAMICO DE TARJETAS (4 COLUMNAS EN PANTALLAS GRANDES) -->
+          <div id="catalogGrid" class="grid grid-cols-2 gap-2.5 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+            <!-- Se llena dinamicamente con renderCatalog() -->
+          </div>
+        </section>
+      </div>
+
+    </div>
+
+  </main>
+
+  </div>
+
+    <!-- =================================================================== -->
+  <!-- DRAWER / MENU DESPLEGABLE DE CATEGORIAS OFICIALES                   -->
+  <!-- =================================================================== -->
+    <!-- =================================================================== -->
+  <!-- DRAWER LATERAL DE CATEGORIAS (ESTILO VIDEO REFERENCIA)             -->
+  <!-- =================================================================== -->
+  <div id="categoryDrawerModal" class="fixed inset-0 z-50 pointer-events-none transition-all duration-300 opacity-0">
+    <!-- Backdrop oscuro translÃºcido con blur -->
+    <div id="categoryDrawerBackdrop" onclick="closeCategoryDrawer()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none cursor-pointer"></div>
+
+    <!-- Panel Desplegable Lateral Oscuro Estilo Video Referencia -->
+    <div id="categoryDrawerContent" class="absolute top-0 left-0 bottom-0 w-full max-w-sm sm:max-w-md bg-[#16243e] shadow-2xl p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between border-r border-white/10 pointer-events-none z-10 text-white">
+      
+      <div class="space-y-6">
+        <!-- Encabezado con Indicador de Marca y BotÃ³n de Cierre -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#FF007F] animate-pulse"></span>
+            <span class="text-xs font-bold uppercase tracking-widest text-slate-300 font-mono">NAVY SPORT &bull; MEN&Uacute;</span>
+          </div>
+          <button type="button" onclick="closeCategoryDrawer()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer" title="Cerrar Men&uacute;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Tarjeta Franquicia / CotizaciÃ³n por Mayor Estilo Video Referencia -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 text-center space-y-3 shadow-inner">
+          <p class="text-xs sm:text-sm font-semibold text-slate-200">&iquest;Te gustar&iacute;a cotizar uniformes para tu equipo?</p>
+          <a
+            href="https://wa.me/593999999999?text=Hola%20Navy%20Sport,%20quisiera%20cotizar%20uniformes%20completos%20para%20mi%20equipo"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block w-full py-2.5 px-4 rounded-full bg-[#faf8f5] hover:bg-white text-[#16243e] font-black text-xs uppercase tracking-wider shadow-md hover:scale-[1.02] active:scale-95 transition-all text-center"
+          >
+            Quiero cotizar para mi club &rarr;
+          </a>
+        </div>
+
+        <!-- TÃ­tulo de SecciÃ³n "Tienda" estilo video referencia -->
+        <div class="space-y-3 pt-2">
+          <h3 class="text-xl font-bold tracking-tight text-white font-sans">Tienda</h3>
+          
+          <!-- Lista Vertical Limpia de CategorÃ­as estilo video referencia -->
+          <nav class="flex flex-col space-y-2.5 font-medium text-sm sm:text-base text-slate-200" id="sidebarCategoryNav">
+            <!-- Se llena dinÃ¡micamente con renderSidebarCategories() -->
+          </nav>
+        </div>
+
+      </div>
+
+      <!-- Pie del MenÃº estilo video: PolÃ­ticas -->
+      <div class="pt-6 border-t border-white/10 mt-8 space-y-2">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Pol&iacute;ticas</h4>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-300">
+          <a href="#" onclick="alert('GuÃ­a de tallas: Disponibles en XS, S, M, L, XL con corte ergonÃ³mico y tela Dry-Fit.'); return false;" class="hover:text-white transition-colors">Tallas y Medidas</a>
+          <a href="#" onclick="alert('GarantÃ­a oficial Navy Sport: 100% sublimaciÃ³n HD y costura reforzada.'); return false;" class="hover:text-white transition-colors">Garant&iacute;a de Calidad</a>
+          <a href="#" onclick="showLandingView(); closeCategoryDrawer(); return false;" class="hover:text-[#FF007F] font-bold transition-colors">&larr; Volver a Portada</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL DE DETALLE DE PRODUCTO (GALERIA 60 FPS & 2 OPCIONES DE COMPRA) -->
+  <!-- =================================================================== -->
+  <div id="productDetailModal" onclick="handleDetailBackdropClick(event)" class="fixed inset-0 z-50 bg-[#16243e]/60 backdrop-blur-sm hidden items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto transition-colors duration-300">
+    <div id="productDetailContainer" class="bg-white border border-[#16243e]/20 rounded-2xl sm:rounded-3xl w-[95vw] max-w-[95vw] h-[95vh] max-h-[95vh] overflow-hidden shadow-2xl relative my-auto text-[#16243e] flex flex-col">
+      
+      <!-- Boton Cerrar -->
+      <button onclick="closeProductDetail()" class="absolute top-4 right-4 z-30 text-slate-500 hover:text-[#16243e] bg-slate-100 hover:bg-slate-200 border border-slate-300 p-2.5 rounded-full transition-all active:scale-90 cursor-pointer shadow-sm">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-0 flex-1 h-full overflow-hidden">
+        
+        <!-- COLUMNA IZQUIERDA: GALERIA DE IMAGENES & PREVISUALIZACION (6/12) -->
+        <div class="lg:col-span-6 bg-[#f8fafc] p-6 sm:p-8 lg:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#16243e]/15 relative overflow-y-auto">
+          
+          <!-- Encabezado de la Galeria -->
+          <div class="relative z-10 flex items-center justify-between">
+            <span id="detailCategoryTag" class="text-xs font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-[#16243e]/5 border border-[#16243e]/15 text-[#16243e]">
+              LIGA NACIONAL
+            </span>
+            <span id="detailBadgeTag" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-[#16243e] text-white">
+              OFICIAL 2024
+            </span>
+          </div>
+
+          <!-- ESCENARIO PRINCIPAL DE LA GALERIA -->
+          <div class="relative z-10 my-auto flex items-center justify-center flex-1 w-full py-4 min-h-0">
+            <div id="detailStageCanvas" class="w-full h-full min-h-[360px] sm:min-h-[440px] lg:min-h-[500px] max-h-[580px] rounded-3xl flex flex-col items-center justify-center relative p-6 sm:p-8 transition-all duration-300 bg-white border border-[#16243e]/10 overflow-hidden shadow-sm">
+              <!-- Render dinamico con animacion fluida .stage-animated -->
+            </div>
+          </div>
+
+          <!-- MINIATURAS INTERACTIVAS DE LA GALERIA -->
+          <div class="relative z-10 space-y-2 pt-3 border-t border-[#16243e]/10">
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Vistas del Uniforme (60 FPS):
+            </div>
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+              
+              <!-- Miniatura 1: Frente Camiseta -->
+              <button type="button" onclick="selectDetailView('front')" id="thumb-front" class="thumb-btn py-2.5 px-3 rounded-2xl bg-[#12131a] border border-[#FF007F] ring-2 ring-[#FF007F]/50 text-white flex flex-col items-center gap-0.5 transition-all active:scale-95 cursor-pointer">
+                <span class="text-xs font-black uppercase text-white">Frente</span>
+                <span id="thumbFrontSub" class="text-[10px] text-neutral-400">Camiseta</span>
+              </button>
+
+              <!-- Miniatura 2: Dorsal Espalda -->
+              <button type="button" onclick="selectDetailView('back')" id="thumb-back" class="thumb-btn py-2.5 px-3 rounded-2xl bg-[#12131a] border border-white/10 hover:border-white/30 text-neutral-400 flex flex-col items-center gap-0.5 transition-all active:scale-95 cursor-pointer">
+                <span class="text-xs font-black uppercase text-neutral-400">Dorsal</span>
+                <span class="text-[10px] text-neutral-400">Nombre & Num</span>
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: DESCRIPCION & 2 OPCIONES DE COMPRA (6/12) -->
+        <div class="lg:col-span-6 p-6 sm:p-8 lg:p-10 flex flex-col justify-between overflow-y-auto">
+          
+          <div class="flex-1 flex flex-col justify-around py-2 space-y-4 lg:space-y-5">
+            <!-- TITULO Y SKU -->
+            <div class="space-y-2">
+              <span id="detailSkuTag" class="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest block">COD: CAM-01-PRO</span>
+              <h2 id="detailProductName" class="text-2xl sm:text-3xl font-black uppercase text-[#16243e] leading-tight font-sans">
+                Barcelona SC Oro & Grana
+              </h2>
+              <p id="detailProductDesc" class="text-sm text-slate-600 leading-relaxed">
+                Confeccion oficial de alta gama con sublimacion digital y tejido transpirable.
+              </p>
+            </div>
+
+            <!-- MODALIDAD DE PRENDA: SOLO CAMISETA (O KIT EN CATEGORIA KITS) -->
+            <div id="purchaseOptionSection" class="space-y-2">
+              <label class="text-xs font-black uppercase tracking-wider text-slate-500 block">
+                Prenda Seleccionada:
+              </label>
+
+              <div>
+                <div
+                  id="optCardShirt"
+                  class="rounded-2xl p-4 sm:p-5 border transition-all text-left flex items-center justify-between border-[#16243e]/20 bg-[#f8fafc] shadow-sm"
+                >
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2.5">
+                      <span class="w-3 h-3 rounded-full bg-[#FF007F]"></span>
+                      <span id="optLabelTitle" class="text-sm sm:text-base font-bold uppercase text-[#16243e]">Camiseta Oficial</span>
+                    </div>
+                    <p id="optLabelDesc" class="text-xs text-slate-500">Prenda titular superior Dry-Fit de alta competencia</p>
+                  </div>
+                  <div class="text-xl sm:text-2xl font-black text-[#16243e] font-mono shrink-0 pl-4" id="optPriceShirt">$24.00</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SELECTOR DE COLOR DE PANTALONETA -->
+            <div id="shortsColorSection" class="hidden space-y-2 pt-2 border-t border-slate-200 transition-all">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-black uppercase tracking-wider text-[#16243e]">Color de Pantaloneta:</span>
+                <span id="selectedShortsColorLabel" class="text-xs text-[#FF007F] font-bold font-mono">Oficial del Club</span>
+              </div>
+              <div class="grid grid-cols-6 gap-2" id="shortsColorChips">
+                <!-- Se genera dinamicamente con renderShortsColorChips() -->
+              </div>
+
+              <!-- OPCION DE NUMERO EN PANTALONETA -->
+              <div id="shortsNumberOptionSection" class="pt-2 border-t border-slate-200 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-black uppercase tracking-wider text-[#16243e]">&iquest;N&uacute;mero en Pantaloneta?</span>
+                  <span id="shortsNumberPriceBadge" class="text-xs font-mono text-emerald-600 font-bold">+ $2.00 / prenda</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    id="btnShortsNoNum"
+                    onclick="setShortsNumberOption(false)"
+                    class="py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-between bg-[#FF007F]/10 border-[#FF007F] text-[#16243e] ring-1 ring-[#FF007F]/40 cursor-pointer"
+                  >
+                    <span>Sin n&uacute;mero</span>
+                    <span class="text-xs text-slate-500 font-mono">+$0</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="btnShortsWithNum"
+                    onclick="setShortsNumberOption(true)"
+                    class="py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-between bg-slate-100 border-slate-200 text-slate-500 hover:border-slate-400 cursor-pointer"
+                  >
+                    <span>Con n&uacute;mero</span>
+                    <span class="text-xs text-[#FF007F] font-mono font-bold">+ $2.00</span>
+                  </button>
+                </div>
+
+                <!-- CAMPO DIRECTO PARA INGRESAR EL NUMERO DE LA PANTALONETA -->
+                <div id="shortsCustomNumberBox" class="hidden mt-2 p-3 rounded-xl bg-[#f8fafc] border border-[#16243e]/20 flex items-center justify-between gap-3 animate-fadeIn">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#FF007F] animate-pulse"></span>
+                    <span class="text-xs font-bold text-[#16243e]">N&uacute;mero en pantaloneta:</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="text"
+                      inputmode="numeric"
+                      id="customShortsNumberInput"
+                      maxlength="4"
+                      placeholder="Ej: 10"
+                      value=""
+                      oninput="updateShortsCustomNumber(this.value)"
+                      class="w-24 bg-white border border-[#16243e]/20 focus:border-[#16243e] rounded-xl px-3 py-2 text-sm text-[#16243e] font-mono font-black text-center focus:outline-none shadow-sm"
+                    />
+                    <span class="text-xs text-slate-400 font-mono">(o dorsal)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SELECTOR DE TALLAS DEPORTIVAS (XS A XL) -->
+            <div class="space-y-2 pt-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-black uppercase tracking-wider text-[#16243e]">Talla de Juego:</span>
+                <span id="detailStockStatusText" class="text-xs text-emerald-600 font-mono font-bold">Selecciona una talla</span>
+              </div>
+
+              <div class="grid grid-cols-5 gap-2.5 sm:gap-3" id="detailSizeChips">
+                <!-- Se llena dinamicamente con renderDetailSizeChips() -->
+              </div>
+              <div id="detailSizeError" class="hidden text-xs text-rose-500 font-bold tracking-wide">
+                * Por favor selecciona una talla para continuar
+              </div>
+            </div>
+
+            <!-- SELECTOR DE CANTIDAD -->
+            <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+              <span class="text-xs font-black uppercase tracking-wider text-[#16243e]">Cantidad:</span>
+              <div class="flex items-center gap-2 bg-[#f8fafc] border border-[#16243e]/20 rounded-xl p-1">
+                <button type="button" onclick="adjustModalQty(-1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 text-[#16243e] font-black text-sm flex items-center justify-center transition active:scale-90 cursor-pointer">-</button>
+                <span id="modalQtyDisplay" class="w-8 text-center font-mono font-bold text-sm text-[#16243e]">1</span>
+                <button type="button" onclick="adjustModalQty(1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 text-[#16243e] font-black text-sm flex items-center justify-center transition active:scale-90 cursor-pointer">+</button>
+              </div>
+            </div>
+
+            <!-- PERSONALIZACION DE DORSAL -->
+            <div id="dorsalSectionContainer" class="space-y-2 pt-3 border-t border-slate-200">
+              <!-- Se llena dinamicamente con renderCustomPlayersList() -->
+            </div>
+
+          </div>
+
+          <!-- BOTONES DE COMPRA Y ACCION -->
+          <div class="pt-6 border-t border-[#16243e]/15 space-y-2.5 mt-6">
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+              <!-- BOTON 1: AGREGAR AL CARRITO -->
+              <button
+                type="button"
+                onclick="addToCartFromModal()"
+                class="w-full bg-[#16243e] hover:bg-[#1f3358] text-white font-black uppercase tracking-wider py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm transition-all shadow-md shadow-[#16243e]/25 flex items-center justify-center gap-2 active:scale-[0.98] group cursor-pointer"
+              >
+                <svg class="w-4 h-4 text-white group-hover:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                </svg>
+                <span>Agregar al Carrito</span>
+              </button>
+
+              <!-- BOTON 2: COMPRAR DIRECTO POR WHATSAPP -->
+              <button
+                type="button"
+                onclick="buyDirectWhatsApp()"
+                class="w-full bg-[#10b981] hover:bg-[#059669] text-white font-black uppercase tracking-wider py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm transition-all shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
+              >
+                <svg class="w-4 h-4 text-white shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.539 1.77.834 2.791.835 3.182 0 5.768-2.586 5.769-5.766.001-3.181-2.585-5.768-5.769-5.768zm0 10.455c-.911 0-1.636-.263-2.392-.712l-.171-.102-1.775.465.474-1.73-.112-.178c-.495-.788-.79-1.579-.79-2.432 0-2.613 2.126-4.739 4.74-4.739 2.614 0 4.74 2.126 4.74 4.739 0 2.614-2.126 4.74-4.74 4.74zm5.006-2.571c-.274-.137-1.623-.801-1.874-.892-.251-.091-.434-.137-.617.137-.183.274-.708.892-.868 1.074-.16.183-.32.206-.594.069-.274-.137-1.157-.426-2.204-1.36-.815-.726-1.365-1.623-1.525-1.897-.16-.274-.017-.422.12-.559.123-.123.274-.32.411-.48.137-.16.183-.274.274-.457.091-.183.046-.343-.023-.48-.069-.137-.617-1.485-.845-2.033-.222-.534-.448-.461-.617-.47l-.525-.01c-.183 0-.48.069-.731.343-.251.274-.96.938-.96 2.287 0 1.349.983 2.652 1.12 2.835.137.183 1.933 2.951 4.682 4.138.654.283 1.165.452 1.564.579.658.209 1.257.179 1.731.109.528-.079 1.623-.663 1.851-1.303.228-.64.228-1.189.16-1.303-.069-.114-.251-.183-.525-.32z"/>
+                </svg>
+                <span>Comprar WhatsApp</span>
+              </button>
+            </div>
+            <div class="text-center text-[10px] text-slate-400">
+              Envios seguros a todo el Ecuador &bull; Garantia oficial NAVY SPORT
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- =================================================================== -->
+  <!-- MODAL DE CONFIRMACION PREVIA (2 SEGUNDOS) ANTES DE WHATSAPP         -->
+  <!-- =================================================================== -->
+  <div id="quotationConfirmModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-card bg-[#12131a] border border-[#FF007F]/40 rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-14 h-14 rounded-full bg-[#FF007F]/20 text-[#FF007F] flex items-center justify-center mx-auto text-2xl font-black animate-bounce">
+        &#10003;
+      </div>
+      <div class="space-y-1">
+        <h3 class="text-lg font-black uppercase text-white tracking-wide">&#161;Tu cotizaci&oacute;n est&aacute; lista!</h3>
+        <p class="text-xs text-neutral-300">Estamos preparando el enlace directo con los detalles de tu uniforme para WhatsApp.</p>
+      </div>
+      <div class="w-full bg-neutral-900 rounded-full h-1.5 overflow-hidden">
+        <div id="confirmProgressBar" class="bg-gradient-to-r from-[#FF007F] to-emerald-400 h-full w-0 transition-all duration-2000 ease-linear"></div>
+      </div>
+      <p class="text-[10px] text-neutral-400 font-mono">Redirigiendo en 2 segundos...</p>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- DRAWER LATERAL DE MI CARRITO                                       -->
+  <!-- =================================================================== -->
+  <div id="cartDrawerBackdrop" onclick="closeCartDrawer()" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden transition-opacity"></div>
+  <div id="cartDrawer" class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white border-l border-[#16243e]/15 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col justify-between text-[#16243e]">
+    
+    <!-- Encabezado Carrito -->
+    <div class="p-6 border-b border-white/5 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg class="w-5 h-5 text-[#16243e]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <h3 class="text-base font-black uppercase text-[#16243e]">Mi Carrito de Compras</h3>
+      </div>
+      <button onclick="closeCartDrawer()" class="text-slate-500 hover:text-[#16243e] p-1 rounded-lg cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Lista de Items en Carrito -->
+    <div id="cartItemsContainer" class="p-6 overflow-y-auto flex-1 space-y-4">
+      <!-- Dinamico -->
+    </div>
+
+    <!-- Pie del Carrito -->
+    <div class="p-6 border-t border-[#16243e]/10 space-y-4 bg-[#f8fafc]">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-neutral-400 font-bold uppercase text-xs">Total Estimado:</span>
+        <span id="cartTotalPrice" class="font-black text-[#16243e] font-mono text-lg">$0.00</span>
+      </div>
+
+      <button
+        onclick="checkoutCartWhatsApp()"
+        class="w-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-700 hover:from-emerald-400 hover:to-emerald-500 text-white font-black uppercase tracking-wider py-3.5 rounded-2xl text-xs transition-all shadow-lg shadow-emerald-950 flex items-center justify-center gap-2"
+      >
+        <span>Finalizar Pedido por WhatsApp</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- JAVASCRIPT ROBUSTO CON TODAS LAS CARACTERISTICAS Y ANIMACIONES      -->
+  <!-- =================================================================== -->
+  <script>
+    // LISTA DE PRODUCTOS CON TALLAS XS A XL Y FOTOS REALES
+    const DEFAULT_PRODUCTS = [
+      {
+        id: "cam-01",
+        name: "Ecuador Retro 2001 Eliminatorias",
+        category: "retro",
+        badge: "COLECCION RETRO",
+        priceShirt: 35.00,
+        priceKit: 43.00,
+        price: 35.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra satinada Dry-Fit con relieve historico y escudo clasico FEF",
+        glow: "#eab308",
+        image: "camisetas/clubes-nacionales/ecuador_retro_2001.png",
+        shortsColor: "#051329",
+        shortsAccent: "#eab308",
+        badgeText: "ECU",
+        description: "Mitica edicion retro de la primera clasificacion mundialista. Franja tricolor central azul y grana sobre amarillo oro vibrante, cuello en V elastizado y pantaloneta azul marino oficial.",
+        stock: { "XS": 6, "S": 8, "M": 14, "L": 10, "XL": 4 }
+      },
+      {
+        id: "cam-02",
+        name: "Espana La Roja Titular Campeones",
+        category: "internacional",
+        badge: "EDICION ROJA MATCH",
+        priceShirt: 28.00,
+        priceKit: 36.00,
+        price: 28.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra Dry-Fit Pro rojo escarlata ultraligero con respiracion perimetral",
+        glow: "#dc2626",
+        image: "camisetas/clubes-internacionales/espana_roja_2024.png",
+        shortsColor: "#071426",
+        shortsAccent: "#dc2626",
+        badgeText: "ESP",
+        description: "El aclamado uniforme rojo titular de la Seleccion Espanola con detalles en amarillo oro y tejido transpirable athletic. Pantaloneta azul profundo con ribetes a juego.",
+        stock: { "XS": 8, "S": 12, "M": 20, "L": 14, "XL": 6 }
+      },
+      {
+        id: "cam-04",
+        name: "Italia Azzurra Elite 4 Stelle",
+        category: "internacional",
+        badge: "EDICION ESPECIAL",
+        priceShirt: 26.00,
+        priceKit: 34.00,
+        price: 26.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Tejido athletic ultra-ligero transpirable con detalles tricolore",
+        glow: "#1d4ed8",
+        image: "camisetas/clubes-internacionales/italia_azzurra_elite.png",
+        shortsColor: "#0b2046",
+        shortsAccent: "#1d4ed8",
+        badgeText: "ITA",
+        description: "El clasico manto azzurro con las 4 estrellas mundiales. Tejido ultra-liviano con microperforacion lateral Sub-Zero y pantaloneta azul royal oficial.",
+        stock: { "XS": 10, "S": 15, "M": 20, "L": 12, "XL": 8 }
+      },
+      {
+        id: "cam-05",
+        name: "Liga de Quito LDU Pro 5 Estrellas",
+        category: "nacional",
+        badge: "OFICIAL 2024",
+        priceShirt: 25.00,
+        priceKit: 33.00,
+        price: 25.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra Dry-Fit transpirable con relieve jacquard y escudo U bordado",
+        glow: "#dc2626",
+        image: "camisetas/clubes-nacionales/ldu_quito_pichincha.png",
+        shortsColor: "#ffffff",
+        shortsAccent: "#dc2626",
+        badgeText: "LDU",
+        description: "La indumentaria del Rey de Copas con las 5 estrellas continentales bordadas en hilo dorado. Sublimacion digital de maxima definicion y pantaloneta blanca oficial con escudo U.",
+        stock: { "XS": 6, "S": 9, "M": 16, "L": 11, "XL": 5 }
+      },
+      {
+        id: "cam-06",
+        name: "FC Barcelona Spotify Match",
+        category: "internacional",
+        badge: "MATCH EDITION",
+        priceShirt: 28.00,
+        priceKit: 36.00,
+        price: 28.00,
+        fitDefault: "slim",
+        sleeve: "corta",
+        fabric: "Tejido jacquard elastizado Dry-Fit con franjas blaugrana clasicas",
+        glow: "#be123c",
+        image: "camisetas/clubes-internacionales/fc_barcelona_spotify.png",
+        shortsColor: "#0f172a",
+        shortsAccent: "#dc2626",
+        badgeText: "FCB",
+        description: "Equipacion blaugrana titular de alta competicion con sponsor oficial Spotify dorado. Tejido jacquard de doble elasticidad y pantaloneta azul marino oficial.",
+        stock: { "XS": 12, "S": 14, "M": 22, "L": 15, "XL": 7 }
+      },
+      {
+        id: "cam-07",
+        name: "Boca Juniors CABJ Bombonera",
+        category: "internacional",
+        badge: "EDICION CLASICA",
+        priceShirt: 26.00,
+        priceKit: 34.00,
+        price: 26.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Poliester interlock pesado athletic con franja dorada en pecho",
+        glow: "#eab308",
+        image: "camisetas/clubes-internacionales/boca_juniors_cabj.png",
+        shortsColor: "#081b3a",
+        shortsAccent: "#eab308",
+        badgeText: "CABJ",
+        description: "Manto xeneize azul y oro con franja central perfecta y cuello en V deportivo. Confeccion de alta durabilidad y pantaloneta azul marino con detalles dorados oficiales.",
+        stock: { "XS": 8, "S": 12, "M": 20, "L": 14, "XL": 6 }
+      },
+      {
+        id: "cam-08",
+        name: "Inter Miami Pink GOAT 10",
+        category: "internacional",
+        badge: "TOP VENTAS",
+        priceShirt: 27.00,
+        priceKit: 35.00,
+        price: 27.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Tejido satinado Dry-Fit ultra-suave rosa palido transpirable",
+        glow: "#f43f5e",
+        image: "camisetas/clubes-internacionales/inter_miami_goat.png",
+        shortsColor: "#111827",
+        shortsAccent: "#f43f5e",
+        badgeText: "MIA",
+        description: "El uniforme rosado mas codiciado con detalles negros elegantes y escudo de garzas. La pantaloneta a juego completa el conjunto icono.",
+        stock: { "XS": 12, "S": 14, "M": 22, "L": 15, "XL": 7 }
+      },
+      {
+        id: "cam-09",
+        name: "AC Milan Rossonero Champions 2007",
+        category: "retro",
+        badge: "RETRO CHAMPIONS",
+        priceShirt: 28.00,
+        priceKit: 36.00,
+        price: 28.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra retro transpirable con franjas rossoneras y sponsor Bwin",
+        glow: "#dc2626",
+        image: "camisetas/clubes-internacionales/milan_bwin_2007.png",
+        shortsColor: "#ffffff",
+        shortsAccent: "#dc2626",
+        badgeText: "ACM",
+        description: "Camiseta retro del AC Milan campeon de Atenas 2007 con mitico sponsor Bwin, cuello polo y pantaloneta blanca oficial.",
+        stock: { "XS": 6, "S": 10, "M": 16, "L": 12, "XL": 5 }
+      },
+      {
+        id: "cam-10",
+        name: "Argentina Homenaje Diego Maradona 10",
+        category: "retro",
+        badge: "LEYENDA RETRO",
+        priceShirt: 32.00,
+        priceKit: 40.00,
+        price: 32.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Poliester jacquard retro celeste y blanco con dorsal historico 10",
+        glow: "#38bdf8",
+        image: "camisetas/clubes-internacionales/argentina_maradona_retro.png",
+        shortsColor: "#000000",
+        shortsAccent: "#38bdf8",
+        badgeText: "ARG",
+        description: "Edicion legendaria homenaje a Diego Armando Maradona con bastones albicelestes clasicos y pantaloneta negra.",
+        stock: { "XS": 8, "S": 12, "M": 18, "L": 14, "XL": 6 }
+      },
+      {
+        id: "cam-11",
+        name: "Colombia Titular Copa America 2024",
+        category: "internacional",
+        badge: "OFICIAL 2024",
+        priceShirt: 28.00,
+        priceKit: 36.00,
+        price: 28.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra Dry-Fit amarillo solar con vivos naranja brillante y azul",
+        glow: "#eab308",
+        image: "camisetas/clubes-internacionales/colombia_amarilla_2024.png",
+        shortsColor: "#051636",
+        shortsAccent: "#eab308",
+        badgeText: "COL",
+        description: "La camiseta de la fiebre cafetera Copa America 2024 en amarillo electrizante y pantaloneta azul profundo.",
+        stock: { "XS": 6, "S": 11, "M": 17, "L": 13, "XL": 5 }
+      },
+      {
+        id: "cam-12",
+        name: "Manchester United Red Devils 24/25",
+        category: "internacional",
+        badge: "PREMIER LEAGUE",
+        priceShirt: 27.00,
+        priceKit: 35.00,
+        price: 27.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Tejido athletic rojo diablo ultra-transpirable con sponsor Snapdragon",
+        glow: "#dc2626",
+        image: "camisetas/clubes-internacionales/manchester_united_2025.png",
+        shortsColor: "#ffffff",
+        shortsAccent: "#000000",
+        badgeText: "MUN",
+        description: "El manto rojo de Old Trafford con detalles degradados y pantaloneta blanca oficial con ribetes negros.",
+        stock: { "XS": 7, "S": 12, "M": 19, "L": 14, "XL": 6 }
+      },
+      {
+        id: "cam-13",
+        name: "Independiente del Valle Matagigantes",
+        category: "nacional",
+        badge: "LIGA PRO ECU",
+        priceShirt: 25.00,
+        priceKit: 33.00,
+        price: 25.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra negra con diseno chevron fucsia y sponsor Marathon",
+        glow: "#FF007F",
+        image: "camisetas/clubes-nacionales/idv_independiente_del_valle.png",
+        shortsColor: "#0a0a0c",
+        shortsAccent: "#FF007F",
+        badgeText: "IDV",
+        description: "Equipacion IDV campeon continental con lineas futuristas fucsias y pantaloneta negra microperforada.",
+        stock: { "XS": 5, "S": 9, "M": 15, "L": 10, "XL": 4 }
+      },
+      {
+        id: "cam-14",
+        name: "El Nacional Puros Criollos Titular",
+        category: "nacional",
+        badge: "EDICION POLO",
+        priceShirt: 25.00,
+        priceKit: 33.00,
+        price: 25.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Tejido jacquard rojo escarlata con cuello polo clasico tricolor",
+        glow: "#dc2626",
+        image: "camisetas/clubes-nacionales/el_nacional_criollos_polo.png",
+        shortsColor: "#0f2347",
+        shortsAccent: "#dc2626",
+        badgeText: "NAC",
+        description: "La tradicion del Bitri militar ecuatoriano con cuello polo tricolor y pantaloneta azul marino oficial.",
+        stock: { "XS": 6, "S": 10, "M": 16, "L": 11, "XL": 5 }
+      },
+      {
+        id: "cam-15",
+        name: "Argentina 3 Estrellas Parche Campeon",
+        category: "internacional",
+        badge: "CAMPEON MUNDIAL",
+        priceShirt: 30.00,
+        priceKit: 38.00,
+        price: 30.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Tejido athletic celeste y blanco con 3 estrellas y parche FIFA Campeon dorado",
+        glow: "#38bdf8",
+        image: "camisetas/clubes-internacionales/argentina_3_estrellas_parche.png",
+        shortsColor: "#000000",
+        shortsAccent: "#38bdf8",
+        badgeText: "ARG",
+        description: "La indumentaria de la gloria eterna en Qatar con 3 estrellas bordadas, parche dorado de campeon del mundo y pantaloneta negra.",
+        stock: { "XS": 10, "S": 15, "M": 24, "L": 18, "XL": 8 }
+      },
+      {
+        id: "cam-16",
+        name: "Brasil Canarinha Pentacampeon CBF",
+        category: "internacional",
+        badge: "MATCH PENTA",
+        priceShirt: 28.00,
+        priceKit: 36.00,
+        price: 28.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra amarilla oro transpirable con vivos verdes esmeralda",
+        glow: "#eab308",
+        image: "camisetas/clubes-internacionales/brasil_canarinha_cbf.png",
+        shortsColor: "#0d2b6b",
+        shortsAccent: "#eab308",
+        badgeText: "BRA",
+        description: "La verdeamarela mas famosa del planeta con textura sublimada de jaguares y pantaloneta azul cobalto oficial.",
+        stock: { "XS": 8, "S": 14, "M": 20, "L": 15, "XL": 7 }
+      },
+      {
+        id: "cam-17",
+        name: "Liverpool FC The Reds Anfield 24/25",
+        category: "internacional",
+        badge: "PREMIER LEAGUE",
+        priceShirt: 28.00,
+        priceKit: 36.00,
+        price: 28.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Tejido athletic rojo carmesi con cuello retro y sponsor Standard Chartered",
+        glow: "#dc2626",
+        image: "camisetas/clubes-internacionales/liverpool_anfield_red.png",
+        shortsColor: "#b91c1c",
+        shortsAccent: "#ffffff",
+        badgeText: "LIV",
+        description: "Equipacion You Will Never Walk Alone con pinstripes amarillos finos y pantaloneta roja intensa a juego.",
+        stock: { "XS": 7, "S": 11, "M": 18, "L": 13, "XL": 6 }
+      },
+      {
+        id: "cam-18",
+        name: "Aucas Papa Oro y Grana Campeon",
+        category: "nacional",
+        badge: "LIGA PRO ECU",
+        priceShirt: 25.00,
+        priceKit: 33.00,
+        price: 25.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra amarilla con franja roja oriental y tecnologia Dry-Sport",
+        glow: "#eab308",
+        image: "camisetas/clubes-nacionales/aucas_oro_grana_bet593.png",
+        shortsColor: "#dc2626",
+        shortsAccent: "#eab308",
+        badgeText: "AUC",
+        description: "La pasion de Chillogallo con el tradicional diseno oro y grana del primer campeonato historico y pantaloneta roja.",
+        stock: { "XS": 5, "S": 8, "M": 14, "L": 10, "XL": 4 }
+      },
+      {
+        id: "cam-19",
+        name: "Paris Saint-Germain PSG Hechter",
+        category: "internacional",
+        badge: "LIGUE 1",
+        priceShirt: 28.00,
+        priceKit: 36.00,
+        price: 28.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Tejido azul marino con franja central Hechter roja pincelada y sponsor Qatar",
+        glow: "#1e3a8a",
+        image: "camisetas/clubes-internacionales/psg_hechter_qatar.png",
+        shortsColor: "#051026",
+        shortsAccent: "#dc2626",
+        badgeText: "PSG",
+        description: "Diseno parisino vanguardista con trazo artistico rojo central sobre azul noche y pantaloneta oscura oficial.",
+        stock: { "XS": 6, "S": 11, "M": 17, "L": 12, "XL": 5 }
+      },
+      {
+        id: "cam-20",
+        name: "Club Nacional Tricolor Antel Pro",
+        category: "internacional",
+        badge: "OFICIAL 2024",
+        priceShirt: 25.00,
+        priceKit: 33.00,
+        price: 25.00,
+        fitDefault: "regular",
+        sleeve: "corta",
+        fabric: "Microfibra transpirable blanca con ribetes tricolor en hombros y escudo bordado",
+        glow: "#2563eb",
+        image: "camisetas/clubes-internacionales/nacional_antel_pro.png",
+        shortsColor: "#1d4ed8",
+        shortsAccent: "#dc2626",
+        badgeText: "CNF",
+        description: "Equipacion oficial del gigante tricolor con sponsor Antel y escudo C.N.de F. de maxima definicion. Pantaloneta azul royal con detalles rojos.",
+        stock: { "XS": 7, "S": 10, "M": 15, "L": 8, "XL": 5 }
+      }
+    ];
+
+    let PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+
+    // ESTADO DE LA TIENDA
+    let currentCategory = "all";
+    let currentSleeveFilter = "all";
+    let currentFabricFilter = "all";
+    let searchQuery = "";
+    let sortMode = "featured";
+    let cart = [];
+
+    // ESTADO DEL MODAL DE DETALLE DE PRODUCTO
+    let activeModalProduct = null;
+    let activePurchaseOption = "kit"; // 'shirt' | 'kit'
+    let activeDetailView = "front"; // 'front' | 'fullkit' | 'back' | 'detail'
+    let activeSelectedSize = null;
+    let activeSelectedFit = "regular";
+    let activeModalQty = 1;
+    let activeSelectedShortsColor = null;
+    let activeSelectedShortsColorName = "Oficial del Club";
+      let activeShortsHasNumber = false; // Desea numero en pantaloneta?
+    let activeShortsCustomNumber = ""; // Numero especifico para la pantaloneta
+      const SHORTS_NUMBER_EXTRA = 2.00; // Incremento por numero estampado en pantaloneta
+      let activePreviewPlayerIndex = 0; // Jugador que se previsualiza en el 3D
+      let activeCustomPlayers = [
+        { name: "", number: "", size: "M" }
+      ];
+
+    // PALETA MULTICOLOR DE PANTALONETAS DISPONIBLES
+    const SHORTS_COLOR_PALETTE = [
+      { id: "club", name: "Oficial Club", hex: null, border: "border-white/30" },
+      { id: "black", name: "Negro Pro", hex: "#090a0f", border: "border-neutral-700" },
+      { id: "white", name: "Blanco Titanio", hex: "#f8fafc", border: "border-neutral-400" },
+      { id: "navy", name: "Azul Marino", hex: "#081b3b", border: "border-blue-900" },
+      { id: "red", name: "Rojo Carmesi", hex: "#991b1b", border: "border-red-700" },
+      { id: "yellow", name: "Amarillo Oro", hex: "#eab308", border: "border-yellow-500" }
+    ];
+
+    function getShortsBadge(p) {
+      if (p && p.badgeText && p.badgeText !== "undefined" && String(p.badgeText).trim().length > 0) {
+        return String(p.badgeText).trim().substring(0, 4).toUpperCase();
+      }
+      if (p && p.name) {
+        const n = p.name.toUpperCase();
+        if (n.includes("ECUADOR") || n.includes("RETRO")) return "ECU";
+        if (n.includes("ESPANA") || n.includes("ROJA")) return "ESP";
+        if (n.includes("NACIONAL") || n.includes("ANTEL")) return "CNF";
+        if (n.includes("ITALIA") || n.includes("AZZURRA")) return "ITA";
+        if (n.includes("LIGA DE QUITO") || n.includes("LDU")) return "LDU";
+        if (n.includes("FC BARCELONA") || n.includes("SPOTIFY") || n.includes("FCB")) return "FCB";
+        if (n.includes("BOCA") || n.includes("CABJ")) return "CABJ";
+        if (n.includes("MIAMI") || n.includes("MIA")) return "MIA";
+      }
+      return "NVS";
+    }
+
+    // PALETA Y TEMA DE COLOR PARA LA ESPALDA DE LA CAMISETA
+    function getJerseyTheme(pName, glow, accent) {
+      const name = (pName || '').toLowerCase();
+      let baseGrad = ['#ffffff', '#f1f5f9'];
+      let textColor = '#16243e';
+      let numColor = '#16243e';
+      let numStroke = '#ffffff';
+      let trimColor = accent || '#FF007F';
+      let collarBg = '#0f172a';
+
+      if (name.includes('colombia')) {
+        baseGrad = ['#fef08a', '#facc15', '#eab308'];
+        textColor = '#16243e';
+        numColor = '#16243e';
+        numStroke = '#ffffff';
+        trimColor = '#dc2626';
+        collarBg = '#16243e';
+      } else if (name.includes('espana') || name.includes('espaÃ±a')) {
+        baseGrad = ['#ef4444', '#dc2626', '#b91c1c'];
+        textColor = '#ffffff';
+        numColor = '#facc15';
+        numStroke = '#991b1b';
+        trimColor = '#facc15';
+        collarBg = '#991b1b';
+      } else if (name.includes('argentina')) {
+        baseGrad = ['#bae6fd', '#7dd3fc', '#38bdf8'];
+        textColor = '#0f172a';
+        numColor = '#000000';
+        numStroke = '#ffffff';
+        trimColor = '#facc15';
+        collarBg = '#0284c7';
+      } else if (name.includes('brasil')) {
+        baseGrad = ['#fef08a', '#facc15', '#eab308'];
+        textColor = '#15803d';
+        numColor = '#15803d';
+        numStroke = '#ffffff';
+        trimColor = '#16a34a';
+        collarBg = '#15803d';
+      } else if (name.includes('barcelona')) {
+        baseGrad = ['#be123c', '#9f1239', '#1e3a8a'];
+        textColor = '#facc15';
+        numColor = '#facc15';
+        numStroke = '#1e1b4b';
+        trimColor = '#facc15';
+        collarBg = '#1e3a8a';
+      } else if (name.includes('miami')) {
+        baseGrad = ['#fbcfe8', '#f472b6', '#ec4899'];
+        textColor = '#111827';
+        numColor = '#111827';
+        numStroke = '#ffffff';
+        trimColor = '#111827';
+        collarBg = '#111827';
+      } else if (name.includes('italia')) {
+        baseGrad = ['#3b82f6', '#1d4ed8', '#1e40af'];
+        textColor = '#ffffff';
+        numColor = '#ffffff';
+        numStroke = '#1e3a8a';
+        trimColor = '#facc15';
+        collarBg = '#1e40af';
+      } else if (name.includes('ecuador')) {
+        baseGrad = ['#fef08a', '#facc15', '#eab308'];
+        textColor = '#1e3a8a';
+        numColor = '#1e3a8a';
+        numStroke = '#ffffff';
+        trimColor = '#dc2626';
+        collarBg = '#1e3a8a';
+      } else if (name.includes('milan')) {
+        baseGrad = ['#dc2626', '#b91c1c', '#111827'];
+        textColor = '#ffffff';
+        numColor = '#ffffff';
+        numStroke = '#000000';
+        trimColor = '#dc2626';
+        collarBg = '#000000';
+      } else if (name.includes('boca')) {
+        baseGrad = ['#0f2347', '#1e3a8a', '#0f2347'];
+        textColor = '#facc15';
+        numColor = '#facc15';
+        numStroke = '#0f2347';
+        trimColor = '#eab308';
+        collarBg = '#0f2347';
+      } else if (name.includes('ldu') || name.includes('quito')) {
+        baseGrad = ['#ffffff', '#f8fafc', '#f1f5f9'];
+        textColor = '#1e3a8a';
+        numColor = '#dc2626';
+        numStroke = '#ffffff';
+        trimColor = '#dc2626';
+        collarBg = '#dc2626';
+      } else if (name.includes('united') || name.includes('liverpool') || name.includes('nacional puros') || name.includes('criollos')) {
+        baseGrad = ['#ef4444', '#dc2626', '#991b1b'];
+        textColor = '#ffffff';
+        numColor = '#ffffff';
+        numStroke = '#7f1d1d';
+        trimColor = '#ffffff';
+        collarBg = '#7f1d1d';
+      } else if (name.includes('psg')) {
+        baseGrad = ['#0f172a', '#1e293b', '#0f172a'];
+        textColor = '#ffffff';
+        numColor = '#ffffff';
+        numStroke = '#dc2626';
+        trimColor = '#dc2626';
+        collarBg = '#dc2626';
+      } else if (name.includes('valle') || name.includes('idv')) {
+        baseGrad = ['#1e293b', '#0f172a', '#020617'];
+        textColor = '#ffffff';
+        numColor = '#FF007F';
+        numStroke = '#ffffff';
+        trimColor = '#FF007F';
+        collarBg = '#FF007F';
+      } else if (name.includes('aucas')) {
+        baseGrad = ['#fef08a', '#facc15', '#dc2626'];
+        textColor = '#dc2626';
+        numColor = '#dc2626';
+        numStroke = '#ffffff';
+        trimColor = '#dc2626';
+        collarBg = '#dc2626';
+      } else {
+        if (glow && glow !== '#000000') {
+          baseGrad = ['#ffffff', '#f8fafc', glow + '22'];
+          trimColor = glow;
+        }
+      }
+
+      return { baseGrad, textColor, numColor, numStroke, trimColor, collarBg };
+    }
+
+        // RENDERIZADOR DORSAL: SOLO LA INFORMACION (NOMBRE, NUMERO Y EDICION SIN SILUETA DE CAMISETA)
+    function renderJerseyBackSVG(pName, glow, accent, name, num) {
+      const t = getJerseyTheme(pName, glow, accent);
+      const safeName = (name && name.trim()) ? name.trim().toUpperCase() : 'NAVY SPORT';
+      const safeNum = (num && num.trim()) ? num.trim() : '10';
+
+      return `
+        <svg viewBox="0 0 200 200" class="w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 relative z-10" xmlns="http://www.w3.org/2000/svg">
+          <!-- BARRA DECORATIVA DE ACENTO DEPORTIVO -->
+          <rect x="75" y="24" width="50" height="4.5" rx="2.25" fill="${t.trimColor || '#FF007F'}" />
+
+          <!-- NOMBRE DEL JUGADOR -->
+          <text x="100" y="60" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="15" letter-spacing="4" fill="${t.textColor}" style="text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${safeName}</text>
+
+          <!-- DORSAL / NUMERO EN ESPALDA -->
+          <text x="100" y="145" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="78" letter-spacing="-2" fill="${t.numColor}" stroke="${t.numStroke || '#ffffff'}" stroke-width="2.2" paint-order="stroke fill" style="filter: drop-shadow(0 6px 12px rgba(22,36,62,0.18));">${safeNum}</text>
+
+          <!-- SUBTITULO MATCH EDITION -->
+          <text x="100" y="180" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="7" letter-spacing="2.5" fill="${t.textColor}" opacity="0.65">NAVY SPORT PRO &bull; MATCH EDITION</text>
+        </svg>
+      `;
+    }
+
+    // RENDERIZADOR SVG DE PANTALONETA DEPORTIVA A JUEGO (SOPORTA CON Y SIN NUMERO)
+    function renderShortsSVG(accentColor, baseColor, badgeText, num, hasNumber) {
+      const showNum = (hasNumber !== undefined) ? hasNumber : activeShortsHasNumber;
+      const safeBadge = (badgeText && badgeText !== "undefined" && String(badgeText).trim().length > 0)
+        ? String(badgeText).trim().substring(0, 4).toUpperCase()
+        : "NVS";
+      const safeAccent = (accentColor && accentColor !== "undefined") ? accentColor : "#FF007F";
+      const safeBase = (baseColor && baseColor !== "undefined") ? baseColor : "#0d0e14";
+      const safeNum = (num && num !== "undefined" && String(num).trim().length > 0) ? num : "10";
+
+      const numSvg = showNum ? `
+        <!-- Numero deportivo en pierna izquierda -->
+        <g transform="translate(142, 98)">
+          <text x="0" y="5" fill="${safeAccent}" font-size="18" font-weight="900" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" stroke="#ffffff" stroke-width="1" paint-order="stroke fill">${safeNum}</text>
+        </g>
+      ` : '';
+
+      return `
+        <svg viewBox="0 0 200 160" class="w-32 h-24 sm:w-36 sm:h-28 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shortGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${safeBase}" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="${safeBase}" stop-opacity="0.8" />
+            </linearGradient>
+          </defs>
+          <!-- Cintura elastica con relieve -->
+          <path d="M45 22 Q100 27 155 22 L157 32 Q100 37 43 32 Z" fill="${safeAccent}" opacity="0.9" />
+          <path d="M44 26 Q100 31 156 26" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="3,2" />
+          
+          <!-- Cordon de ajuste central -->
+          <path d="M96 32 C95 44 92 48 91 54" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" />
+          <path d="M104 32 C105 44 108 48 109 54" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" />
+
+          <!-- Cuerpo principal de pantaloneta deportiva -->
+          <path d="M43 32 L26 122 C32 126 58 132 86 126 L98 62 L102 62 L114 126 C142 132 168 126 174 122 L157 32 Q100 37 43 32 Z" fill="url(#shortGrad)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+
+          <!-- Rayas laterales / ribetes atleticos -->
+          <path d="M43 32 L26 122 L33 124 L48 33 Z" fill="${safeAccent}" opacity="0.85" />
+          <path d="M157 32 L174 122 L167 124 L152 33 Z" fill="${safeAccent}" opacity="0.85" />
+
+          <!-- Escudo oficial en pierna derecha -->
+          <g transform="translate(62, 95)">
+            <circle cx="0" cy="0" r="11" fill="#0c0d12" stroke="rgba(255,255,255,0.3)" stroke-width="1" />
+            <text x="0" y="3.5" fill="#ffffff" font-size="7.5" font-weight="900" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">${safeBadge}</text>
+          </g>
+
+          ${numSvg}
+        </svg>
+      `;
+    }
+
+    // RENDERIZADOR DEL CATALOGO DE PRODUCTOS (SIN BORDES BLANCOS Y CON ANIMACION 60 FPS)
+        // CONTROL DEL SLIDER HORIZONTAL LOOKBOOK (DESLIZAMIENTO SUAVE A 4 COLUMNAS)
+    function slideLookbook(direction) {
+      const track = document.getElementById("lookbookTrack");
+      if (!track) return;
+      
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      const step = track.clientWidth > 1024 ? Math.round(track.clientWidth / 4) : Math.round(track.clientWidth * 0.85);
+
+      if (direction === 1) {
+        // Cuando llegue a la ultima camiseta se repite volviendo al principio
+        if (track.scrollLeft >= maxScroll - 25) {
+          track.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          track.scrollBy({ left: step, behavior: "smooth" });
+        }
+      } else if (direction === -1) {
+        // Si esta en la primera y retrocede, se repite yendo a la ultima
+        if (track.scrollLeft <= 25) {
+          track.scrollTo({ left: maxScroll, behavior: "smooth" });
+        } else {
+          track.scrollBy({ left: -step, behavior: "smooth" });
+        }
+      }
+    }
+
+    function renderCatalog() {
+      try {
+        const grid = document.getElementById("catalogGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+
+        if (!Array.isArray(PRODUCTS) || PRODUCTS.length === 0) {
+          PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+        }
+
+        let filtered = PRODUCTS.filter(p => {
+          if (!p) return false;
+          let matchesCategory = false;
+            if (currentCategory === "all") {
+              matchesCategory = true;
+            } else if (currentCategory === "nacional") {
+              matchesCategory = (p.category === "nacional" || p.badgeText === "ECU" || (p.badge && p.badge.toLowerCase().includes("ecu")) || (p.name && (p.name.toLowerCase().includes("ecuador") || p.name.toLowerCase().includes("liga") || p.name.toLowerCase().includes("barcelona") || p.name.toLowerCase().includes("emelec") || p.name.toLowerCase().includes("aucas") || p.name.toLowerCase().includes("valle") || p.name.toLowerCase().includes("nacional"))));
+            } else if (currentCategory === "internacional" || currentCategory === "clubes") {
+              matchesCategory = (p.category === "internacional" || p.category === "clubes" || (p.badge && (p.badge.toLowerCase().includes("club") || p.badge.toLowerCase().includes("int") || p.badge.toLowerCase().includes("premier") || p.badge.toLowerCase().includes("ligue"))) || (p.name && (p.name.toLowerCase().includes("milan") || p.name.toLowerCase().includes("miami") || p.name.toLowerCase().includes("cruyff") || p.name.toLowerCase().includes("argentina") || p.name.toLowerCase().includes("espana") || p.name.toLowerCase().includes("italia") || p.name.toLowerCase().includes("brasil") || p.name.toLowerCase().includes("colombia") || p.name.toLowerCase().includes("liverpool") || p.name.toLowerCase().includes("manchester") || p.name.toLowerCase().includes("psg"))));
+            } else if (currentCategory === "buzos") {
+              const nameLower = (p.name || "").toLowerCase();
+              matchesCategory = (p.category === "buzos") || nameLower.includes("buzo") || nameLower.includes("manga larga") || nameLower.includes("termica") || nameLower.includes("hoodie") || p.sleeve === "larga";
+            } else if (currentCategory === "uniformes" || currentCategory === "kits") {
+              matchesCategory = true;
+            } else if (currentCategory === "liquidacion") {
+              const b = (p.badge || "").toLowerCase();
+              const n = (p.name || "").toLowerCase();
+              const price = p.priceShirt || p.price || 999;
+              matchesCategory = (p.category === "liquidacion") || b.includes("liquid") || b.includes("sale") || b.includes("oferta") || n.includes("retro") || price <= 28;
+            } else {
+              matchesCategory = (p.category === currentCategory);
+            }
+          const matchesSearch = !searchQuery || 
+                                ((p.name && p.name.toLowerCase().includes(searchQuery.toLowerCase())) || 
+                                 (p.fabric && p.fabric.toLowerCase().includes(searchQuery.toLowerCase())));
+
+          let matchesSleeve = true;
+          const nameLower = (p.name || "").toLowerCase();
+          if (currentSleeveFilter === 'corta') {
+            matchesSleeve = !nameLower.includes('manga larga');
+          } else if (currentSleeveFilter === 'larga') {
+            matchesSleeve = nameLower.includes('manga larga') || nameLower.includes('termica');
+          }
+
+          return matchesCategory && matchesSearch && matchesSleeve;
+        });
+
+        if (sortMode === "price-asc") filtered.sort((a, b) => (a.priceShirt || a.price || 0) - (b.priceShirt || b.price || 0));
+        else if (sortMode === "price-desc") filtered.sort((a, b) => (b.priceShirt || b.price || 0) - (a.priceShirt || a.price || 0));
+        else if (sortMode === "name-asc") filtered.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+        const counterBadge = document.getElementById("productCounterBadge");
+        if (counterBadge) counterBadge.innerText = `${filtered.length} Prendas`;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full py-16 text-center space-y-3 glass-card rounded-3xl p-8 border border-white/5">
+              <svg class="w-12 h-12 text-neutral-600 mx-auto" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <h3 class="text-base font-bold text-white uppercase">No se encontraron prendas</h3>
+              <p class="text-xs text-neutral-400">Prueba con otra categoria o limpia tu busqueda.</p>
+              <button onclick="setCategory('all'); clearSearch();" class="mt-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FF007F] to-[#D9006C] text-white text-xs font-bold uppercase shadow-lg shadow-[#FF007F]/30">Ver todo el catalogo</button>
+            </div>
+          `;
+          return;
+        }
+
+        filtered.forEach((p, idx) => {
+          try {
+            const stockObj = (p.stock && typeof p.stock === 'object') ? p.stock : { "XS": 5, "S": 8, "M": 12, "L": 10, "XL": 4 };
+            const totalStock = Object.values(stockObj).reduce((a, b) => a + (Number(b) || 0), 0);
+            const isOutOfStock = totalStock <= 0;
+
+            const card = document.createElement("div");
+            card.id = `card-${p.id}`;
+            card.className = "jersey-card card-grid-item bg-white border border-[#16243e]/15 rounded-2xl sm:rounded-[28px] p-2 sm:p-6 flex flex-col justify-between relative group hover:border-[#16243e] shadow-sm hover:shadow-xl cursor-pointer transition-all";
+            card.style.animationDelay = `${idx * 0.04}s`;
+            card.onclick = () => openProductDetail(p.id);
+
+            card.innerHTML = `
+              <!-- CONTENEDOR CENTRAL: FOTO REAL SOBRE FONDO SUAVE -->
+              <div class="relative w-full aspect-square flex items-center justify-center p-1.5 sm:p-3 rounded-xl sm:rounded-2xl bg-[#f8fafc] border border-[#16243e]/10 overflow-hidden shadow-inner">
+                <img
+                  src="${p.image}"
+                  alt="${p.name}"
+                  class="relative z-10 w-full h-full max-h-[135px] sm:max-h-[250px] object-contain filter drop-shadow-[0_4px_10px_rgba(22,36,62,0.12)] sm:drop-shadow-[0_8px_16px_rgba(22,36,62,0.15)] group-hover:scale-108 transition-transform duration-500 ease-out pointer-events-none select-none"
+                  loading="lazy"
+                />
+
+                <!-- Boton flotante bolsa/carrito estilo referencia en movil -->
+                <button
+                  type="button"
+                  onclick="event.stopPropagation(); openProductDetail('${p.id}')"
+                  class="absolute bottom-1.5 right-1.5 sm:hidden z-20 w-7 h-7 rounded-full bg-[#16243e] hover:bg-[#FF007F] text-white flex items-center justify-center shadow-md active:scale-90 transition-all cursor-pointer"
+                  title="Ver uniforme y tallas"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                </button>
+              </div>
+
+              <!-- EN MOVIL (< sm): NOMBRE Y PRECIO COMPACTO ESTILO REFERENCIA (2 COLUMNAS) -->
+              <div class="pt-1.5 px-0.5 space-y-0.5 sm:hidden">
+                <h3 class="text-[11.5px] font-bold text-[#16243e] line-clamp-1 leading-tight group-hover:text-[#FF007F] transition-colors" title="${p.name}">
+                  ${p.name}
+                </h3>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-black text-[#16243e] font-mono">$${(p.priceShirt || p.price || 28.00).toFixed(2)}</span>
+                  ${isOutOfStock ? `
+                    <span class="text-[8.5px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded-full border border-rose-200 uppercase">Agotado</span>
+                  ` : `
+                    <span class="text-[8.5px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200 uppercase">Stock</span>
+                  `}
+                </div>
+              </div>
+
+              <!-- EN DESKTOP (>= sm): DISENO COMPLETO ORIGINAL CON TALLAS AL HOVER Y BOTON -->
+              <div class="hidden sm:block space-y-3 pt-3 border-t border-[#16243e]/10">
+                <!-- FILA 1: PRECIO Y DISPONIBILIDAD -->
+                <div class="space-y-1">
+                  <div class="flex items-baseline justify-between gap-3">
+                    <span class="text-xs font-black uppercase text-slate-500 tracking-wider">${currentCategory === 'kits' ? 'Kit Completo:' : 'Solo Camiseta:'}</span>
+                    <span class="text-base sm:text-lg font-black text-[#16243e] shrink-0 font-mono">$${(currentCategory === 'kits' ? (p.priceKit || (p.priceShirt ? p.priceShirt + 8 : 36.00)) : (p.priceShirt || p.price || 28.00)).toFixed(2)}</span>
+                  </div>
+                  
+                  <div class="flex items-center justify-between text-[10px]">
+                    <span class="font-medium text-slate-500">${currentCategory === 'kits' ? 'Camiseta + Pantaloneta' : 'Prenda Titular Oficial'}</span>
+                    ${isOutOfStock ? `
+                      <span class="inline-flex items-center gap-1 text-rose-800 bg-rose-50 border border-rose-300 px-2 py-0.5 rounded-full font-bold uppercase text-[9px]"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Agotado</span>
+                    ` : `
+                      <span class="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 border border-emerald-300 px-2.5 py-0.5 rounded-full font-bold uppercase text-[9px]"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>En Stock</span>
+                    `}
+                  </div>
+                </div>
+
+                <!-- FILA 1.5: DISPONIBILIDAD DE TALLAS (APARECE AL PASAR EL MOUSE) -->
+                <div class="flex items-center justify-between pt-1 border-t border-[#16243e]/10 text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span class="text-slate-500 uppercase tracking-wider text-[9px] font-semibold">Tallas Disponibles:</span>
+                  <span class="text-[#16243e] font-bold tracking-wider">XS, S, M, L, XL</span>
+                </div>
+
+                <!-- FILA 2: BOTON DE ACCION CON EL TITULO DE LA CAMISETA -->
+                <button
+                  type="button"
+                  onclick="event.stopPropagation(); openProductDetail('${p.id}')"
+                  class="w-full bg-[#16243e] hover:bg-[#FF007F] group-hover:bg-[#FF007F] text-white font-black uppercase tracking-wider py-3 px-3 rounded-2xl text-xs transition-all duration-300 shadow-md shadow-[#16243e]/20 hover:shadow-lg hover:shadow-[#FF007F]/30 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer group/btn"
+                  title="${p.name}"
+                >
+                  <span class="line-clamp-1">${p.name}</span>
+                  <svg class="w-4 h-4 shrink-0 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+              </div>
+            `;
+
+            grid.appendChild(card);
+          } catch (errCard) {
+            console.error("Error al renderizar tarjeta de producto:", p, errCard);
+          }
+        });
+      } catch (errCatalog) {
+        console.error("Error critico en renderCatalog:", errCatalog);
+      }
+    }
+
+    // ABRIR MODAL DE DETALLE DE PRODUCTO
+        // OPCION NUMERO EN PANTALONETA (AUMENTA PRECIO EN $2.00)
+    function setShortsNumberOption(hasNumber) {
+      activeShortsHasNumber = !!hasNumber;
+      updateShortsNumberUI();
+      refreshModalPrices();
+      updateDetailStageLive();
+    }
+
+    function updateShortsCustomNumber(val) {
+      activeShortsCustomNumber = val;
+      updateDetailStageLive();
+    }
+
+    function updateShortsNumberUI() {
+      const btnNo = document.getElementById("btnShortsNoNum");
+      const btnWith = document.getElementById("btnShortsWithNum");
+      const box = document.getElementById("shortsCustomNumberBox");
+      const input = document.getElementById("customShortsNumberInput");
+      if (!btnNo || !btnWith) return;
+
+      if (activeShortsHasNumber) {
+        btnWith.className = "py-1.5 px-2.5 rounded-xl border text-[11px] font-bold transition flex items-center justify-between bg-[#FF007F]/10 border-[#FF007F] text-white ring-1 ring-[#FF007F]/40 cursor-pointer";
+        btnNo.className = "py-1.5 px-2.5 rounded-xl border text-[11px] font-bold transition flex items-center justify-between bg-neutral-900/60 border-white/10 text-neutral-400 hover:border-white/30 cursor-pointer";
+        if (box) box.classList.remove("hidden");
+        if (input && !input.value && activeCustomPlayers[0] && activeCustomPlayers[0].number) {
+          input.placeholder = activeCustomPlayers[0].number;
+        }
+      } else {
+        btnNo.className = "py-1.5 px-2.5 rounded-xl border text-[11px] font-bold transition flex items-center justify-between bg-[#FF007F]/10 border-[#FF007F] text-white ring-1 ring-[#FF007F]/40 cursor-pointer";
+        btnWith.className = "py-1.5 px-2.5 rounded-xl border text-[11px] font-bold transition flex items-center justify-between bg-neutral-900/60 border-white/10 text-neutral-400 hover:border-white/30 cursor-pointer";
+        if (box) box.classList.add("hidden");
+      }
+    }
+
+    function refreshModalPrices() {
+      if (!activeModalProduct) return;
+      const p = activeModalProduct;
+      const priceShirt = (p.priceShirt || p.price || 28.00);
+      const baseKit = (p.priceKit || (p.priceShirt ? p.priceShirt + 8 : 36.00));
+      const kitWithNumber = baseKit + (activeShortsHasNumber ? SHORTS_NUMBER_EXTRA : 0);
+
+      const elShirt = document.getElementById("optPriceShirt");
+      const elKit = document.getElementById("optPriceKit");
+      if (elShirt) elShirt.innerText = `$${priceShirt.toFixed(2)}`;
+      if (elKit) elKit.innerText = `$${kitWithNumber.toFixed(2)}`;
+    }
+
+    // LISTA DE PERSONALIZACION DE JUGADORES (1 O MULTIPLES SIN RE-RENDER EN FOCUS/TYPE)
+    function renderCustomPlayersList() {
+      const container = document.getElementById("dorsalSectionContainer") || document.getElementById("customPlayersContainer");
+      if (!container) return;
+
+      const player1 = activeCustomPlayers[0] || { name: "", number: "" };
+      const safeName1 = player1.name ? player1.name.replace(/"/g, '&quot;') : "";
+      const safeNum1 = (player1.number !== undefined && player1.number !== null && player1.number !== "") 
+        ? String(player1.number).replace(/"/g, '&quot;') 
+        : "";
+
+      if (activeModalQty <= 1) {
+          // VISTA LIMPIA PARA 1 SOLA PRENDA (PERMITE CUALQUIER NUMERO: 0, 7, 10, 99, 100, ETC.)
+          container.innerHTML = `
+            <label class="text-xs font-black uppercase tracking-wider text-slate-500 block mb-2">
+              Personalizaci&oacute;n de Dorsal:
+            </label>
+            <div class="grid grid-cols-12 gap-3">
+              <div class="col-span-8">
+                <input
+                  type="text"
+                  id="customJerseyName"
+                  maxlength="14"
+                  value="${safeName1}"
+                  placeholder="Tu Nombre (Ej: CAISAPANTA)"
+                  oninput="updatePlayerDorsalValue(0, 'name', this.value)"
+                  class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-4 py-3 text-sm text-[#16243e] uppercase placeholder-slate-400 font-bold tracking-wider focus:outline-none focus:border-[#16243e] focus:bg-white shadow-sm"
+                />
+              </div>
+              <div class="col-span-4">
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  id="customJerseyNumber"
+                  maxlength="4"
+                  value="${safeNum1}"
+                  placeholder="N&uacute;m (10)"
+                  oninput="updatePlayerDorsalValue(0, 'number', this.value)"
+                  class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-4 py-3 text-sm text-[#16243e] font-mono font-black text-center focus:outline-none focus:border-[#16243e] focus:bg-white shadow-sm"
+                />
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+      // VISTA COMPACTA Y FLUIDA PARA MULTIPLES PRENDAS (> 1)
+      let rowsHtml = '';
+      activeCustomPlayers.forEach((player, idx) => {
+        const pName = player.name ? player.name.replace(/"/g, '&quot;') : "";
+        const pNum = (player.number !== undefined && player.number !== null && player.number !== "") 
+          ? String(player.number).replace(/"/g, '&quot;') 
+          : "";
+
+        rowsHtml += `
+          <div class="grid grid-cols-12 gap-1.5 items-center bg-[#f8fafc] p-1.5 rounded-lg border border-[#16243e]/15 focus-within:border-[#16243e] transition">
+            <div class="col-span-2 text-center text-[10px] font-mono font-black text-[#16243e]">
+              #${idx + 1}
+            </div>
+            <div class="col-span-7">
+              <input
+                type="text"
+                id="playerInputName_${idx}"
+                value="${pName}"
+                maxlength="14"
+                placeholder="Nombre jugador ${idx + 1}"
+                oninput="updatePlayerDorsalValue(${idx}, 'name', this.value)"
+                class="w-full bg-transparent border-0 px-1 py-0.5 text-xs text-[#16243e] uppercase placeholder-slate-400 font-bold tracking-wider focus:outline-none"
+              />
+            </div>
+            <div class="col-span-3">
+              <input
+                type="text"
+                inputmode="numeric"
+                id="playerInputNumber_${idx}"
+                value="${pNum}"
+                maxlength="4"
+                placeholder="10"
+                oninput="updatePlayerDorsalValue(${idx}, 'number', this.value)"
+                class="w-full bg-white border border-[#16243e]/20 rounded px-1 py-0.5 text-xs text-[#16243e] font-mono font-bold text-center focus:outline-none focus:border-[#16243e]"
+              />
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = `
+        <div class="flex items-center justify-between text-[10px] mb-1">
+          <label class="font-black uppercase tracking-wider text-neutral-300">
+            Personalizaci&oacute;n de los ${activeModalQty} Jugadores:
+          </label>
+          <span class="text-[9px] font-mono text-[#FF007F] font-bold">${activeModalQty} dorsales</span>
+        </div>
+        <div class="space-y-1.5 max-h-44 overflow-y-auto pr-1 no-scrollbar">
+          ${rowsHtml}
+        </div>
+      `;
+    }
+
+    function updatePlayerDorsalValue(index, field, value) {
+      if (!activeCustomPlayers[index]) {
+        activeCustomPlayers[index] = { name: "", number: "", size: activeSelectedSize || "M" };
+      }
+      activeCustomPlayers[index][field] = value;
+      activePreviewPlayerIndex = index;
+      updateDetailStageLive();
+    }
+
+    function openProductDetail(productId) {
+      const p = PRODUCTS.find(x => x.id === productId);
+      if (!p) return;
+
+      activeModalProduct = p;
+      activePurchaseOption = (currentCategory === "kits") ? "kit" : "shirt";
+      activeDetailView = "front";
+      
+      const optTitle = document.getElementById("optLabelTitle");
+      const optDesc = document.getElementById("optLabelDesc");
+      if (activePurchaseOption === "kit") {
+        if (optTitle) optTitle.textContent = "Kit Completo (Uniforme)";
+        if (optDesc) optDesc.textContent = "Camiseta titular oficial + Pantaloneta deportiva a juego";
+      } else {
+        if (optTitle) optTitle.textContent = "Solo Camiseta";
+        if (optDesc) optDesc.textContent = "Prenda titular superior Dry-Fit de alta competencia";
+      }
+      activeModalQty = 1;
+      activeShortsHasNumber = false;
+      activePreviewPlayerIndex = 0;
+
+      // Autoseleccionar primera talla disponible
+      const sizes = ["XS", "S", "M", "L", "XL"];
+      activeSelectedSize = sizes.find(s => (p.stock[s] || 0) > 0) || "M";
+      activeCustomPlayers = [
+        { name: "", number: "", size: activeSelectedSize }
+      ];
+
+      // Actualizar campos
+      document.getElementById("detailCategoryTag").innerText = p.category.toUpperCase();
+      document.getElementById("detailBadgeTag").innerText = p.badge;
+      document.getElementById("detailSkuTag").innerText = `COD: ${p.id.toUpperCase()}-PRO`;
+      document.getElementById("detailProductName").innerText = p.name;
+      document.getElementById("detailProductDesc").innerText = p.description || p.fabric;
+      document.getElementById("modalQtyDisplay").innerText = "1";
+
+      const err = document.getElementById("detailSizeError");
+      if (err) err.classList.add("hidden");
+
+      activeSelectedShortsColor = p.shortsColor || "#0a0a0c";
+      activeSelectedShortsColorName = "Oficial del Club";
+      refreshModalPrices();
+      updateShortsNumberUI();
+      renderDetailSizeChips();
+      renderShortsColorChips();
+      renderCustomPlayersList();
+      updatePurchaseOptionUI();
+      selectDetailView("front");
+
+      const shortsSection = document.getElementById("shortsColorSection");
+      if (shortsSection) {
+        if (activePurchaseOption === "kit") {
+          shortsSection.classList.remove("hidden");
+        } else {
+          shortsSection.classList.add("hidden");
+        }
+      }
+
+      const modal = document.getElementById("productDetailModal");
+      const container = document.getElementById("productDetailContainer");
+      if (modal) {
+        modal.classList.remove("hidden", "modal-backdrop-out");
+        modal.classList.add("flex", "modal-backdrop-in");
+        if (container) {
+          container.classList.remove("modal-card-out");
+          container.classList.add("modal-card-in");
+        }
+        document.body.style.overflow = "hidden";
+      }
+    }
+
+    function closeProductDetail() {
+      const modal = document.getElementById("productDetailModal");
+      const container = document.getElementById("productDetailContainer");
+      if (modal && !modal.classList.contains("hidden")) {
+        modal.classList.remove("modal-backdrop-in");
+        modal.classList.add("modal-backdrop-out");
+        if (container) {
+          container.classList.remove("modal-card-in");
+          container.classList.add("modal-card-out");
+        }
+        setTimeout(() => {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex", "modal-backdrop-out");
+          if (container) container.classList.remove("modal-card-out");
+          document.body.style.overflow = "auto";
+        }, 210);
+      }
+    }
+
+    function handleDetailBackdropClick(e) {
+      if (e.target && e.target.id === "productDetailModal") {
+        closeProductDetail();
+      }
+    }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape" || e.keyCode === 27) {
+        closeProductDetail();
+      }
+    });
+
+    function selectDetailView(viewName) {
+      activeDetailView = viewName;
+
+      ['front', 'back'].forEach(v => {
+        const btn = document.getElementById(`thumb-${v}`);
+        if (!btn) return;
+        if (v === viewName) {
+          btn.className = "thumb-btn py-1.5 px-2 rounded-xl bg-[#12131a] border border-[#FF007F] ring-2 ring-[#FF007F]/50 flex flex-col items-center gap-0.5 transition-all active:scale-95 cursor-pointer";
+          const title = btn.querySelector("span:first-child");
+          if (title) title.className = "text-[9px] font-black uppercase text-white";
+        } else {
+          btn.className = "thumb-btn py-1.5 px-2 rounded-xl bg-[#12131a] border border-white/10 hover:border-white/30 flex flex-col items-center gap-0.5 transition-all active:scale-95 cursor-pointer";
+          const title = btn.querySelector("span:first-child");
+          if (title) title.className = "text-[9px] font-black uppercase text-neutral-400";
+        }
+      });
+
+      updateDetailStageLive();
+    }
+
+    // ACTUALIZAR ESCENARIO DEL MODAL (60 FPS, SIN BORDES BLANCOS NI RECUADROS)
+    function updateDetailStageLive() {
+      const stage = document.getElementById("detailStageCanvas");
+      if (!stage || !activeModalProduct) return;
+
+      const p = activeModalProduct;
+      const previewPlayer = (activeCustomPlayers && activeCustomPlayers[activePreviewPlayerIndex])
+        ? activeCustomPlayers[activePreviewPlayerIndex]
+        : (activeCustomPlayers && activeCustomPlayers[0] ? activeCustomPlayers[0] : { name: "", number: "" });
+
+      const name = (previewPlayer.name && previewPlayer.name.trim()) 
+        ? previewPlayer.name.trim().toUpperCase() 
+        : (p.name.split(" ")[0].toUpperCase() || "NAVY SPORT");
+      const num = (previewPlayer.number !== undefined && previewPlayer.number !== null && String(previewPlayer.number).trim() !== "") 
+        ? String(previewPlayer.number).trim() 
+        : "10";
+      const shortsNum = (activeShortsCustomNumber !== undefined && activeShortsCustomNumber !== null && String(activeShortsCustomNumber).trim() !== "")
+        ? String(activeShortsCustomNumber).trim()
+        : num;
+
+      const isKit = (activePurchaseOption === "kit");
+
+      if (activeDetailView === "front") {
+        if (isKit) {
+          // VISTA UNIFORME COMPLETO: CAMISETA + PANTALONETA A JUEGO
+          stage.innerHTML = `
+            <div class="relative w-full h-full flex flex-col items-center justify-center p-1 sm:p-2 stage-animated">
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="w-52 h-52 sm:w-60 sm:h-60 rounded-full blur-3xl opacity-40" style="background: radial-gradient(circle, #FF007F 0%, ${p.glow || '#FF007F'} 45%, transparent 75%);"></div>
+              </div>
+
+              <!-- Camiseta Superior -->
+              <div class="relative z-20 w-full flex justify-center -mb-6">
+                <img
+                  src="${p.image}"
+                  alt="${p.name}"
+                  class="w-56 h-48 sm:w-64 sm:h-56 object-contain filter drop-shadow-[0_16px_30px_rgba(0,0,0,0.22)] pointer-events-none border-0 outline-none"
+                  style="border: none !important; outline: none !important;"
+                />
+              </div>
+
+              <!-- Pantaloneta a Juego (Color Seleccionado en Tiempo Real) -->
+              <div class="relative z-10 w-full flex justify-center">
+                ${renderShortsSVG(p.shortsAccent || p.glow || '#FF007F', activeSelectedShortsColor || p.shortsColor || '#0a0a0c', getShortsBadge(p), shortsNum, activeShortsHasNumber)}
+              </div>
+            </div>
+          `;
+        } else {
+          // VISTA FRENTE CAMISETA (INTEGRACION PERFECTA CON EL FONDO)
+            stage.innerHTML = `
+              <div class="relative w-full h-full flex items-center justify-center p-2 stage-animated overflow-hidden">
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div class="w-80 h-80 sm:w-[480px] sm:h-[480px] rounded-full blur-3xl opacity-35" style="background: radial-gradient(circle, #FF007F 0%, ${p.glow} 65%, transparent 100%);"></div>
+                </div>
+                <img
+                  src="${p.image}"
+                  alt="${p.name}"
+                  class="relative z-10 max-h-[92%] max-w-[92%] w-auto h-auto object-contain filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.22)] pointer-events-none select-none border-0 outline-none transform scale-115 sm:scale-120 lg:scale-125 transition-transform duration-300"
+                  style="border: none !important; outline: none !important;"
+                />
+              </div>
+            `;
+        }
+      } else if (activeDetailView === "back") {
+        if (isKit) {
+          // VISTA DORSAL ESPALDA + PANTALONETA EN KIT COMPLETO
+          stage.innerHTML = `
+            <div class="relative w-full h-full flex flex-col items-center justify-center p-1 sm:p-2 stage-animated">
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="w-52 h-52 sm:w-60 sm:h-60 rounded-full blur-2xl opacity-20" style="background: ${p.glow || p.shortsAccent || '#16243e'};"></div>
+              </div>
+
+              <!-- Camiseta Dorsal Superior -->
+              <div class="relative z-20 w-full flex justify-center -mb-5">
+                ${renderJerseyBackSVG(p.name, p.glow, p.shortsAccent, name, num)}
+              </div>
+
+              <!-- Pantaloneta a Juego (Color Seleccionado en Tiempo Real) -->
+              <div class="relative z-10 w-full flex justify-center">
+                ${renderShortsSVG(p.shortsAccent || p.glow || '#FF007F', activeSelectedShortsColor || p.shortsColor || '#0a0a0c', getShortsBadge(p), shortsNum, activeShortsHasNumber)}
+              </div>
+            </div>
+          `;
+        } else {
+          // VISTA DORSAL ESPALDA PERSONALIZADA (SILUETA REAL DE CAMISETA CON COLORES OFICIALES)
+          stage.innerHTML = `
+            <div class="relative w-full h-full flex flex-col items-center justify-center p-1 sm:p-2 stage-animated">
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="w-44 h-44 sm:w-52 sm:h-52 rounded-full blur-2xl opacity-20" style="background: ${p.glow || p.shortsAccent || '#16243e'};"></div>
+              </div>
+              
+              <div class="relative z-10 w-full flex items-center justify-center">
+                ${renderJerseyBackSVG(p.name, p.glow, p.shortsAccent, name, num)}
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function handleDorsalChange() {
+      updateDetailStageLive();
+    }
+
+    // SELECCIONAR MODALIDAD DE COMPRA (SOLO CAMISETA VS UNIFORME COMPLETO)
+    function selectPurchaseOption(opt) {
+      activePurchaseOption = opt;
+      updatePurchaseOptionUI();
+      refreshModalPrices();
+
+      const shortsSection = document.getElementById("shortsColorSection");
+      if (opt === "shirt") {
+        if (shortsSection) shortsSection.classList.add("hidden");
+      } else if (opt === "kit") {
+        if (shortsSection) shortsSection.classList.remove("hidden");
+      }
+      updateDetailStageLive();
+    }
+
+    function updatePurchaseOptionUI() {
+      const cardShirt = document.getElementById("optCardShirt");
+      const optTitle = document.getElementById("optLabelTitle");
+      const optDesc = document.getElementById("optLabelDesc");
+      if (cardShirt) {
+        cardShirt.className = "rounded-2xl p-3 border transition-all text-left flex items-center justify-between border-[#16243e]/20 bg-[#f8fafc] shadow-sm";
+      }
+      const thumbSub = document.getElementById("thumbFrontSub");
+      if (activePurchaseOption === "kit") {
+        if (optTitle) optTitle.textContent = "Kit Completo (Uniforme)";
+        if (optDesc) optDesc.textContent = "Camiseta titular oficial + Pantaloneta deportiva a juego";
+        if (thumbSub) thumbSub.textContent = "+ Pantaloneta";
+      } else {
+        if (optTitle) optTitle.textContent = "Camiseta Oficial";
+        if (optDesc) optDesc.textContent = "Prenda titular superior Dry-Fit de alta competencia";
+        if (thumbSub) thumbSub.textContent = "Camiseta";
+      }
+    }
+
+    // RENDERIZAR CHIPS DE TALLAS
+    function renderDetailSizeChips() {
+      const container = document.getElementById("detailSizeChips");
+      if (!container || !activeModalProduct) return;
+      container.innerHTML = "";
+
+      const sizes = ["XS", "S", "M", "L", "XL"];
+      sizes.forEach(sz => {
+        const qty = activeModalProduct.stock[sz] || 0;
+        const isSelected = (sz === activeSelectedSize);
+        const isOutOfStock = (qty <= 0);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.disabled = isOutOfStock;
+        btn.onclick = () => selectSize(sz);
+
+        if (isOutOfStock) {
+            btn.className = "py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-400 text-sm font-bold line-through cursor-not-allowed text-center";
+          } else if (isSelected) {
+            btn.className = "py-3 rounded-xl border border-[#16243e] bg-[#16243e] text-white text-sm font-black shadow-md shadow-[#16243e]/30 scale-105 transition-all text-center";
+          } else {
+            btn.className = "py-3 rounded-xl border border-[#16243e]/20 bg-[#f8fafc] hover:bg-[#f1f5f9] text-[#16243e] text-sm font-bold hover:border-[#16243e] transition-all active:scale-95 text-center";
+          }
+
+        btn.innerText = sz;
+        container.appendChild(btn);
+      });
+
+      const status = document.getElementById("detailStockStatusText");
+      if (status && activeSelectedSize) {
+        const stockQty = activeModalProduct.stock[activeSelectedSize] || 0;
+        status.innerText = `Talla ${activeSelectedSize}: ${stockQty} disponibles`;
+      }
+    }
+
+    function selectSize(sz) {
+      activeSelectedSize = sz;
+      const err = document.getElementById("detailSizeError");
+      if (err) err.classList.add("hidden");
+      renderDetailSizeChips();
+      if (activeCustomPlayers && activeCustomPlayers.length > 0) {
+        activeCustomPlayers.forEach(p => {
+          if (!p.sizeCustomized) {
+            p.size = sz;
+          }
+        });
+        renderCustomPlayersList();
+      }
+    }
+
+    // RENDERIZAR SELECTOR DE COLOR DE PANTALONETA MULTIPLE (SOLICITUD DE USUARIO)
+    function renderShortsColorChips() {
+      const container = document.getElementById("shortsColorChips");
+      const label = document.getElementById("selectedShortsColorLabel");
+      if (!container || !activeModalProduct) return;
+      container.innerHTML = "";
+
+      const p = activeModalProduct;
+      if (label) label.innerText = activeSelectedShortsColorName;
+
+      SHORTS_COLOR_PALETTE.forEach(c => {
+        const effectiveHex = (c.id === "club") ? (p.shortsColor || "#0a0a0c") : c.hex;
+        const isSelected = (activeSelectedShortsColor === effectiveHex || (c.id === "club" && activeSelectedShortsColor === (p.shortsColor || "#0a0a0c")));
+
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.onclick = () => selectShortsColor(effectiveHex, c.name);
+        chip.title = c.name;
+
+        if (isSelected) {
+          chip.className = "flex flex-col items-center gap-0.5 p-1 rounded-lg bg-neutral-900 border-2 border-[#FF007F] shadow-[0_0_10px_rgba(255,0,127,0.45)] scale-105 transition-all";
+        } else {
+          chip.className = "flex flex-col items-center gap-0.5 p-1 rounded-lg bg-neutral-900/60 border border-white/10 hover:border-white/30 transition-all active:scale-95";
+        }
+
+        chip.innerHTML = 
+          '<span class="w-4 h-4 sm:w-5 sm:h-5 rounded-md ' + c.border + ' shadow-inner flex items-center justify-center relative overflow-hidden" style="background-color: ' + effectiveHex + ';">' +
+            (isSelected ? '<span class="text-[8px] font-black drop-shadow text-white">&#10003;</span>' : '') +
+          '</span>' +
+          '<span class="text-[7.5px] font-bold tracking-tight uppercase truncate max-w-full ' + (isSelected ? 'text-white' : 'text-neutral-400') + '">' +
+            (c.id === 'club' ? 'Club' : c.name.split(' ')[0]) +
+          '</span>';
+
+        container.appendChild(chip);
+      });
+    }
+
+    function selectShortsColor(hex, name) {
+      activeSelectedShortsColor = hex;
+      activeSelectedShortsColorName = name;
+
+      // Si esta en 'shirt', cambiar automaticamente a 'kit' para que el usuario previsualice la pantaloneta
+      if (activePurchaseOption !== "kit") {
+        selectPurchaseOption("kit");
+      }
+      updateDetailStageLive();
+
+      renderShortsColorChips();
+    }
+
+    // AGREGAR AL CARRITO DESDE EL MODAL
+    function addToCartFromModal() {
+      if (!activeSelectedSize) {
+        const err = document.getElementById("detailSizeError");
+        if (err) err.classList.remove("hidden");
+        return;
+      }
+      const p = activeModalProduct;
+      const isKit = (activePurchaseOption === "kit");
+      const basePrice = isKit ? (p.priceKit || (p.priceShirt ? p.priceShirt + 8 : 36.00)) : (p.priceShirt || p.price || 28.00);
+      const extraShorts = (isKit && activeShortsHasNumber) ? SHORTS_NUMBER_EXTRA : 0;
+      const unitPrice = basePrice + extraShorts;
+
+      const optLabel = isKit 
+        ? ("Uniforme Completo (Pantaloneta " + activeSelectedShortsColorName + (activeShortsHasNumber ? " con numero" : " sin numero") + ")") 
+        : "Solo Camiseta";
+
+      cart.push({
+        id: p.id,
+        name: p.name,
+        image: p.image,
+        size: activeSelectedSize,
+        option: optLabel,
+        price: unitPrice,
+        qty: activeModalQty,
+        isKit: isKit,
+        shortsColorName: isKit ? activeSelectedShortsColorName : null,
+        shortsHasNumber: isKit ? activeShortsHasNumber : false,
+        players: JSON.parse(JSON.stringify(activeCustomPlayers))
+      });
+
+      renderCartItems();
+      openCartDrawer();
+      closeProductDetail();
+    }
+
+    function adjustModalQty(delta) {
+      activeModalQty = Math.max(1, activeModalQty + delta);
+      const display = document.getElementById("modalQtyDisplay");
+      if (display) display.innerText = activeModalQty;
+
+      while (activeCustomPlayers.length < activeModalQty) {
+        activeCustomPlayers.push({
+          name: "",
+          number: "",
+          size: activeSelectedSize || "M"
+        });
+      }
+      if (activeCustomPlayers.length > activeModalQty) {
+        activeCustomPlayers = activeCustomPlayers.slice(0, activeModalQty);
+      }
+      if (activePreviewPlayerIndex >= activeModalQty) {
+        activePreviewPlayerIndex = activeModalQty - 1;
+      }
+
+      renderCustomPlayersList();
+      updateDetailStageLive();
+    }
+
+    // BOTON: "COMPRAR POR WHATSAPP" DIRECTO CON CONFIRMACION INTERMEDIA (2S)
+    function buyDirectWhatsApp() {
+      if (!activeSelectedSize) {
+        const err = document.getElementById("detailSizeError");
+        if (err) err.classList.remove("hidden");
+        return;
+      }
+
+      const p = activeModalProduct;
+      const isKit = (activePurchaseOption === "kit");
+      const basePrice = isKit ? (p.priceKit || (p.priceShirt ? p.priceShirt + 8 : 36.00)) : (p.priceShirt || p.price || 28.00);
+      const extraShorts = (isKit && activeShortsHasNumber) ? SHORTS_NUMBER_EXTRA : 0;
+      const unitPrice = basePrice + extraShorts;
+      const total = unitPrice * activeModalQty;
+
+      const optionLabel = isKit 
+        ? ("Uniforme Completo (Camiseta + Pantaloneta " + activeSelectedShortsColorName + (activeShortsHasNumber ? " - Con numero estampado +$2.00" : " - Sin numero") + ")") 
+        : "Solo Camiseta";
+
+      let dorsalesMsg = "";
+      if (activeCustomPlayers.length === 1) {
+        const pl = activeCustomPlayers[0];
+        const n = (pl.name && pl.name.trim()) ? pl.name.trim().toUpperCase() : "Sin dorsal";
+        const num = (pl.number !== undefined && pl.number !== null && String(pl.number).trim() !== "") ? String(pl.number).trim() : "10";
+        const shortsNumInfo = (isKit && activeShortsHasNumber)
+          ? (" | Num Pantaloneta: " + ((activeShortsCustomNumber && activeShortsCustomNumber.trim()) ? activeShortsCustomNumber.trim() : num))
+          : "";
+        dorsalesMsg = "Dorsal: Nombre: " + n + " | Numero: " + num + " | Talla: " + (pl.size || activeSelectedSize) + shortsNumInfo;
+      } else {
+        dorsalesMsg = "Detalle de Dorsales (" + activeCustomPlayers.length + " jugadores):\n" +
+          activeCustomPlayers.map((pl, idx) => {
+            const n = (pl.name && pl.name.trim()) ? pl.name.trim().toUpperCase() : "Sin nombre";
+            const num = (pl.number && String(pl.number).trim()) ? ("#" + pl.number) : "S/N";
+            return "  " + (idx + 1) + ". " + n + " " + num + " (Talla: " + (pl.size || activeSelectedSize) + ")";
+          }).join("\n");
+      }
+
+      // Mensaje estructurado de WhatsApp
+      const msg = 
+        `Hola NAVY SPORT! Deseo comprar el siguiente pedido:\n\n` +
+        `Prenda: ${p.name}\n` +
+        `Modalidad: ${optionLabel}\n` +
+        `Cantidad: ${activeModalQty} unidad(es)\n` +
+        `${dorsalesMsg}\n\n` +
+        `Total: $${total.toFixed(2)}\n\n` +
+        `Por favor confirmen la disponibilidad y datos de pago. Muchas gracias!`;
+
+      const whatsappUrl = `https://wa.me/593998765432?text=${encodeURIComponent(msg)}`;
+
+      // Pantalla de confirmacion de 2 segundos antes de redirigir
+      const confirmModal = document.getElementById("quotationConfirmModal");
+      const pBar = document.getElementById("confirmProgressBar");
+
+      if (confirmModal) {
+        confirmModal.classList.remove("hidden");
+        confirmModal.classList.add("flex");
+
+        if (pBar) {
+          pBar.style.width = "0%";
+          setTimeout(() => { pBar.style.width = "100%"; }, 50);
+        }
+
+        setTimeout(() => {
+          confirmModal.classList.add("hidden");
+          confirmModal.classList.remove("flex");
+          window.open(whatsappUrl, "_blank");
+        }, 2000);
+      } else {
+        window.open(whatsappUrl, "_blank");
+      }
+    }
+
+    // ===============================================================
+    // CATEGORIAS DINAMICAS Y FILTRADO LATERAL
+    // ===============================================================
+    const DEFAULT_CATEGORIES = [
+      { id: "nacional", name: "Clubes Nacionales", badge: "NACIONAL", color: "#eab308" },
+      { id: "internacional", name: "Clubes Internacionales", badge: "CLUBES", color: "#3b82f6" },
+      { id: "buzos", name: "Buzos", badge: "BUZOS", color: "#06b6d4" },
+      { id: "uniformes", name: "Uniformes Completos", badge: "UNIFORMES", color: "#FF007F" },
+      { id: "kits", name: "Uniformes Completos", badge: "UNIFORMES", color: "#FF007F" },
+      { id: "liquidacion", name: "Liquidación en Stock", badge: "LIQUIDACIÓN", color: "#ef4444" }
+    ];
+
+    function loadCategories() {
+      try {
+        const saved = localStorage.getItem("navy_sport_categories_v1");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const map = new Map();
+            DEFAULT_CATEGORIES.forEach(c => map.set(c.id, c));
+            parsed.forEach(c => map.set(c.id, c));
+            return Array.from(map.values());
+          }
+        }
+      } catch(e) {}
+      return [...DEFAULT_CATEGORIES];
+    }
+
+        function renderSidebarCategories() {
+      const nav = document.getElementById("sidebarCategoryNav");
+      if (!nav) return;
+
+      const categories = [
+        { id: "all", name: "Ver Todo", tag: "TODOS" },
+        { id: "nacional", name: "Clubes Nacionales", tag: "NACIONAL" },
+        { id: "internacional", name: "Clubes Internacionales", tag: "CLUBES" },
+        { id: "buzos", name: "Buzos", tag: "BUZOS" },
+        { id: "uniformes", name: "Uniformes Completos", tag: "UNIFORMES" },
+        { id: "liquidacion", name: "Liquidaci&oacute;n en Stock", tag: "LIQUIDACI&Oacute;N" }
+      ];
+
+      let html = "";
+      categories.forEach(cat => {
+        const isActive = (currentCategory === cat.id);
+        html += `
+          <button
+            type="button"
+            onclick="setCategory('${cat.id}'); closeCategoryDrawer();"
+            class="flex items-center justify-between w-full py-2 px-3 rounded-xl transition-all text-left ${isActive ? 'bg-white/15 text-white font-black pl-4 border-l-4 border-[#FF007F]' : 'text-slate-300 hover:text-white hover:bg-white/5 hover:pl-4'}"
+          >
+            <span class="text-sm sm:text-base">${cat.name}</span>
+            <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full ${isActive ? 'bg-[#FF007F] text-white' : 'bg-white/10 text-slate-300'} uppercase">${cat.tag}</span>
+          </button>
+        `;
+      });
+
+
+
+      nav.innerHTML = html;
+    }
+
+    // CONTROL DEL DRAWER / MENU DESPLEGABLE DE CATEGORIAS
+    function openCategoryDrawer() {
+      const modal = document.getElementById('categoryDrawerModal');
+      const backdrop = document.getElementById('categoryDrawerBackdrop');
+      const content = document.getElementById('categoryDrawerContent');
+      if (!modal || !backdrop || !content) return;
+
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      modal.classList.add('pointer-events-auto', 'opacity-100');
+      backdrop.classList.remove('pointer-events-none', 'opacity-0');
+      backdrop.classList.add('pointer-events-auto', 'opacity-100');
+      content.classList.remove('pointer-events-none', '-translate-x-full');
+      content.classList.add('pointer-events-auto', 'translate-x-0');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCategoryDrawer() {
+      const modal = document.getElementById('categoryDrawerModal');
+      const backdrop = document.getElementById('categoryDrawerBackdrop');
+      const content = document.getElementById('categoryDrawerContent');
+      if (!modal || !backdrop || !content) return;
+
+      backdrop.classList.remove('pointer-events-auto', 'opacity-100');
+      backdrop.classList.add('pointer-events-none', 'opacity-0');
+      content.classList.remove('pointer-events-auto', 'translate-x-0');
+      content.classList.add('pointer-events-none', '-translate-x-full');
+      setTimeout(() => {
+        modal.classList.remove('pointer-events-auto', 'opacity-100');
+        modal.classList.add('pointer-events-none', 'opacity-0');
+      }, 300);
+      document.body.style.overflow = '';
+    }
+
+    // NAVEGACION POR CATEGORIAS LATERALES
+    function setCategory(cat) {
+      currentCategory = cat;
+      renderSidebarCategories();
+      renderCatalog();
+      closeCategoryDrawer();
+      const badge = document.getElementById("activeCategoryBadge");
+      if (badge) {
+          if (cat === "all") {
+            badge.textContent = "Ver Todo";
+          } else if (cat === "nacional") {
+            badge.textContent = "Clubes Nacionales";
+          } else if (cat === "internacional" || cat === "clubes") {
+            badge.textContent = "Clubes Internacionales";
+          } else if (cat === "buzos") {
+            badge.textContent = "Buzos";
+          } else if (cat === "uniformes" || cat === "kits") {
+            badge.textContent = "Uniformes Completos";
+          } else if (cat === "liquidacion") {
+            badge.textContent = "Liquidación en Stock";
+          } else {
+            const found = loadCategories().find(c => c.id === cat);
+            badge.textContent = found ? found.name : cat.toUpperCase();
+          }
+        }
+      }
+
+    // FILTROS TECNICOS
+    function setSleeveFilter(type) {
+      currentSleeveFilter = type;
+      ['all', 'corta', 'larga'].forEach(s => {
+        const btn = document.getElementById(`sleeve-${s}`);
+        if (!btn) return;
+        if (s === type) {
+          btn.className = "py-1.5 rounded-xl border border-[#FF007F] bg-[#FF007F]/20 text-white font-bold transition-all text-center";
+        } else {
+          btn.className = "py-1.5 rounded-xl border border-white/10 bg-neutral-900 text-neutral-400 hover:text-white transition-all text-center";
+        }
+      });
+      renderCatalog();
+    window.addEventListener('DOMContentLoaded', renderCatalog);
+    }
+
+    function setFabricFilter(type) {
+      currentFabricFilter = type;
+      ['all', 'dryfit', 'spandex', 'retro'].forEach(f => {
+        const btn = document.getElementById(`fabric-${f}`);
+        if (!btn) return;
+        if (f === type) {
+          btn.className = "text-left px-3 py-1.5 rounded-xl border border-[#FF007F] bg-[#FF007F]/20 text-white font-bold transition-all";
+        } else {
+          btn.className = "text-left px-3 py-1.5 rounded-xl border border-white/10 bg-neutral-900 text-neutral-400 hover:text-white font-semibold transition-all";
+        }
+      });
+      renderCatalog();
+    window.addEventListener('DOMContentLoaded', renderCatalog);
+    }
+
+    // BUSCADOR EN VIVO
+    function handleSearchInput(val) {
+      searchQuery = val.trim();
+      const clearBtn = document.getElementById("clearSearchBtn");
+      if (clearBtn) {
+        if (searchQuery.length > 0) clearBtn.classList.remove("hidden");
+        else clearBtn.classList.add("hidden");
+      }
+      renderCatalog();
+    window.addEventListener('DOMContentLoaded', renderCatalog);
+    }
+
+    function clearSearch() {
+      const inp = document.getElementById("catalogSearchInput");
+      if (inp) inp.value = "";
+      searchQuery = "";
+      const clearBtn = document.getElementById("clearSearchBtn");
+      if (clearBtn) clearBtn.classList.add("hidden");
+      renderCatalog();
+    window.addEventListener('DOMContentLoaded', renderCatalog);
+    }
+
+    function handleSortChange(val) {
+      sortMode = val;
+      renderCatalog();
+    window.addEventListener('DOMContentLoaded', renderCatalog);
+    }
+
+    function showCatalogView() {
+      const mainHeader = document.getElementById("mainHeader");
+      if (mainHeader) mainHeader.classList.remove("hidden");
+      const landing = document.getElementById("landingView");
+      const catalog = document.getElementById("catalogView");
+      const searchContainer = document.getElementById("headerSearchContainer");
+      if (searchContainer) searchContainer.classList.remove("hidden");
+      if (landing) landing.classList.add("hidden");
+      if (catalog) {
+        catalog.classList.remove("hidden");
+        loadMainStoreBanner();
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+      updateNavActiveState("catalog");
+    }
+
+    function showLandingView() {
+      const mainHeader = document.getElementById("mainHeader");
+      if (mainHeader) mainHeader.classList.add("hidden");
+      const landing = document.getElementById("landingView");
+      const catalog = document.getElementById("catalogView");
+      const searchContainer = document.getElementById("headerSearchContainer");
+      if (searchContainer) searchContainer.classList.add("hidden");
+      if (catalog) catalog.classList.add("hidden");
+      if (landing) {
+        landing.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+      closeCategoryDrawer();
+      updateNavActiveState("lookbook");
+    }
+
+    function scrollToCatalog() {
+      showCatalogView();
+    }
+
+    function updateNavActiveState(view) {
+      const navLookbook = document.getElementById("navLookbookBtn");
+      const navCatalog = document.getElementById("navCatalogBtn");
+      if (view === "catalog") {
+        if (navCatalog) {
+          navCatalog.style.backgroundColor = "#ffffff";
+          navCatalog.style.color = "#16243e";
+          navCatalog.classList.add("shadow-md");
+        }
+        if (navLookbook) {
+          navLookbook.style.backgroundColor = "transparent";
+          navLookbook.style.color = "rgba(255, 255, 255, 0.85)";
+          navLookbook.classList.remove("shadow-md");
+        }
+      } else {
+        if (navLookbook) {
+          navLookbook.style.backgroundColor = "#ffffff";
+          navLookbook.style.color = "#16243e";
+          navLookbook.classList.add("shadow-md");
+        }
+        if (navCatalog) {
+          navCatalog.style.backgroundColor = "transparent";
+          navCatalog.style.color = "rgba(255, 255, 255, 0.85)";
+          navCatalog.classList.remove("shadow-md");
+        }
+      }
+    }
+
+    // Actualizar indicador activo del navbar segun la posicion del scroll
+    window.addEventListener("scroll", function() {
+      const catalog = document.getElementById("catalogView");
+      if (catalog) {
+        const rect = catalog.getBoundingClientRect();
+        if (rect.top <= 250) {
+          updateNavActiveState("catalog");
+        } else {
+          updateNavActiveState("lookbook");
+        }
+      }
+    });
+
+    function openProductFromLookbook(productId) {
+      showCatalogView();
+      setTimeout(function() {
+        openProductDetail(productId);
+      }, 50);
+    }
+
+    // CARRITO DE COMPRAS
+    function openCartDrawer() {
+      const drawer = document.getElementById("cartDrawer");
+      const backdrop = document.getElementById("cartDrawerBackdrop");
+      renderCartItems();
+      if (backdrop) backdrop.classList.remove("hidden");
+      if (drawer) drawer.classList.remove("translate-x-full");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeCartDrawer() {
+      const drawer = document.getElementById("cartDrawer");
+      const backdrop = document.getElementById("cartDrawerBackdrop");
+      if (drawer) drawer.classList.add("translate-x-full");
+      if (backdrop) backdrop.classList.add("hidden");
+      document.body.style.overflow = "auto";
+    }
+
+    function setSearchFilter(term) {
+      const input = document.getElementById("catalogSearchInput");
+      if (input) {
+        input.value = term;
+        handleSearchInput(term);
+        const clearBtn = document.getElementById("clearSearchBtn");
+        if (clearBtn) clearBtn.classList.remove("hidden");
+      }
+    }
+
+    function renderCartItems() {
+      const container = document.getElementById("cartItemsContainer");
+      const totalEl = document.getElementById("cartTotalPrice");
+      const badge = document.getElementById("headerCartCount");
+      const badgeMobile = document.getElementById("headerCartCountMobile");
+      const headerTotal = document.getElementById("headerCartTotal");
+      if (!container) return;
+
+      container.innerHTML = "";
+      const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      const totalMoney = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      
+      if (badge) badge.innerText = totalCount;
+      if (badgeMobile) badgeMobile.innerText = totalCount;
+      if (headerTotal) headerTotal.innerText = `$${totalMoney.toFixed(2)}`;
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center space-y-2">
+            <svg class="w-10 h-10 text-neutral-600 mx-auto" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <p class="text-xs text-neutral-400 font-bold uppercase">Tu carrito esta vacio</p>
+            <p class="text-[10px] text-neutral-500">Agrega uniformes desde la tienda para cotizar.</p>
+          </div>
+        `;
+        if (totalEl) totalEl.innerText = "$0.00";
+        return;
+      }
+
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price * item.qty;
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between p-3 rounded-2xl bg-[#f8fafc] border border-[#16243e]/12 text-xs shadow-sm";
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <img src="${item.image}" alt="${item.name}" class="w-10 h-10 object-contain border-0" />
+            <div>
+              <div class="font-bold text-[#16243e] leading-tight">${item.name}</div>
+              <div class="text-[10px] text-neutral-400">${item.option} &bull; Talla: ${item.size}</div>
+              <div class="text-xs font-mono font-bold text-[#16243e]">$${item.price.toFixed(2)} x ${item.qty}</div>
+            </div>
+          </div>
+          <button onclick="removeCartItem(${index})" class="text-neutral-500 hover:text-red-400 p-1.5 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        `;
+        container.appendChild(row);
+      });
+
+      if (totalEl) totalEl.innerText = `$${total.toFixed(2)}`;
+    }
+
+    function removeCartItem(idx) {
+      cart.splice(idx, 1);
+      renderCartItems();
+    }
+
+    function checkoutCartWhatsApp() {
+      if (cart.length === 0) return;
+
+      let msg = "Hola NAVY SPORT! Deseo cotizar los siguientes uniformes de mi carrito:\n\n";
+      let total = 0;
+      cart.forEach((item, i) => {
+        const sub = item.price * item.qty;
+        total += sub;
+        msg += `${i + 1}. ${item.name} (${item.option}) - Talla: ${item.size} - Cant: ${item.qty} - $${sub.toFixed(2)}\n`;
+      });
+      msg += `\nTotal Estimado: $${total.toFixed(2)}\nPor favor confirmen la disponibilidad y entrega.`;
+
+      const whatsappUrl = `https://wa.me/593998765432?text=${encodeURIComponent(msg)}`;
+      window.open(whatsappUrl, "_blank");
+    }
+
+    // CARGAR PRODUCTOS E INVENTARIO DESDE LOCALSTORAGE (MIGRACION INTELIGENTE)
+    function loadLiveProducts() {
+      try {
+        const savedProducts = localStorage.getItem("navy_sport_products_list");
+        if (savedProducts) {
+          try {
+            const parsed = JSON.parse(savedProducts);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const merged = [...parsed];
+              DEFAULT_PRODUCTS.forEach(dp => {
+                const existing = merged.find(p => p.id === dp.id);
+                if (!existing) {
+                  merged.push(JSON.parse(JSON.stringify(dp)));
+                } else {
+                  // Sincronizar propiedades criticas
+                  existing.image = dp.image;
+                  existing.glow = dp.glow || '#FF007F';
+                  existing.badge = dp.badge || 'OFICIAL';
+                  existing.name = dp.name || existing.name;
+                  existing.category = dp.category || 'nacional';
+                  existing.priceShirt = Number(existing.priceShirt || dp.priceShirt || dp.price || 28.00);
+                  existing.priceKit = Number(existing.priceKit || dp.priceKit || (existing.priceShirt + 8.00));
+                  existing.price = existing.priceShirt;
+                  existing.shortsColor = existing.shortsColor || dp.shortsColor || '#090a0f';
+                  existing.shortsAccent = existing.shortsAccent || dp.shortsAccent || '#ffffff';
+                  existing.badgeText = existing.badgeText || dp.badgeText || 'NVS';
+                  if (!existing.stock || typeof existing.stock !== 'object') {
+                    existing.stock = JSON.parse(JSON.stringify(dp.stock || { "XS": 5, "S": 8, "M": 12, "L": 10, "XL": 4 }));
+                  }
+                }
+              });
+              // Filtrar posibles elementos nulos o danados
+              PRODUCTS = merged.filter(p => p && p.id && p.name && p.id !== "cam-03");
+              localStorage.setItem("navy_sport_products_list", JSON.stringify(PRODUCTS));
+            } else {
+              PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+              localStorage.setItem("navy_sport_products_list", JSON.stringify(PRODUCTS));
+            }
+          } catch(e) {
+            PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+          }
+        } else {
+          PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+          localStorage.setItem("navy_sport_products_list", JSON.stringify(DEFAULT_PRODUCTS));
+        }
+
+        const savedStock = localStorage.getItem("navy_sport_inventory_db");
+        if (savedStock) {
+          try {
+            const parsedStock = JSON.parse(savedStock);
+            if (parsedStock && typeof parsedStock === 'object') {
+              PRODUCTS.forEach(p => {
+                if (parsedStock[p.id] && typeof parsedStock[p.id] === 'object') {
+                  p.stock = parsedStock[p.id];
+                  if (p.stock["Nino"] !== undefined && p.stock["XS"] === undefined) {
+                    p.stock["XS"] = p.stock["Nino"];
+                    delete p.stock["Nino"];
+                  }
+                }
+              });
+            }
+          } catch (eStock) {
+            console.warn("Error leyendo stock:", eStock);
+          }
+        }
+
+        // Validacion final: asegurar que CADA producto tenga stock valido
+        PRODUCTS.forEach(p => {
+          if (!p.stock || typeof p.stock !== 'object') {
+            const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
+            p.stock = dp && dp.stock ? JSON.parse(JSON.stringify(dp.stock)) : { "XS": 5, "S": 8, "M": 12, "L": 10, "XL": 4 };
+          }
+        });
+      } catch (e) {
+        console.warn("Error cargando inventario en vivo:", e);
+        PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+      }
+    }
+
+        // CONTROL DEL PRELOADER DE BIENVENIDA NAVY SPORT
+    function startNavyPreloader() {}
+    function initClientApp() {
+      loadLiveProducts();
+      renderSidebarCategories();
+      renderCatalog();
+    window.addEventListener('DOMContentLoaded', renderCatalog);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initClientApp);
+    } else {
+      initClientApp();
+    }
+  </script>
+</body>
+</html>
+
+
+
