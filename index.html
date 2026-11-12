@@ -1623,12 +1623,12 @@
                 <!-- FILA 1: PRECIO Y DISPONIBILIDAD -->
                 <div class="space-y-1">
                   <div class="flex items-baseline justify-between gap-3">
-                    <span class="text-xs font-black uppercase text-slate-500 tracking-wider">${currentCategory === 'kits' ? 'Kit Completo:' : 'Solo Camiseta:'}</span>
+                    <span class="text-xs font-black uppercase text-slate-500 tracking-wider">${(currentCategory === 'buzos' || p.category === 'buzos' || (p.name && p.name.toLowerCase().includes('buzo'))) ? 'Solo Buzo:' : (currentCategory === 'kits' ? 'Kit Completo:' : 'Solo Camiseta:')}</span>
                     <span class="text-base sm:text-lg font-black text-[#16243e] shrink-0 font-mono">$${(currentCategory === 'kits' ? (p.priceKit || (p.priceShirt ? p.priceShirt + 8 : 36.00)) : (p.priceShirt || p.price || 28.00)).toFixed(2)}</span>
                   </div>
                   
                   <div class="flex items-center justify-between text-[10px]">
-                    <span class="font-medium text-slate-500">${currentCategory === 'kits' ? 'Camiseta + Pantaloneta' : 'Prenda Titular Oficial'}</span>
+                    <span class="font-medium text-slate-500">${(currentCategory === 'buzos' || p.category === 'buzos' || (p.name && p.name.toLowerCase().includes('buzo'))) ? 'Buzo Oficial Térmico' : (currentCategory === 'kits' ? 'Camiseta + Pantaloneta' : 'Prenda Titular Oficial')}</span>
                     ${isOutOfStock ? `
                       <span class="inline-flex items-center gap-1 text-rose-800 bg-rose-50 border border-rose-300 px-2 py-0.5 rounded-full font-bold uppercase text-[9px]"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Agotado</span>
                     ` : `
@@ -1925,7 +1925,7 @@
         if (optTitle) optTitle.textContent = "Kit Completo (Uniforme)";
         if (optDesc) optDesc.textContent = "Camiseta titular oficial + Pantaloneta deportiva a juego";
       } else {
-        if (optTitle) optTitle.textContent = "Solo Camiseta";
+        if (optTitle) optTitle.textContent = (activeModalProduct && (activeModalProduct.category === 'buzos' || (activeModalProduct.name && activeModalProduct.name.toLowerCase().includes('buzo')))) ? "Solo Buzo" : "Solo Camiseta";
         if (optDesc) optDesc.textContent = "Prenda titular superior Dry-Fit de alta competencia";
       }
       activeModalQty = 1;
