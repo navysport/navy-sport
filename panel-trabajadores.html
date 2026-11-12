@@ -577,16 +577,10 @@
                         <span class="text-xs font-black">+</span> Nueva Categor&iacute;a
                       </button>
                     </div>
-                    <select
-                      id="wireframeCategory"
-                      onchange="handleWireframeCategoryChange(this.value)"
-                      class="w-full bg-[#f8fafc] border border-[#16243e]/20 focus:border-[#16243e] rounded-2xl px-4 py-3 text-sm text-[#16243e] focus:outline-none focus:ring-1 focus:ring-[#16243e] focus:bg-white transition font-sans cursor-pointer shadow-sm"
-                    >
-                      <option value="nacional">Liga Nacional (Ecuador)</option>
-                      <option value="internacional">Internacionales (Clubes &amp; Selecciones)</option>
-                      <option value="retro">Coleccion Retro (Historicas)</option>
-                      <option value="__add_new__" class="text-[#16243e] font-bold bg-white">+ AGREGAR NUEVA CATEGOR&Iacute;A...</option>
-                    </select>
+                    <div id="wireframeCategoriesChips" class="grid grid-cols-2 gap-1.5 p-2 bg-[#f8fafc] border border-[#16243e]/20 rounded-2xl min-h-[50px] max-h-36 overflow-y-auto">
+                      <!-- Chips dinamicos de categorias en creacion -->
+                    </div>
+                    <input type="hidden" id="wireframeCategory" value="nacional" />
                   </div>
                   <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-[#16243e] mb-1.5">Precio de venta*</label>
@@ -1376,15 +1370,43 @@
                 </div>
               </div>
 
-              <!-- COLUMNA DERECHA: VISUALIZACION (UNICO ELEMENTO CON SCROLL) -->
-              <div class="xl:col-span-8 space-y-2 min-w-0 flex flex-col h-full min-h-0 overflow-hidden">
-                <div class="shrink-0 flex items-center justify-between border-b border-slate-100 pb-2">
-                  <span class="text-xs font-black uppercase tracking-widest text-[#16243e] font-mono">VISUALIZACI&Oacute;N</span>
-                  <span id="invVisualFilterLabel" class="text-[10px] text-neutral-400 font-mono"></span>
+              <!-- COLUMNA DERECHA: VISUALIZACION (CON BUSCADOR EN VIVO Y SCROLL) -->
+              <div class="xl:col-span-8 space-y-2.5 min-w-0 flex flex-col h-full min-h-0 overflow-hidden">
+                <div class="shrink-0 space-y-2 pb-1 border-b border-slate-100">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-black uppercase tracking-widest text-[#16243e] font-mono">VISUALIZACI&Oacute;N DE PRENDAS</span>
+                      <span id="invSearchMatchesBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700"></span>
+                    </div>
+                    <span id="invVisualFilterLabel" class="text-[10px] text-slate-400 font-mono"></span>
+                  </div>
+
+                  <!-- BUSCADOR EN VIVO DE PRENDAS EN INVENTARIO -->
+                  <div class="relative">
+                    <span class="absolute left-3 top-2.5 text-slate-400 pointer-events-none">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </span>
+                    <input
+                      type="text"
+                      id="inventorySearchInput"
+                      placeholder="Buscar prenda por nombre, club, selección o categoría (ej: Ecuador, Milan, Retro)..."
+                      oninput="handleInventorySearch(this.value)"
+                      class="w-full pl-9 pr-8 py-2 bg-white border border-[#16243e]/20 focus:border-[#16243e] rounded-xl text-xs text-[#16243e] placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#16243e] shadow-sm transition"
+                    />
+                    <button
+                      type="button"
+                      id="clearInventorySearchBtn"
+                      onclick="clearInventorySearch()"
+                      class="hidden absolute right-2.5 top-2 text-slate-400 hover:text-slate-700 p-0.5 rounded-full text-xs font-bold cursor-pointer"
+                      title="Borrar búsqueda"
+                    >
+                      &times;
+                    </button>
+                  </div>
                 </div>
 
                 <!-- CONTENEDOR DE TARJETAS DE VISUALIZACION: UNICO CON SCROLL -->
-                <div id="inventoryVisualList" class="space-y-2.5 overflow-y-auto custom-scroll pr-2 flex-1 min-h-0 max-h-[calc(100vh-310px)] xl:h-[calc(100vh-310px)]">
+                <div id="inventoryVisualList" class="space-y-2.5 overflow-y-auto custom-scroll pr-2 flex-1 min-h-0 max-h-[calc(100vh-340px)] xl:h-[calc(100vh-340px)]">
                   <!-- Se llena dinamicamente con renderInventoryVisual() -->
                 </div>
               </div>
@@ -1716,19 +1738,22 @@
           <input type="text" id="editProdName" required class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-3 py-2 text-xs text-[#16243e] focus:bg-white focus:outline-none focus:border-amber-400">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-slate-700 text-xs font-bold mb-1">Categoria *</label>
-            <select id="editProdCategory" class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-3 py-2 text-xs text-[#16243e] focus:bg-white focus:outline-none focus:border-amber-400">
-              <option value="nacional">Liga Nacional</option>
-              <option value="internacional">Internacional</option>
-              <option value="retro">Coleccion Retro</option>
-            </select>
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-slate-700 text-xs font-bold">
+              Categor&iacute;as Oficiales * <span class="text-[10px] text-slate-400 font-normal">(puedes seleccionar varias, ej: Internacional + Retro)</span>
+            </label>
+            <span id="editSelectedCountBadge" class="text-[10px] font-mono font-bold text-[#16243e] bg-slate-100 px-2 py-0.5 rounded-full">1 seleccionada</span>
           </div>
-          <div>
-            <label class="block text-slate-700 text-xs font-bold mb-1">Precio Venta ($) *</label>
-            <input type="number" id="editProdPrice" step="0.50" min="5" required class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-3 py-2 text-xs text-[#16243e] focus:bg-white font-mono focus:outline-none focus:border-amber-400">
+          <div id="editProdCategoriesChips" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#f8fafc] border border-[#16243e]/20 rounded-2xl max-h-40 overflow-y-auto">
+            <!-- Chips dinamicos de categorias -->
           </div>
+          <input type="hidden" id="editProdCategory" value="" />
+        </div>
+
+        <div>
+          <label class="block text-slate-700 text-xs font-bold mb-1">Precio Venta ($) *</label>
+          <input type="number" id="editProdPrice" step="0.50" min="5" required class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-3 py-2 text-xs text-[#16243e] focus:bg-white font-mono focus:outline-none focus:border-amber-400">
         </div>
 
         <!-- Stock por Tallas -->
@@ -3416,6 +3441,49 @@
       showToast("+" + qty + " unidades sumadas a " + product.name + " (Talla " + size + ")!", true);
     }
 
+    // ===============================================================
+    // HELPERS PARA CATEGORIAS MULTIPLES Y BUSCADOR DE INVENTARIO
+    // ===============================================================
+    let inventorySearchQuery = "";
+    let selectedEditCategories = [];
+    let selectedWireframeCategories = ["nacional"];
+
+    function getProductCategories(p) {
+      if (!p) return [];
+      if (Array.isArray(p.categories) && p.categories.length > 0) {
+        return p.categories.map(c => String(c).trim().toLowerCase()).filter(Boolean);
+      }
+      if (Array.isArray(p.category)) {
+        return p.category.map(c => String(c).trim().toLowerCase()).filter(Boolean);
+      }
+      if (typeof p.categories === "string" && p.categories.trim()) {
+        return p.categories.split(",").map(c => c.trim().toLowerCase()).filter(Boolean);
+      }
+      if (typeof p.category === "string" && p.category.trim()) {
+        return p.category.split(",").map(c => c.trim().toLowerCase()).filter(Boolean);
+      }
+      return [];
+    }
+
+    function handleInventorySearch(val) {
+      inventorySearchQuery = (val || "").trim();
+      const clearBtn = document.getElementById("clearInventorySearchBtn");
+      if (clearBtn) {
+        if (inventorySearchQuery) clearBtn.classList.remove("hidden");
+        else clearBtn.classList.add("hidden");
+      }
+      renderInventoryVisual();
+    }
+
+    function clearInventorySearch() {
+      inventorySearchQuery = "";
+      const input = document.getElementById("inventorySearchInput");
+      if (input) input.value = "";
+      const clearBtn = document.getElementById("clearInventorySearchBtn");
+      if (clearBtn) clearBtn.classList.add("hidden");
+      renderInventoryVisual();
+    }
+
     function renderInventoryVisual() {
       const container = document.getElementById("inventoryVisualList");
       if (!container) return;
@@ -3445,6 +3513,35 @@
         });
       }
 
+      // Filtro de búsqueda en vivo
+      if (inventorySearchQuery) {
+        const q = inventorySearchQuery.toLowerCase();
+        list = list.filter(p => {
+          const name = (p.name || "").toLowerCase();
+          const id = (p.id || "").toLowerCase();
+          const badge = (p.badge || "").toLowerCase();
+          const pCats = getProductCategories(p);
+          const catMatches = pCats.some(c => c.includes(q));
+          const catNames = pCats.map(c => {
+            const found = (typeof CATEGORIES !== "undefined") ? CATEGORIES.find(x => x.id === c) : null;
+            return found ? found.name.toLowerCase() : "";
+          });
+          const catNameMatches = catNames.some(cn => cn.includes(q));
+          return name.includes(q) || id.includes(q) || badge.includes(q) || catMatches || catNameMatches;
+        });
+      }
+
+      const matchBadge = document.getElementById("invSearchMatchesBadge");
+      if (matchBadge) {
+        if (inventorySearchQuery) {
+          matchBadge.innerText = list.length + " de " + PRODUCTS.length + " prendas";
+          matchBadge.className = "text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#16243e] text-white";
+        } else {
+          matchBadge.innerText = PRODUCTS.length + " prendas";
+          matchBadge.className = "text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700";
+        }
+      }
+
       const totalCriticas = PRODUCTS.reduce((acc, p) => {
         const s = p.stock || {};
         const count = ["XS", "S", "M", "L", "XL"].filter(sz => {
@@ -3466,7 +3563,10 @@
       if (elOut) elOut.innerText = totalAgotadas;
 
       if (list.length === 0) {
-        container.innerHTML = '<div class="p-8 text-center text-neutral-500 text-xs italic bg-white/5 rounded-2xl border border-white/5">No hay prendas que coincidan con el filtro seleccionado.</div>';
+        container.innerHTML = '<div class="p-8 text-center text-slate-500 text-xs italic bg-slate-50 rounded-2xl border border-slate-200 space-y-2">' +
+          '<p>No hay prendas que coincidan con <strong>"' + (inventorySearchQuery || 'el filtro seleccionado') + '"</strong>.</p>' +
+          '<button type="button" onclick="clearInventorySearch(); filterInventoryByStatus(\'all\');" class="px-3 py-1.5 rounded-xl bg-[#16243e] text-white text-xs font-bold uppercase transition cursor-pointer">Ver todas las prendas</button>' +
+        '</div>';
         return;
       }
 
@@ -3512,8 +3612,12 @@
           '</div>';
         }).join("");
 
-        const foundCat = (typeof CATEGORIES !== "undefined") ? CATEGORIES.find(c => c.id === p.category) : null;
-        const catName = foundCat ? foundCat.name : (p.category === "nacional" ? "Liga Nacional" : (p.category === "retro" ? "Coleccion Retro" : (p.category || "Internacional")));
+        const pCats = getProductCategories(p);
+        const catNamesList = pCats.map(catId => {
+          const fc = (typeof CATEGORIES !== "undefined") ? CATEGORIES.find(c => c.id === catId) : null;
+          return fc ? fc.name : catId;
+        });
+        const catName = catNamesList.length > 0 ? catNamesList.join(" • ") : (p.category || "General");
         const priceFmt = "$" + Number(p.priceShirt || p.price || 28).toFixed(2);
 
         return '<div id="inv-card-' + p.id + '" class="p-3 sm:p-3.5 rounded-2xl bg-white border border-[#16243e]/12 hover:border-[#16243e]/40 transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-sm min-w-0 overflow-hidden">' +
@@ -3560,6 +3664,7 @@
     const DEFAULT_CATEGORIES = [
       { id: "nacional", name: "Clubes Nacionales", badge: "NACIONAL", color: "#eab308" },
       { id: "internacional", name: "Clubes Internacionales", badge: "CLUBES", color: "#3b82f6" },
+      { id: "retro", name: "Colección Retro", badge: "RETRO", color: "#a855f7" },
       { id: "buzos", name: "Buzos", badge: "BUZOS", color: "#06b6d4" },
       { id: "uniformes", name: "Uniformes Completos", badge: "UNIFORMES", color: "#FF007F" },
       { id: "liquidacion", name: "Liquidación en Stock", badge: "LIQUIDACIÓN", color: "#ef4444" }
@@ -3588,25 +3693,47 @@
       return CATEGORIES;
     }
 
-    function populateCategoriesSelect(selectedId) {
-      const select = document.getElementById("wireframeCategory");
-      if (!select) return;
+    function renderWireframeCategoryChips() {
+      const container = document.getElementById("wireframeCategoriesChips");
+      if (!container) return;
+      if (!CATEGORIES || CATEGORIES.length === 0) loadCategories();
 
+      container.innerHTML = CATEGORIES.map(c => {
+        const isChecked = selectedWireframeCategories.includes(c.id);
+        return '<button type="button" onclick="toggleWireframeCategorySelection(\'' + c.id + '\')" class="flex items-center justify-between gap-1 px-2.5 py-2 rounded-xl text-xs font-bold transition text-left cursor-pointer border ' + (isChecked ? 'bg-[#16243e] text-white border-[#16243e] shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300') + '">' +
+          '<span class="truncate">' + c.name + '</span>' +
+          '<span class="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] shrink-0 font-mono ' + (isChecked ? 'bg-[#FF007F] text-white' : 'bg-slate-100 text-transparent border border-slate-300') + '">✓</span>' +
+        '</button>';
+      }).join("");
+
+      const hiddenInput = document.getElementById("wireframeCategory");
+      if (hiddenInput) {
+        hiddenInput.value = selectedWireframeCategories[0] || "nacional";
+      }
+    }
+
+    function toggleWireframeCategorySelection(catId) {
+      const idx = selectedWireframeCategories.indexOf(catId);
+      if (idx >= 0) {
+        if (selectedWireframeCategories.length <= 1) {
+          showToast("La prenda debe tener al menos 1 categoría asignada", false);
+          return;
+        }
+        selectedWireframeCategories.splice(idx, 1);
+      } else {
+        selectedWireframeCategories.push(catId);
+      }
+      renderWireframeCategoryChips();
+    }
+
+    function populateCategoriesSelect(selectedId) {
       if (!CATEGORIES || CATEGORIES.length === 0) {
         loadCategories();
       }
-
-      let html = CATEGORIES.map(c => {
-        const isSel = (c.id === selectedId) ? "selected" : "";
-        return '<option value="' + c.id + '" ' + isSel + '>' + c.name + '</option>';
-      }).join("");
-
-      html += '<option value="__add_new__" class="text-[#16243e] font-bold bg-white">+ AGREGAR NUEVA CATEGOR&Iacute;A...</option>';
-      select.innerHTML = html;
-
-      if (selectedId) {
-        select.value = selectedId;
+      if (selectedId && !selectedWireframeCategories.includes(selectedId)) {
+        selectedWireframeCategories.push(selectedId);
       }
+      renderWireframeCategoryChips();
     }
 
     function handleWireframeCategoryChange(val) {
@@ -3821,7 +3948,8 @@
         return;
       }
 
-      const category = catSelect ? catSelect.value : "nacional";
+      const assignedCategories = (selectedWireframeCategories && selectedWireframeCategories.length > 0) ? [...selectedWireframeCategories] : ["nacional"];
+      const primaryCategory = assignedCategories[0];
       const price = parseFloat(priceInput ? priceInput.value : 28) || 28.00;
       const fabric = fabricInput ? fabricInput.value.trim() : "Microfibra Dry-Fit Pro con respiracion perimetral";
       
@@ -3832,25 +3960,26 @@
       const stockXS = parseInt(sXS ? sXS.value : 0) || 0;
       const totalUnits = stockXL + stockL + stockM + stockS + stockXS;
 
-      const catMeta = (CATEGORIES && CATEGORIES.find(c => c.id === category)) || { name: category, badge: "NUEVO", color: "#FF007F" };
+      const catMeta = (CATEGORIES && CATEGORIES.find(c => c.id === primaryCategory)) || { name: primaryCategory, badge: "NUEVO", color: "#FF007F" };
       const newId = "cam-new-" + Date.now();
       const imageSrc = uploadedWireframeImageDataUrl || "camisetas/clubes-nacionales/ecuador_retro_2001.png";
 
       let finalBadge = catMeta.badge || "OFICIAL 2026";
-      if (finalBadge === "BUZOS" || finalBadge.toUpperCase() === category.toUpperCase() || finalBadge === "NUEVO") {
+      if (finalBadge === "BUZOS" || finalBadge.toUpperCase() === primaryCategory.toUpperCase() || finalBadge === "NUEVO") {
         finalBadge = "OFICIAL 2026";
       }
 
       const newProduct = {
         id: newId,
         name: name,
-        category: category,
+        category: primaryCategory,
+        categories: assignedCategories,
         badge: finalBadge,
         priceShirt: price,
         priceKit: price + 8.00,
         price: price,
         fitDefault: "regular",
-        sleeve: (category === "buzos" ? "larga" : "corta"),
+        sleeve: (assignedCategories.includes("buzos") ? "larga" : "corta"),
         fabric: fabric,
         glow: catMeta.color || "#16243e",
         image: imageSrc,
@@ -3917,6 +4046,47 @@
     // ===============================================================
     let pendingDeleteProductId = null;
 
+    // ===============================================================
+    // MULTI-SELECCIÓN DE CATEGORÍAS EN EDICIÓN
+    // ===============================================================
+    function renderEditCategoryChips() {
+      const container = document.getElementById("editProdCategoriesChips");
+      if (!container) return;
+      if (!CATEGORIES || CATEGORIES.length === 0) loadCategories();
+
+      container.innerHTML = CATEGORIES.map(c => {
+        const isSelected = selectedEditCategories.includes(c.id);
+        return '<button type="button" onclick="toggleEditCategorySelection(\'' + c.id + '\')" class="flex items-center justify-between gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition text-left cursor-pointer border ' + (isSelected ? 'bg-[#16243e] text-white border-[#16243e] shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300') + '">' +
+          '<span class="truncate">' + c.name + '</span>' +
+          '<span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] shrink-0 font-mono ' + (isSelected ? 'bg-[#FF007F] text-white' : 'bg-slate-100 text-transparent border border-slate-300') + '">✓</span>' +
+        '</button>';
+      }).join("");
+
+      const countBadge = document.getElementById("editSelectedCountBadge");
+      if (countBadge) {
+        countBadge.innerText = selectedEditCategories.length + (selectedEditCategories.length === 1 ? " seleccionada" : " seleccionadas");
+      }
+
+      const hiddenInput = document.getElementById("editProdCategory");
+      if (hiddenInput) {
+        hiddenInput.value = selectedEditCategories[0] || "nacional";
+      }
+    }
+
+    function toggleEditCategorySelection(catId) {
+      const idx = selectedEditCategories.indexOf(catId);
+      if (idx >= 0) {
+        if (selectedEditCategories.length <= 1) {
+          showToast("La prenda debe tener al menos 1 categoría asignada", false);
+          return;
+        }
+        selectedEditCategories.splice(idx, 1);
+      } else {
+        selectedEditCategories.push(catId);
+      }
+      renderEditCategoryChips();
+    }
+
     function openEditProductModal(productId) {
       const p = PRODUCTS.find(x => x.id === productId);
       if (!p) return;
@@ -3928,15 +4098,12 @@
       document.getElementById("editProdName").value = p.name || "";
       document.getElementById("editProdPrice").value = Number(p.priceShirt || p.price || 28.00).toFixed(2);
 
-      // Poblar categorias dinamicas en el select de edicion
-      const catSelect = document.getElementById("editProdCategory");
-      if (catSelect) {
-        if (!CATEGORIES || CATEGORIES.length === 0) loadCategories();
-        catSelect.innerHTML = CATEGORIES.map(c => {
-          const isSel = (c.id === p.category) ? "selected" : "";
-          return '<option value="' + c.id + '" ' + isSel + '>' + c.name + '</option>';
-        }).join("");
+      // Cargar múltiples categorías asignadas a la prenda
+      selectedEditCategories = getProductCategories(p);
+      if (selectedEditCategories.length === 0) {
+        selectedEditCategories = [p.category || "nacional"];
       }
+      renderEditCategoryChips();
 
       // Stock
       const s = p.stock || {};
@@ -3964,8 +4131,12 @@
       const p = PRODUCTS.find(x => x.id === id);
       if (!p) return;
 
+      if (!selectedEditCategories || selectedEditCategories.length === 0) {
+        showToast("Por favor selecciona al menos una categoría", false);
+        return;
+      }
+
       const newName = document.getElementById("editProdName").value.trim();
-      const newCat = document.getElementById("editProdCategory").value;
       const newPrice = parseFloat(document.getElementById("editProdPrice").value) || p.priceShirt || 28.00;
 
       const sXS = parseInt(document.getElementById("editStockXS").value) || 0;
@@ -3975,7 +4146,8 @@
       const sXL = parseInt(document.getElementById("editStockXL").value) || 0;
 
       p.name = newName;
-      p.category = newCat;
+      p.categories = [...selectedEditCategories];
+      p.category = selectedEditCategories[0]; // Categoría principal para compatibilidad
       p.priceShirt = newPrice;
       p.priceKit = newPrice + 8.00;
       p.price = newPrice;
@@ -3991,12 +4163,12 @@
       } catch(err) {}
       if (window.NavySupabase) { window.NavySupabase.saveProduct(p); }
 
-      logMovement("MODIFICACION", p.name, "EdiciÃ³n", "Datos y stock actualizados en bodega");
+      logMovement("MODIFICACION", p.name, "Edición", "Datos y categorías actualizados en bodega");
       renderInventoryVisual();
       populateInventoryModelSelect();
       updateKPIs();
       closeEditProductModal();
-      showToast("Prenda '" + p.name + "' actualizada con Ã©xito", true);
+      showToast("Prenda '" + p.name + "' actualizada con éxito", true);
     }
 
     function confirmDeleteProduct(productId) {
