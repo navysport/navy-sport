@@ -563,38 +563,46 @@
                   >
                 </div>
 
-                <!-- CATEGORIA Y PRECIO DE VENTA (2 COLUMNAS) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                      <label class="block text-xs font-bold uppercase tracking-wider text-[#16243e]">Categoria*</label>
-                      <button
-                        type="button"
-                        onclick="openAddCategoryModal()"
-                        class="text-[11px] font-black uppercase text-[#16243e] hover:text-[#2a4575] flex items-center gap-1 transition cursor-pointer hover:underline"
-                        title="Crear una nueva categor&iacute;a para el cat&aacute;logo"
-                      >
-                        <span class="text-xs font-black">+</span> Nueva Categor&iacute;a
-                      </button>
-                    </div>
-                    <div id="wireframeCategoriesChips" class="grid grid-cols-2 gap-1.5 p-2 bg-[#f8fafc] border border-[#16243e]/20 rounded-2xl min-h-[50px] max-h-36 overflow-y-auto">
+                <!-- CATEGORIA Y PRECIO DE VENTA (2 COLUMNAS BALANCEADAS) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+                  <!-- COLUMNA IZQUIERDA: CATEGORIAS MULTIPLES -->
+                  <div class="flex flex-col">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#16243e] mb-1.5">Categor&iacute;as de la Prenda*</label>
+                    <div id="wireframeCategoriesChips" class="grid grid-cols-2 gap-1.5 p-2 bg-[#f8fafc] border border-[#16243e]/20 rounded-2xl min-h-[50px] max-h-36 overflow-y-auto flex-1">
                       <!-- Chips dinamicos de categorias en creacion -->
                     </div>
                     <input type="hidden" id="wireframeCategory" value="nacional" />
                   </div>
-                  <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-[#16243e] mb-1.5">Precio de venta*</label>
-                    <div class="relative">
-                      <span class="absolute left-4 top-3 text-sm font-bold text-neutral-400 font-mono">$</span>
-                      <input
-                        type="number"
-                        id="wireframePrice"
-                        required
-                        step="0.50"
-                        min="5"
-                        value="28.00"
-                        class="w-full bg-[#f8fafc] border border-[#16243e]/20 focus:border-[#16243e] rounded-2xl pl-8 pr-4 py-3 text-sm text-[#16243e] focus:outline-none focus:ring-1 focus:ring-[#16243e] focus:bg-white transition font-mono font-bold shadow-sm"
+
+                  <!-- COLUMNA DERECHA: BOTON NUEVA CATEGORIA ARRIBA + PRECIO DE VENTA ABAJO (ELIMINA ESPACIO SOBRANTE) -->
+                  <div class="flex flex-col justify-between space-y-2.5">
+                    <div>
+                      <label class="block text-xs font-bold uppercase tracking-wider text-[#16243e] mb-1.5">Nueva Categor&iacute;a</label>
+                      <button
+                        type="button"
+                        onclick="openAddCategoryModal()"
+                        class="w-full py-2.5 px-3 rounded-2xl bg-white hover:bg-slate-50 border border-dashed border-[#16243e]/30 hover:border-[#16243e] text-[#16243e] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow"
+                        title="Crear una nueva categor&iacute;a para el cat&aacute;logo"
                       >
+                        <span class="w-4 h-4 rounded-full bg-[#16243e] text-white flex items-center justify-center text-xs font-black leading-none">+</span>
+                        <span>+ Nueva Categor&iacute;a</span>
+                      </button>
+                    </div>
+
+                    <div>
+                      <label class="block text-xs font-bold uppercase tracking-wider text-[#16243e] mb-1.5">Precio de Venta*</label>
+                      <div class="relative">
+                        <span class="absolute left-4 top-2.5 text-sm font-bold text-neutral-400 font-mono">$</span>
+                        <input
+                          type="number"
+                          id="wireframePrice"
+                          required
+                          step="0.50"
+                          min="5"
+                          value="28.00"
+                          class="w-full bg-[#f8fafc] border border-[#16243e]/20 focus:border-[#16243e] rounded-2xl pl-8 pr-4 py-2.5 text-sm text-[#16243e] focus:outline-none focus:ring-1 focus:ring-[#16243e] focus:bg-white transition font-mono font-bold shadow-sm"
+                        >
+                      </div>
                     </div>
                   </div>
                 </div>
