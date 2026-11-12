@@ -189,67 +189,138 @@
     <!-- =============================================================== -->
     <!-- BARRA DE NAVEGACION RAPIDA PARA CELULARES (STICKY MOBILE TABS)   -->
     <!-- =============================================================== -->
-    <nav class="lg:hidden shrink-0 sticky top-16 z-30 bg-[#16243e] border-b border-white/10 px-2.5 py-2 shadow-lg w-full max-w-full overflow-hidden">
-      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-0.5 w-full">
-        
-        <!-- PEDIDOS -->
+        <!-- =============================================================== -->
+    <!-- BARRA DE NAVEGACION RAPIDA PARA CELULARES (MENU DESPLEGABLE)     -->
+    <!-- =============================================================== -->
+    <div class="lg:hidden shrink-0 sticky top-16 z-30 bg-[#16243e] border-b border-white/10 px-3 py-2.5 shadow-lg w-full" id="mobileWorkerDropdownWrapper">
+      <div class="relative w-full">
+        <!-- BOTON DISPARADOR DEL MENU DESPLEGABLE -->
         <button
           type="button"
-          id="mobileBtnOrders"
-          onclick="switchWorkerTab('orders')"
-          class="mobile-tab-btn shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition text-neutral-300 hover:text-white hover:bg-white/10 cursor-pointer"
+          id="mobileWorkerMenuToggleBtn"
+          onclick="toggleMobileWorkerDropdown(event)"
+          class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white shadow-sm transition active:scale-[0.99] cursor-pointer"
         >
-          <svg class="w-3.5 h-3.5 text-[#FF007F]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-          <span>Pedidos</span>
-          <span id="mobileOrdersBadge" class="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#FF007F] text-white font-black">5</span>
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span id="mobileActiveIconBox" class="w-7 h-7 rounded-lg bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0 font-black text-sm">
+              +
+            </span>
+            <div class="text-left truncate">
+              <div class="text-[9px] text-neutral-400 font-bold uppercase tracking-wider">Módulo Operativo</div>
+              <div id="mobileActiveLabel" class="text-xs font-black uppercase text-white truncate">Nueva Prenda</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <span id="mobileActiveBadge" class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-500 text-white font-black uppercase">ALTA</span>
+            <svg id="mobileChevronIcon" class="w-4 h-4 text-neutral-300 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </div>
         </button>
 
-        <!-- INVENTARIO -->
-        <button
-          type="button"
-          id="mobileBtnInventory"
-          onclick="switchWorkerTab('inventory')"
-          class="mobile-tab-btn shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition text-neutral-300 hover:text-white hover:bg-white/10 cursor-pointer"
+        <!-- MENU DESPLEGABLE FLOTANTE -->
+        <div
+          id="mobileWorkerDropdownMenu"
+          class="hidden absolute left-0 right-0 top-full mt-1.5 bg-[#121c2e] border border-white/15 rounded-2xl shadow-2xl p-2 space-y-1 z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150"
         >
-          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-          <span>Inventario</span>
-        </button>
+          <div class="text-[9px] font-black uppercase tracking-wider text-neutral-400 px-3 py-1 border-b border-white/5 flex items-center justify-between">
+            <span>Cambiar de Pantalla</span>
+            <span class="text-[8px] text-neutral-500">Toca para abrir</span>
+          </div>
 
-        <!-- PRENDA -->
-        <button
-          type="button"
-          id="mobileBtnNewProduct"
-          onclick="switchWorkerTab('newProduct')"
-          class="mobile-tab-btn shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-black uppercase transition bg-white text-[#16243e] shadow-sm cursor-pointer"
-        >
-          <span class="font-black text-xs text-[#FF007F]">+</span>
-          <span>Prenda</span>
-        </button>
+          <!-- PEDIDOS -->
+          <button
+            type="button"
+            onclick="selectMobileTab('orders')"
+            class="mobile-dropdown-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold uppercase transition text-neutral-200 hover:text-white hover:bg-white/10 cursor-pointer text-left"
+          >
+            <div class="flex items-center gap-2.5">
+              <div class="w-6 h-6 rounded-lg bg-[#FF007F]/20 text-[#FF007F] flex items-center justify-center shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+              </div>
+              <span>Pedidos Pendientes</span>
+            </div>
+            <span id="mobileMenuOrdersBadge" class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#FF007F] text-white font-black">5</span>
+          </button>
 
-        <!-- BANNERS -->
-        <button
-          type="button"
-          id="mobileBtnBanners"
-          onclick="switchWorkerTab('banners')"
-          class="mobile-tab-btn shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition text-neutral-300 hover:text-white hover:bg-white/10 cursor-pointer"
-        >
-          <svg class="w-3.5 h-3.5 text-[#FF007F]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <span>Banners</span>
-        </button>
+          <!-- INVENTARIO -->
+          <button
+            type="button"
+            onclick="selectMobileTab('inventory')"
+            class="mobile-dropdown-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold uppercase transition text-neutral-200 hover:text-white hover:bg-white/10 cursor-pointer text-left"
+          >
+            <div class="flex items-center gap-2.5">
+              <div class="w-6 h-6 rounded-lg bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+              </div>
+              <span>Inventario & Stock</span>
+            </div>
+            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/10 text-neutral-300 font-bold">20 Modelos</span>
+          </button>
 
-        <!-- MOVIMIENTO -->
-        <button
-          type="button"
-          id="mobileBtnMovements"
-          onclick="switchWorkerTab('movements')"
-          class="mobile-tab-btn shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] font-bold uppercase transition text-neutral-300 hover:text-white hover:bg-white/10 cursor-pointer"
-        >
-          <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span>Bodega</span>
-        </button>
+          <!-- NUEVA PRENDA -->
+          <button
+            type="button"
+            onclick="selectMobileTab('newProduct')"
+            class="mobile-dropdown-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold uppercase transition text-neutral-200 hover:text-white hover:bg-white/10 cursor-pointer text-left"
+          >
+            <div class="flex items-center gap-2.5">
+              <div class="w-6 h-6 rounded-lg bg-emerald-400/20 text-emerald-400 flex items-center justify-center shrink-0 font-black text-sm">
+                +
+              </div>
+              <span>Nueva Prenda</span>
+            </div>
+            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">ALTA</span>
+          </button>
 
+          <!-- BANNERS -->
+          <button
+            type="button"
+            onclick="selectMobileTab('banners')"
+            class="mobile-dropdown-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold uppercase transition text-neutral-200 hover:text-white hover:bg-white/10 cursor-pointer text-left"
+          >
+            <div class="flex items-center gap-2.5">
+              <div class="w-6 h-6 rounded-lg bg-[#FF007F]/20 text-[#FF007F] flex items-center justify-center shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+              <span>Banners de Tienda</span>
+            </div>
+            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/10 text-neutral-300 font-bold">2 SLIDERS</span>
+          </button>
+
+          <!-- MOVIMIENTOS -->
+          <button
+            type="button"
+            onclick="selectMobileTab('movements')"
+            class="mobile-dropdown-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold uppercase transition text-neutral-200 hover:text-white hover:bg-white/10 cursor-pointer text-left"
+          >
+            <div class="flex items-center gap-2.5">
+              <div class="w-6 h-6 rounded-lg bg-sky-400/20 text-sky-400 flex items-center justify-center shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <span>Movimientos de Bodega</span>
+            </div>
+            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/10 text-neutral-300 font-bold">HISTORIAL</span>
+          </button>
+
+          <div class="pt-2 mt-1 border-t border-white/10 flex items-center gap-2">
+            <a
+              href="tienda-cliente.html"
+              class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white text-[11px] font-bold uppercase transition"
+            >
+              <svg class="w-3.5 h-3.5 text-sky-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              <span>Ver Tienda</span>
+            </a>
+            <button
+              type="button"
+              onclick="lockWorkerPanel()"
+              class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 text-[11px] font-bold uppercase transition cursor-pointer"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              <span>Bloquear</span>
+            </button>
+          </div>
+        </div>
       </div>
-    </nav>
+    </div>
 
 
 
@@ -274,7 +345,7 @@
       <div class="flex-1 min-h-0 flex flex-col lg:flex-row gap-6 items-stretch lg:overflow-hidden w-full pb-2">
         
         <!-- SIDEBAR DE OPERACIONES (FIJO EN PANTALLA - NO SE DESPLAZA AL SCROLLEAR CONTENIDO) -->
-        <aside id="workerSidebarAside" class="w-full lg:w-80 shrink-0 space-y-4 lg:h-full lg:overflow-y-auto custom-scroll pr-1 pb-6">
+        <aside id="workerSidebarAside" class="hidden lg:block lg:w-80 shrink-0 space-y-4 lg:h-full lg:overflow-y-auto custom-scroll pr-1 pb-6">
           
           <!-- 1. TARJETA: PEDIDOS E INVENTARIO (PRIMERO) -->
           <div class="bg-white rounded-3xl p-5 shadow-xl text-[#16243e] space-y-3 border border-slate-200/80">
@@ -4533,26 +4604,43 @@
     // ===============================================================
     // CONTROL DE PESTANAS / VISTAS DEL SIDEBAR (PANTALLAS SEPARADAS)
     // ===============================================================
-        // ===============================================================
-    // CONTROL DEL MENU MOVIL DE 3 TARJETAS
+            // ===============================================================
+    // CONTROL DEL MENU DESPLEGABLE EN VISTA CELULAR (MOBILE DROPDOWN)
     // ===============================================================
-    function toggleMobileSidebarCards() {
-      const aside = document.getElementById("workerSidebarAside");
-      const label = document.getElementById("toggleMobileSidebarLabel");
-      const icon = document.getElementById("toggleMobileSidebarIcon");
-      if (!aside) return;
-
-      const isHidden = aside.classList.contains("hidden");
-      if (isHidden) {
-        aside.classList.remove("hidden");
-        if (label) label.innerText = "Ocultar Tarjetas";
-        if (icon) icon.innerText = "▲";
+    function toggleMobileWorkerDropdown(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById("mobileWorkerDropdownMenu");
+      const chevron = document.getElementById("mobileChevronIcon");
+      if (!menu) return;
+      const isClosed = menu.classList.contains("hidden");
+      if (isClosed) {
+        menu.classList.remove("hidden");
+        if (chevron) chevron.classList.add("rotate-180");
       } else {
-        aside.classList.add("hidden");
-        if (label) label.innerText = "Ver 3 Tarjetas";
-        if (icon) icon.innerText = "▼";
+        menu.classList.add("hidden");
+        if (chevron) chevron.classList.remove("rotate-180");
       }
     }
+
+    function closeMobileWorkerDropdown() {
+      const menu = document.getElementById("mobileWorkerDropdownMenu");
+      const chevron = document.getElementById("mobileChevronIcon");
+      if (menu) menu.classList.add("hidden");
+      if (chevron) chevron.classList.remove("rotate-180");
+    }
+
+    function selectMobileTab(tabName) {
+      closeMobileWorkerDropdown();
+      switchWorkerTab(tabName);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.addEventListener("click", function(event) {
+      const wrapper = document.getElementById("mobileWorkerDropdownWrapper");
+      if (wrapper && !wrapper.contains(event.target)) {
+        closeMobileWorkerDropdown();
+      }
+    });
 
     
     // ===============================================================
@@ -4595,6 +4683,54 @@
     });
 
     function switchWorkerTab(tabName) {
+      // Sincronizar disparador de menu desplegable movil
+      const mobileActiveLabel = document.getElementById("mobileActiveLabel");
+      const mobileActiveBadge = document.getElementById("mobileActiveBadge");
+      const mobileActiveIconBox = document.getElementById("mobileActiveIconBox");
+      if (mobileActiveLabel && mobileActiveBadge) {
+        if (tabName === "newProduct") {
+          mobileActiveLabel.innerText = "Nueva Prenda";
+          mobileActiveBadge.innerText = "ALTA";
+          mobileActiveBadge.className = "text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-500 text-white font-black uppercase";
+          if (mobileActiveIconBox) {
+            mobileActiveIconBox.className = "w-7 h-7 rounded-lg bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0 font-black text-sm";
+            mobileActiveIconBox.innerHTML = "+";
+          }
+        } else if (tabName === "banners" || tabName === "bannerPortada" || tabName === "bannerMainStore") {
+          mobileActiveLabel.innerText = "Banners de Tienda";
+          mobileActiveBadge.innerText = "SLIDERS";
+          mobileActiveBadge.className = "text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#FF007F] text-white font-black uppercase";
+          if (mobileActiveIconBox) {
+            mobileActiveIconBox.className = "w-7 h-7 rounded-lg bg-[#FF007F]/20 border border-[#FF007F]/30 flex items-center justify-center text-[#FF007F] shrink-0";
+            mobileActiveIconBox.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>';
+          }
+        } else if (tabName === "orders") {
+          mobileActiveLabel.innerText = "Pedidos Pendientes";
+          mobileActiveBadge.innerText = "5";
+          mobileActiveBadge.className = "text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#FF007F] text-white font-black uppercase";
+          if (mobileActiveIconBox) {
+            mobileActiveIconBox.className = "w-7 h-7 rounded-lg bg-[#FF007F]/20 border border-[#FF007F]/30 flex items-center justify-center text-[#FF007F] shrink-0";
+            mobileActiveIconBox.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>';
+          }
+        } else if (tabName === "inventory") {
+          mobileActiveLabel.innerText = "Inventario & Stock";
+          mobileActiveBadge.innerText = "STOCK";
+          mobileActiveBadge.className = "text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500 text-white font-black uppercase";
+          if (mobileActiveIconBox) {
+            mobileActiveIconBox.className = "w-7 h-7 rounded-lg bg-amber-400/20 border border-amber-400/30 flex items-center justify-center text-amber-400 shrink-0";
+            mobileActiveIconBox.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
+          }
+        } else if (tabName === "movements") {
+          mobileActiveLabel.innerText = "Movimientos Bodega";
+          mobileActiveBadge.innerText = "BODEGA";
+          mobileActiveBadge.className = "text-[9px] font-mono px-2 py-0.5 rounded-full bg-sky-500 text-white font-black uppercase";
+          if (mobileActiveIconBox) {
+            mobileActiveIconBox.className = "w-7 h-7 rounded-lg bg-sky-400/20 border border-sky-400/30 flex items-center justify-center text-sky-400 shrink-0";
+            mobileActiveIconBox.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+          }
+        }
+      }
+      closeMobileWorkerDropdown();
       // Sincronizar titulos de barra superior
       const topTitle = document.getElementById("topBarActiveModuleName");
       const topBadge = document.getElementById("topBarActiveModuleBadge");
@@ -4755,6 +4891,11 @@
         if (mobileOrdersBadge && typeof ORDERS !== "undefined" && Array.isArray(ORDERS)) {
           const pendingCount = ORDERS.filter(o => o.status !== "entregado").length;
           mobileOrdersBadge.innerText = pendingCount;
+        }
+                const mobileMenuOrdersBadge = document.getElementById("mobileMenuOrdersBadge");
+        if (mobileMenuOrdersBadge && typeof ORDERS !== "undefined" && Array.isArray(ORDERS)) {
+          const pending = ORDERS.filter(o => o.status !== "entregado").length;
+          mobileMenuOrdersBadge.innerText = pending;
         }
         if (ordersBadge && typeof ORDERS !== "undefined" && Array.isArray(ORDERS)) {
           const pending = ORDERS.filter(o => o.status !== "entregado").length;
