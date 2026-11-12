@@ -415,9 +415,7 @@
                   <span id="mainStoreBannerCtaText">VER OFERTA</span>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </a>
-                <span class="inline-flex items-center gap-1.5 text-xs text-slate-300 font-medium drop-shadow">
-                  🚚 Envíos a todo el Ecuador
-                </span>
+
               </div>
             </div>
           </div>
@@ -668,7 +666,7 @@
                       maxlength="4"
                       placeholder="Ej: 10"
                       value=""
-                      oninput="updateShortsCustomNumber(this.value)"
+                      onkeydown="enforceOnlyDigits(event)" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateShortsCustomNumber(this.value)"
                       class="w-20 bg-white border border-[#16243e]/20 focus:border-[#16243e] rounded-lg px-2 py-1 text-xs text-[#16243e] font-mono font-black text-center focus:outline-none shadow-sm"
                     />
                     <span class="text-[10px] text-slate-400 font-mono">(o dorsal)</span>
@@ -697,7 +695,17 @@
               <span class="text-xs font-black uppercase tracking-wider text-[#16243e]">Cantidad:</span>
               <div class="flex items-center gap-2 bg-[#f8fafc] border border-[#16243e]/20 rounded-xl p-1">
                 <button type="button" onclick="adjustModalQty(-1)" class="w-7 h-7 rounded-lg bg-slate-200 hover:bg-slate-300 text-[#16243e] font-black text-sm flex items-center justify-center transition active:scale-90 cursor-pointer">-</button>
-                <span id="modalQtyDisplay" class="w-7 text-center font-mono font-bold text-sm text-[#16243e]">1</span>
+                <input
+                  type="number"
+                  id="modalQtyInput"
+                  min="1"
+                  max="99"
+                  value="1"
+                  oninput="setModalQty(this.value)"
+                  onchange="setModalQty(this.value)"
+                  class="w-10 text-center font-mono font-bold text-sm text-[#16243e] bg-white border border-[#16243e]/20 rounded-lg focus:outline-none focus:border-[#16243e]"
+                />
+                <span id="modalQtyDisplay" class="hidden">1</span>
                 <button type="button" onclick="adjustModalQty(1)" class="w-7 h-7 rounded-lg bg-slate-200 hover:bg-slate-300 text-[#16243e] font-black text-sm flex items-center justify-center transition active:scale-90 cursor-pointer">+</button>
               </div>
             </div>
@@ -822,6 +830,25 @@
   <!-- JAVASCRIPT ROBUSTO CON TODAS LAS CARACTERISTICAS Y ANIMACIONES      -->
   <!-- =================================================================== -->
   <script>
+    // VALIDACION ESTRICTA DE ENTRADA: SOLO NUMEROS EN DORSAL, SOLO LETRAS EN NOMBRE
+    function enforceOnlyDigits(event) {
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      const allowedSpecial = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter', 'Home', 'End'];
+      if (allowedSpecial.includes(event.key)) return;
+      if (!/^[0-9]$/.test(event.key)) {
+        event.preventDefault();
+      }
+    }
+
+    function enforceOnlyLetters(event) {
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      const allowedSpecial = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter', 'Home', 'End'];
+      if (allowedSpecial.includes(event.key)) return;
+      if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/.test(event.key)) {
+        event.preventDefault();
+      }
+    }
+
     // LISTA DE PRODUCTOS CON TALLAS XS A XL Y FOTOS REALES
     const DEFAULT_PRODUCTS = [
       {
@@ -1196,6 +1223,7 @@
     let searchQuery = "";
     let sortMode = "name-asc";
     let cart = [];
+    let openCartDorsalesSet = new Set();
 
     // ESTADO DEL MODAL DE DETALLE DE PRODUCTO
     let activeModalProduct = null;
@@ -1707,76 +1735,94 @@
     }
 
     // LISTA DE PERSONALIZACION DE JUGADORES (1 O MULTIPLES SIN RE-RENDER EN FOCUS/TYPE)
-    function renderCustomPlayersList() {
+        function renderCustomPlayersList() {
       const container = document.getElementById("dorsalSectionContainer") || document.getElementById("customPlayersContainer");
       if (!container) return;
 
-      const player1 = activeCustomPlayers[0] || { name: "", number: "" };
+      const player1 = activeCustomPlayers[0] || { name: "", number: "", size: activeSelectedSize || "M" };
       const safeName1 = player1.name ? player1.name.replace(/"/g, '&quot;') : "";
       const safeNum1 = (player1.number !== undefined && player1.number !== null && player1.number !== "") 
         ? String(player1.number).replace(/"/g, '&quot;') 
         : "";
 
-      if (activeModalQty <= 1) {
-          // VISTA LIMPIA PARA 1 SOLA PRENDA (PERMITE CUALQUIER NUMERO: 0, 7, 10, 99, 100, ETC.)
-          container.innerHTML = `
-            <label class="text-xs font-black uppercase tracking-wider text-slate-500 block mb-2">
-              Personalizaci&oacute;n de Dorsal:
-            </label>
-            <div class="grid grid-cols-12 gap-3">
-              <div class="col-span-8">
-                <input
-                  type="text"
-                  id="customJerseyName"
-                  maxlength="14"
-                  value="${safeName1}"
-                  placeholder="Tu Nombre (Ej: CAISAPANTA)"
-                  oninput="updatePlayerDorsalValue(0, 'name', this.value)"
-                  class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-4 py-3 text-sm text-[#16243e] uppercase placeholder-slate-400 font-bold tracking-wider focus:outline-none focus:border-[#16243e] focus:bg-white shadow-sm"
-                />
-              </div>
-              <div class="col-span-4">
-                <input
-                  type="text"
-                  inputmode="numeric"
-                  id="customJerseyNumber"
-                  maxlength="4"
-                  value="${safeNum1}"
-                  placeholder="N&uacute;m (10)"
-                  oninput="updatePlayerDorsalValue(0, 'number', this.value)"
-                  class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-4 py-3 text-sm text-[#16243e] font-mono font-black text-center focus:outline-none focus:border-[#16243e] focus:bg-white shadow-sm"
-                />
-              </div>
-            </div>
-          `;
-          return;
-        }
+      const SIZES = ["XS", "S", "M", "L", "XL"];
 
-      // VISTA COMPACTA Y FLUIDA PARA MULTIPLES PRENDAS (> 1)
+      if (activeModalQty <= 1) {
+        // VISTA LIMPIA PARA 1 SOLA PRENDA (PERMITE CUALQUIER NUMERO: 0, 7, 10, 99, 100, ETC.)
+        container.innerHTML = `
+          <label class="text-xs font-black uppercase tracking-wider text-slate-500 block mb-2">
+            Personalizaci&oacute;n de Dorsal:
+          </label>
+          <div class="grid grid-cols-12 gap-3">
+            <div class="col-span-8">
+              <input
+                type="text"
+                id="customJerseyName"
+                maxlength="14"
+                value="${safeName1}"
+                placeholder="Tu Nombre (Ej: CAISAPANTA)"
+                onfocus="activePreviewPlayerIndex = 0; updateDetailStageLive();"
+                onkeydown="enforceOnlyLetters(event)"
+                oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); updatePlayerDorsalValue(0, 'name', this.value)"
+                class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-4 py-3 text-sm text-[#16243e] uppercase placeholder-slate-400 font-bold tracking-wider focus:outline-none focus:border-[#16243e] focus:bg-white shadow-sm"
+              />
+            </div>
+            <div class="col-span-4">
+              <input
+                type="text"
+                inputmode="numeric"
+                id="customJerseyNumber"
+                maxlength="4"
+                value="${safeNum1}"
+                placeholder="N&uacute;m (10)"
+                onfocus="activePreviewPlayerIndex = 0; updateDetailStageLive();"
+                onkeydown="enforceOnlyDigits(event)"
+                oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePlayerDorsalValue(0, 'number', this.value)"
+                class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-xl px-4 py-3 text-sm text-[#16243e] font-mono font-black text-center focus:outline-none focus:border-[#16243e] focus:bg-white shadow-sm"
+              />
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // VISTA CON SELECCION INDEPENDIENTE DE TALLA, NOMBRE Y NUMERO POR CADA CAMISETA
       let rowsHtml = '';
       activeCustomPlayers.forEach((player, idx) => {
         const pName = player.name ? player.name.replace(/"/g, '&quot;') : "";
         const pNum = (player.number !== undefined && player.number !== null && player.number !== "") 
           ? String(player.number).replace(/"/g, '&quot;') 
           : "";
+        const pSize = player.size || activeSelectedSize || "M";
+
+        const sizeOptionsHtml = SIZES.map(sz => {
+          const qty = (activeModalProduct && activeModalProduct.stock) ? (activeModalProduct.stock[sz] || 0) : 0;
+          const isOutOfStock = qty <= 0;
+          const isSel = (sz === pSize);
+          const dis = isOutOfStock ? 'disabled class="text-slate-300 line-through"' : '';
+          const label = isOutOfStock ? `${sz} (agotada)` : sz;
+          return `<option value="${sz}" ${isSel ? 'selected' : ''} ${dis}>${label}</option>`;
+        }).join('');
 
         rowsHtml += `
-          <div class="grid grid-cols-12 gap-1.5 items-center bg-[#f8fafc] p-1.5 rounded-lg border border-[#16243e]/15 focus-within:border-[#16243e] transition">
-            <div class="col-span-2 text-center text-[10px] font-mono font-black text-[#16243e]">
-              #${idx + 1}
+          <div class="flex items-center gap-1.5 sm:gap-2 bg-[#f8fafc] p-1.5 rounded-xl border border-[#16243e]/15 focus-within:border-[#16243e] focus-within:bg-white transition shadow-2xs">
+            <div class="w-6 shrink-0 text-center text-[10px] font-mono font-black text-[#16243e] flex items-center justify-center">
+              <span>#${idx + 1}</span>
             </div>
-            <div class="col-span-7">
+            <div class="flex-1 min-w-[70px]">
               <input
                 type="text"
                 id="playerInputName_${idx}"
                 value="${pName}"
                 maxlength="14"
-                placeholder="Nombre jugador ${idx + 1}"
-                oninput="updatePlayerDorsalValue(${idx}, 'name', this.value)"
+                placeholder="Nombre #${idx + 1}"
+                onfocus="activePreviewPlayerIndex = ${idx}; updateDetailStageLive();"
+                onkeydown="enforceOnlyLetters(event)"
+                oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); updatePlayerDorsalValue(${idx}, 'name', this.value)"
                 class="w-full bg-transparent border-0 px-1 py-0.5 text-xs text-[#16243e] uppercase placeholder-slate-400 font-bold tracking-wider focus:outline-none"
               />
             </div>
-            <div class="col-span-3">
+            <div class="w-12 sm:w-14 shrink-0">
               <input
                 type="text"
                 inputmode="numeric"
@@ -1784,20 +1830,43 @@
                 value="${pNum}"
                 maxlength="4"
                 placeholder="10"
-                oninput="updatePlayerDorsalValue(${idx}, 'number', this.value)"
-                class="w-full bg-white border border-[#16243e]/20 rounded px-1 py-0.5 text-xs text-[#16243e] font-mono font-bold text-center focus:outline-none focus:border-[#16243e]"
+                onfocus="activePreviewPlayerIndex = ${idx}; updateDetailStageLive();"
+                onkeydown="enforceOnlyDigits(event)"
+                oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePlayerDorsalValue(${idx}, 'number', this.value)"
+                class="w-full bg-white border border-[#16243e]/20 rounded-lg px-1 py-0.5 text-xs text-[#16243e] font-mono font-bold text-center focus:outline-none focus:border-[#16243e]"
               />
+            </div>
+            <div class="w-16 sm:w-20 shrink-0">
+              <select
+                id="playerInputSize_${idx}"
+                onchange="updatePlayerDorsalValue(${idx}, 'size', this.value)"
+                onfocus="activePreviewPlayerIndex = ${idx}; updateDetailStageLive();"
+                class="w-full bg-white border border-[#16243e]/20 rounded-lg px-1 sm:px-1.5 py-0.5 text-xs text-[#16243e] font-bold focus:outline-none focus:border-[#16243e] cursor-pointer shadow-2xs"
+                title="Talla de la camiseta #${idx + 1}"
+              >
+                ${sizeOptionsHtml}
+              </select>
+            </div>
+            <div class="w-5 shrink-0 text-center">
+              <button type="button" onclick="removeCustomPlayer(${idx})" title="Quitar esta camiseta" class="w-5 h-5 rounded hover:bg-rose-100 text-slate-400 hover:text-rose-500 font-bold text-xs flex items-center justify-center transition cursor-pointer">&times;</button>
             </div>
           </div>
         `;
       });
 
       container.innerHTML = `
-        <div class="flex items-center justify-between text-[10px] mb-1.5 shrink-0">
+        <div class="flex items-center justify-between text-[10px] mb-1 shrink-0">
           <label class="font-black uppercase tracking-wider text-slate-500">
-            Personalizaci&oacute;n de los ${activeModalQty} Jugadores:
+            Personalizaci&oacute;n y Talla de las ${activeModalQty} Camisetas:
           </label>
           <span class="text-[9px] font-mono text-[#FF007F] font-bold">${activeModalQty} dorsales</span>
+        </div>
+        <div class="flex items-center gap-1.5 sm:gap-2 px-1 text-[8.5px] font-bold uppercase tracking-wider text-slate-400 mb-1 shrink-0">
+          <span class="w-6 text-center">#</span>
+          <span class="flex-1">Nombre Dorsal</span>
+          <span class="w-12 sm:w-14 text-center">Número</span>
+          <span class="w-16 sm:w-20 text-center">Talla</span>
+          <span class="w-5"></span>
         </div>
         <div id="customPlayersScrollList" class="space-y-1.5 flex-1 min-h-0 overflow-y-auto pr-1.5 custom-scroll">
           ${rowsHtml}
@@ -1809,8 +1878,33 @@
       if (!activeCustomPlayers[index]) {
         activeCustomPlayers[index] = { name: "", number: "", size: activeSelectedSize || "M" };
       }
-      activeCustomPlayers[index][field] = value;
+      let cleanVal = value;
+      if (field === "number") {
+        cleanVal = String(value).replace(/\D/g, '');
+      } else if (field === "name") {
+        cleanVal = String(value).replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+      } else if (field === "size") {
+        cleanVal = String(value).toUpperCase().trim();
+        activeCustomPlayers[index].sizeCustomized = true;
+      }
+      activeCustomPlayers[index][field] = cleanVal;
       activePreviewPlayerIndex = index;
+      updateDetailStageLive();
+    }
+
+    function removeCustomPlayer(idx) {
+      if (activeCustomPlayers.length <= 1) return;
+      activeCustomPlayers.splice(idx, 1);
+      activeModalQty = activeCustomPlayers.length;
+      const input = document.getElementById("modalQtyInput");
+      if (input) input.value = activeModalQty;
+      const display = document.getElementById("modalQtyDisplay");
+      if (display) display.innerText = activeModalQty;
+      if (activePreviewPlayerIndex >= activeModalQty) {
+        activePreviewPlayerIndex = Math.max(0, activeModalQty - 1);
+      }
+      renderDetailSizeChips();
+      renderCustomPlayersList();
       updateDetailStageLive();
     }
 
@@ -1853,7 +1947,10 @@
       document.getElementById("detailSkuTag").innerText = `COD: ${p.id.toUpperCase()}-PRO`;
       document.getElementById("detailProductName").innerText = p.name;
       document.getElementById("detailProductDesc").innerText = p.description || p.fabric;
-      document.getElementById("modalQtyDisplay").innerText = "1";
+      const mQtyDisplay = document.getElementById("modalQtyDisplay");
+      if (mQtyDisplay) mQtyDisplay.innerText = "1";
+      const mQtyInput = document.getElementById("modalQtyInput");
+      if (mQtyInput) mQtyInput.value = "1";
 
       const err = document.getElementById("detailSizeError");
       if (err) err.classList.add("hidden");
@@ -2097,12 +2194,12 @@
         btn.onclick = () => selectSize(sz);
 
         if (isOutOfStock) {
-            btn.className = "py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-400 text-sm font-bold line-through cursor-not-allowed text-center";
-          } else if (isSelected) {
-            btn.className = "py-3 rounded-xl border border-[#16243e] bg-[#16243e] text-white text-sm font-black shadow-md shadow-[#16243e]/30 scale-105 transition-all text-center";
-          } else {
-            btn.className = "py-3 rounded-xl border border-[#16243e]/20 bg-[#f8fafc] hover:bg-[#f1f5f9] text-[#16243e] text-sm font-bold hover:border-[#16243e] transition-all active:scale-95 text-center";
-          }
+          btn.className = "py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-400 text-sm font-bold line-through cursor-not-allowed text-center";
+        } else if (isSelected) {
+          btn.className = "py-3 rounded-xl border border-[#16243e] bg-[#16243e] text-white text-sm font-black shadow-md shadow-[#16243e]/30 scale-105 transition-all text-center";
+        } else {
+          btn.className = "py-3 rounded-xl border border-[#16243e]/20 bg-[#f8fafc] hover:bg-[#f1f5f9] text-[#16243e] text-sm font-bold hover:border-[#16243e] transition-all active:scale-95 text-center";
+        }
 
         btn.innerText = sz;
         container.appendChild(btn);
@@ -2111,7 +2208,11 @@
       const status = document.getElementById("detailStockStatusText");
       if (status && activeSelectedSize) {
         const stockQty = activeModalProduct.stock[activeSelectedSize] || 0;
-        status.innerText = `Talla ${activeSelectedSize}: ${stockQty} disponibles`;
+        if (activeModalQty > 1) {
+          status.innerText = `Talla ${activeSelectedSize}: ${stockQty} disp. (o elige por camiseta abajo)`;
+        } else {
+          status.innerText = `Talla ${activeSelectedSize}: ${stockQty} disponibles`;
+        }
       }
     }
 
@@ -2121,11 +2222,13 @@
       if (err) err.classList.add("hidden");
       renderDetailSizeChips();
       if (activeCustomPlayers && activeCustomPlayers.length > 0) {
-        activeCustomPlayers.forEach(p => {
-          if (!p.sizeCustomized) {
+        if (activeModalQty > 1) {
+          activeCustomPlayers.forEach(p => {
             p.size = sz;
-          }
-        });
+          });
+        } else {
+          activeCustomPlayers[0].size = sz;
+        }
         renderCustomPlayersList();
       }
     }
@@ -2197,11 +2300,14 @@
         ? ("Uniforme Completo (Pantaloneta " + activeSelectedShortsColorName + (activeShortsHasNumber ? " con numero" : " sin numero") + ")") 
         : "Solo Camiseta";
 
+      const distinctSizes = [...new Set(activeCustomPlayers.map(p => p.size || activeSelectedSize || "M"))];
+      const summarySize = distinctSizes.length === 1 ? distinctSizes[0] : distinctSizes.join(", ");
+
       cart.push({
         id: p.id,
         name: p.name,
         image: p.image,
-        size: activeSelectedSize,
+        size: summarySize,
         option: optLabel,
         price: unitPrice,
         qty: activeModalQty,
@@ -2216,8 +2322,12 @@
       closeProductDetail();
     }
 
-    function adjustModalQty(delta) {
-      activeModalQty = Math.max(1, activeModalQty + delta);
+    function setModalQty(val) {
+      const num = parseInt(val, 10);
+      activeModalQty = (isNaN(num) || num < 1) ? 1 : Math.min(99, num);
+
+      const input = document.getElementById("modalQtyInput");
+      if (input && document.activeElement !== input) input.value = activeModalQty;
       const display = document.getElementById("modalQtyDisplay");
       if (display) display.innerText = activeModalQty;
 
@@ -2232,11 +2342,19 @@
         activeCustomPlayers = activeCustomPlayers.slice(0, activeModalQty);
       }
       if (activePreviewPlayerIndex >= activeModalQty) {
-        activePreviewPlayerIndex = activeModalQty - 1;
+        activePreviewPlayerIndex = Math.max(0, activeModalQty - 1);
       }
 
+      renderDetailSizeChips();
       renderCustomPlayersList();
       updateDetailStageLive();
+    }
+
+    function adjustModalQty(delta) {
+      const next = Math.max(1, activeModalQty + delta);
+      setModalQty(next);
+      const input = document.getElementById("modalQtyInput");
+      if (input) input.value = next;
     }
 
     // BOTON: "COMPRAR POR WHATSAPP" DIRECTO CON CONFIRMACION INTERMEDIA (2S)
@@ -2719,8 +2837,7 @@
         if (clearBtn) clearBtn.classList.remove("hidden");
       }
     }
-
-    function renderCartItems() {
+    function renderCartItems() {
       const container = document.getElementById("cartItemsContainer");
       const totalEl = document.getElementById("cartTotalPrice");
       const badge = document.getElementById("headerCartCount");
@@ -2756,23 +2873,188 @@
         return;
       }
 
+      const SIZES = ["XS", "S", "M", "L", "XL"];
       let total = 0;
       cart.forEach((item, index) => {
-        total += item.price * item.qty;
-        const row = document.createElement("div");
-        row.className = "flex items-center justify-between p-3 rounded-2xl bg-[#f8fafc] border border-[#16243e]/12 text-xs shadow-sm";
-        row.innerHTML = `
-          <div class="flex items-center gap-3">
-            <img src="${item.image}" alt="${item.name}" class="w-10 h-10 object-contain border-0" />
-            <div>
-              <div class="font-bold text-[#16243e] leading-tight">${item.name}</div>
-              <div class="text-[10px] text-neutral-400">${item.option} &bull; Talla: ${item.size}</div>
-              <div class="text-xs font-mono font-bold text-[#16243e]">$${item.price.toFixed(2)} x ${item.qty}</div>
+        const itemQty = Math.max(1, parseInt(item.qty, 10) || 1);
+        item.qty = itemQty;
+        const lineSubtotal = item.price * itemQty;
+        total += lineSubtotal;
+
+        // Asegurar que item.players exista y coincida con itemQty
+        if (!Array.isArray(item.players)) {
+          item.players = [];
+        }
+        while (item.players.length < itemQty) {
+          item.players.push({ name: "", number: "", size: item.size || "M" });
+        }
+        if (item.players.length > itemQty) {
+          item.players = item.players.slice(0, itemQty);
+        }
+
+        const distinctSizes = [...new Set(item.players.map(p => p.size || item.size || 'M'))];
+        const sizesDisplay = distinctSizes.length > 0 ? distinctSizes.join(', ') : (item.size || 'M');
+        const sizeTitle = (distinctSizes.length > 1) ? 'Tallas' : 'Talla';
+
+        const isOpen = openCartDorsalesSet.has(index);
+        let playersInnerHtml = '';
+        if (itemQty === 1) {
+          const pl = item.players[0] || { name: "", number: "", size: item.size || "M" };
+          const pName = (pl.name || '').replace(/"/g, '&quot;');
+          const pNum = (pl.number !== undefined && pl.number !== null) ? String(pl.number).replace(/"/g, '&quot;') : '';
+          const pSize = pl.size || item.size || 'M';
+          const sizeOpts = SIZES.map(sz => `<option value="${sz}" ${sz === pSize ? 'selected' : ''}>Talla ${sz}</option>`).join('');
+
+          playersInnerHtml = `
+            <div class="grid grid-cols-12 gap-1.5 items-center">
+              <div class="col-span-5 sm:col-span-6">
+                <input
+                  type="text"
+                  value="${pName}"
+                  placeholder="Nombre dorsal"
+                  onkeydown="enforceOnlyLetters(event)" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); updateCartItemPlayer(${index}, 0, 'name', this.value)"
+                  class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-lg px-2 py-1 text-xs text-[#16243e] uppercase placeholder-slate-400 font-bold tracking-wider focus:outline-none focus:border-[#16243e] focus:bg-white"
+                />
+              </div>
+              <div class="col-span-3">
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="4"
+                  value="${pNum}"
+                  placeholder="Núm (10)"
+                  onkeydown="enforceOnlyDigits(event)" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateCartItemPlayer(${index}, 0, 'number', this.value)"
+                  class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-lg px-1.5 py-1 text-xs text-[#16243e] font-mono font-black text-center focus:outline-none focus:border-[#16243e] focus:bg-white"
+                />
+              </div>
+              <div class="col-span-4 sm:col-span-3">
+                <select
+                  onchange="updateCartItemPlayer(${index}, 0, 'size', this.value)"
+                  class="w-full bg-[#f8fafc] border border-[#16243e]/20 rounded-lg px-1 py-1 text-xs text-[#16243e] font-bold focus:outline-none focus:border-[#16243e] cursor-pointer"
+                  title="Talla de la camiseta"
+                >
+                  ${sizeOpts}
+                </select>
+              </div>
+            </div>
+          `;
+        } else {
+          let playersRows = '';
+          item.players.forEach((pl, pIdx) => {
+            const pName = (pl.name || '').replace(/"/g, '&quot;');
+            const pNum = (pl.number !== undefined && pl.number !== null) ? String(pl.number).replace(/"/g, '&quot;') : '';
+            const pSize = pl.size || item.size || 'M';
+            const sizeOpts = SIZES.map(sz => `<option value="${sz}" ${sz === pSize ? 'selected' : ''}>${sz}</option>`).join('');
+
+            playersRows += `
+              <div class="flex items-center gap-1.5 bg-[#f8fafc] p-1 rounded-lg border border-[#16243e]/10">
+                <div class="w-5 text-center text-[10px] font-mono font-black text-[#16243e]">#${pIdx + 1}</div>
+                <div class="flex-1 min-w-[65px]">
+                  <input
+                    type="text"
+                    value="${pName}"
+                    placeholder="Nombre #${pIdx + 1}"
+                    onkeydown="enforceOnlyLetters(event)" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); updateCartItemPlayer(${index}, ${pIdx}, 'name', this.value)"
+                    class="w-full bg-transparent border-0 px-1 py-0.5 text-xs text-[#16243e] uppercase placeholder-slate-400 font-bold focus:outline-none"
+                  />
+                </div>
+                <div class="w-11 shrink-0">
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="4"
+                    value="${pNum}"
+                    placeholder="10"
+                    onkeydown="enforceOnlyDigits(event)" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateCartItemPlayer(${index}, ${pIdx}, 'number', this.value)"
+                    class="w-full bg-white border border-[#16243e]/20 rounded px-1 py-0.5 text-xs text-[#16243e] font-mono font-bold text-center focus:outline-none focus:border-[#16243e]"
+                  />
+                </div>
+                <div class="w-14 shrink-0">
+                  <select
+                    onchange="updateCartItemPlayer(${index}, ${pIdx}, 'size', this.value)"
+                    class="w-full bg-white border border-[#16243e]/20 rounded px-1 py-0.5 text-xs text-[#16243e] font-bold focus:outline-none focus:border-[#16243e] cursor-pointer"
+                    title="Talla #${pIdx + 1}"
+                  >
+                    ${sizeOpts}
+                  </select>
+                </div>
+              </div>
+            `;
+          });
+          playersInnerHtml = `
+            <div class="space-y-1 max-h-36 overflow-y-auto pr-1 custom-scroll">
+              ${playersRows}
+            </div>
+          `;
+        }
+
+        const dorsalesEditorHtml = `
+          <div class="mt-2 pt-2 border-t border-[#16243e]/10">
+            <button
+              type="button"
+              onclick="toggleCartItemDorsales(${index})"
+              class="w-full flex items-center justify-between py-1.5 px-2.5 rounded-xl bg-white hover:bg-slate-50 border border-[#16243e]/15 text-left transition group cursor-pointer shadow-2xs"
+            >
+              <div class="flex items-center gap-2 min-w-0">
+                <svg class="w-3.5 h-3.5 text-[#FF007F] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                <span class="text-[11px] font-bold text-[#16243e] truncate">
+                  ${itemQty === 1 ? 'Personalizar Dorsal y Talla' : `Dorsales y Tallas (${itemQty} prendas)`}
+                </span>
+              </div>
+              <div class="flex items-center gap-1 text-[10px] text-[#FF007F] font-bold">
+                <span id="cartDorsalesLabel_${index}">${isOpen ? 'Cerrar' : 'Editar'}</span>
+                <svg id="cartDorsalesChevron_${index}" class="w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </button>
+            <div id="cartDorsalesContent_${index}" class="${isOpen ? '' : 'hidden'} mt-1.5 p-2 bg-white/80 rounded-xl border border-[#16243e]/10 space-y-1.5 shadow-xs">
+              <div class="flex items-center justify-between text-[9px] text-slate-400 font-semibold uppercase tracking-wider mb-0.5">
+                <span>Nombres, números & tallas:</span>
+                <span class="text-[#FF007F] lowercase font-mono">editable</span>
+              </div>
+              ${playersInnerHtml}
             </div>
           </div>
-          <button onclick="removeCartItem(${index})" class="text-neutral-500 hover:text-red-400 p-1.5 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-          </button>
+        `;
+
+        const row = document.createElement("div");
+        row.className = "p-3 rounded-2xl bg-[#f8fafc] border border-[#16243e]/12 text-xs shadow-sm space-y-2";
+        row.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-3 min-w-0">
+              <img src="${item.image}" alt="${item.name}" class="w-11 h-11 object-contain border-0 rounded-lg bg-white p-0.5 shadow-xs shrink-0" />
+              <div class="min-w-0">
+                <div class="font-black text-[#16243e] leading-tight truncate">${item.name}</div>
+                <div class="text-[10px] text-slate-500 truncate">${item.option} &bull; ${sizeTitle}: <span id="cartItemSizes_${index}" class="font-bold text-[#16243e]">${sizesDisplay}</span></div>
+                <div class="text-[11px] font-mono text-slate-500">$${item.price.toFixed(2)} c/u</div>
+              </div>
+            </div>
+            <button onclick="removeCartItem(${index})" title="Eliminar artículo" class="text-slate-400 hover:text-rose-500 p-1 rounded-lg transition shrink-0 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+          </div>
+
+          ${dorsalesEditorHtml}
+
+          <div class="flex items-center justify-between pt-1.5 border-t border-[#16243e]/10">
+            <div class="flex items-center gap-1.5 bg-white border border-[#16243e]/20 rounded-xl p-1 shadow-xs">
+              <button type="button" onclick="adjustCartItemQty(${index}, -1)" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#16243e] font-black text-xs flex items-center justify-center transition active:scale-95 cursor-pointer">-</button>
+              <input
+                type="number"
+                min="1"
+                max="999"
+                value="${itemQty}"
+                id="cartItemQty_${index}"
+                oninput="setCartItemQty(${index}, this.value)"
+                onchange="setCartItemQty(${index}, this.value)"
+                class="w-10 text-center font-mono font-bold text-xs text-[#16243e] bg-transparent focus:outline-none focus:bg-slate-50 rounded"
+              />
+              <button type="button" onclick="adjustCartItemQty(${index}, 1)" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#16243e] font-black text-xs flex items-center justify-center transition active:scale-95 cursor-pointer">+</button>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400 uppercase font-semibold">Subtotal: </span>
+              <span class="text-xs font-mono font-black text-[#16243e]">$${lineSubtotal.toFixed(2)}</span>
+            </div>
+          </div>
         `;
         container.appendChild(row);
       });
@@ -2780,12 +3062,91 @@
       if (totalEl) totalEl.innerText = `$${total.toFixed(2)}`;
     }
 
+    function adjustCartItemQty(index, delta) {
+      if (!cart[index]) return;
+      const current = parseInt(cart[index].qty, 10) || 1;
+      const next = Math.max(1, current + delta);
+      setCartItemQty(index, next);
+    }
+
+    function setCartItemQty(index, val) {
+      if (!cart[index]) return;
+      const num = parseInt(val, 10);
+      const next = (isNaN(num) || num < 1) ? 1 : Math.min(999, num);
+      cart[index].qty = next;
+
+      if (Array.isArray(cart[index].players)) {
+        while (cart[index].players.length < next) {
+          cart[index].players.push({
+            name: "",
+            number: "",
+            size: cart[index].size || "M"
+          });
+        }
+        if (cart[index].players.length > next) {
+          cart[index].players = cart[index].players.slice(0, next);
+        }
+      }
+
+      renderCartItems();
+    }
+
+    function toggleCartItemDorsales(idx) {
+      const content = document.getElementById(`cartDorsalesContent_${idx}`);
+      const chevron = document.getElementById(`cartDorsalesChevron_${idx}`);
+      const label = document.getElementById(`cartDorsalesLabel_${idx}`);
+      if (!content) return;
+      if (content.classList.contains("hidden")) {
+        content.classList.remove("hidden");
+        if (chevron) chevron.classList.add("rotate-180");
+        if (label) label.innerText = "Cerrar";
+        openCartDorsalesSet.add(idx);
+      } else {
+        content.classList.add("hidden");
+        if (chevron) chevron.classList.remove("rotate-180");
+        if (label) label.innerText = "Editar";
+        openCartDorsalesSet.delete(idx);
+      }
+    }
+
+    function updateCartItemPlayer(cartIdx, playerIdx, field, value) {
+      if (!cart[cartIdx]) return;
+      if (!Array.isArray(cart[cartIdx].players)) {
+        cart[cartIdx].players = [];
+      }
+      while (cart[cartIdx].players.length <= playerIdx) {
+        cart[cartIdx].players.push({ name: "", number: "", size: cart[cartIdx].size || "M" });
+      }
+      let cleanVal = value;
+      if (field === "number") {
+        cleanVal = String(value).replace(/\D/g, '');
+      } else if (field === "name") {
+        cleanVal = String(value).replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+      } else if (field === "size") {
+        cleanVal = String(value).toUpperCase().trim();
+      }
+      cart[cartIdx].players[playerIdx][field] = cleanVal;
+
+      if (field === "size") {
+        const distinctSizes = [...new Set(cart[cartIdx].players.map(p => p.size).filter(Boolean))];
+        cart[cartIdx].size = distinctSizes.join(", ");
+        const sizeSpan = document.getElementById(`cartItemSizes_${cartIdx}`);
+        if (sizeSpan) sizeSpan.innerText = cart[cartIdx].size;
+      }
+    }
+
     function removeCartItem(idx) {
       cart.splice(idx, 1);
       renderCartItems();
     }
 
-    function checkoutCartWhatsApp() {
+    // CHECKOUT DE CARRITO POR WHATSAPP (CON RESPECTO DE PRECIOS EXACTOS Y DETALLE DE DORSALES)
+    function checkoutWhatsApp() {
+      if (cart.length === 0) {
+        showToast("Tu carrito está vacío. Agrega prendas para continuar.");
+        return;
+      }
+
       let msg = "";
       if (cart.length === 0) {
         msg = "¡Hola NAVY SPORT! Deseo solicitar información y consultar disponibilidad para realizar un pedido de uniformes.";
@@ -2795,7 +3156,21 @@
         cart.forEach((item, i) => {
           const sub = item.price * item.qty;
           total += sub;
-          msg += `${i + 1}. ${item.name} (${item.option}) - Talla: ${item.size} - Cant: ${item.qty} - $${sub.toFixed(2)}\n`;
+          const distinctSizes = [...new Set((item.players || []).map(p => p.size || item.size || "M"))];
+          const sizesSummary = distinctSizes.join(", ");
+          msg += `${i + 1}. ${item.name} (${item.option}) - Tallas: ${sizesSummary || item.size} - Cant: ${item.qty} - $${sub.toFixed(2)}\n`;
+          if (Array.isArray(item.players) && item.players.length > 0) {
+            item.players.forEach((pl, pIdx) => {
+              const pName = (pl.name && pl.name.trim()) ? pl.name.trim().toUpperCase() : "SIN NOMBRE";
+              const pNum = (pl.number !== undefined && pl.number !== null && String(pl.number).trim() !== "") ? ("#" + String(pl.number).trim()) : "S/N";
+              const pSz = pl.size || item.size || "M";
+              if (item.qty > 1) {
+                msg += `   └ Prenda ${pIdx + 1}: ${pName} (${pNum}) - Talla: ${pSz}\n`;
+              } else {
+                msg += `   └ Dorsal: ${pName} (${pNum}) - Talla: ${pSz}\n`;
+              }
+            });
+          }
         });
         msg += `\nTotal Estimado: $${total.toFixed(2)}\nPor favor confirmen la disponibilidad y entrega.`;
       }
