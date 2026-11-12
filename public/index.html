@@ -3288,7 +3288,7 @@
                 }
               });
               // Filtrar posibles elementos nulos o danados y remover duplicados
-              PRODUCTS = merged.filter(p => p && p.id && p.name && p.id !== "cam-03" && p.id !== "cam-brasil-2026");
+              PRODUCTS = merged.filter(p => p && p.id && p.name && p.id !== "cam-03");
               localStorage.setItem("navy_sport_products_list", JSON.stringify(PRODUCTS));
             } else {
               PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
