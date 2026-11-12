@@ -38,9 +38,104 @@
     ::-webkit-scrollbar-track { background: #f8fafc; }
     ::-webkit-scrollbar-thumb { background: rgba(22, 36, 62, 0.25); border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: #16243e; }
+    @keyframes pinShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake-anim {
+      animation: pinShake 0.4s ease-in-out;
+    }
   </style>
 </head>
 <body class="bg-[#ffffff] text-[#16243e] antialiased min-h-screen lg:h-screen lg:overflow-hidden selection:bg-[#16243e] selection:text-white carbon-pattern overflow-x-hidden w-full max-w-full">
+
+  <!-- =================================================================== -->
+  <!-- MODAL DE ACCESO / PANTALLA DE SEGURIDAD CON PIN (TALLER NAVY SPORT)  -->
+  <!-- =================================================================== -->
+  <div id="workerAuthLockScreen" class="fixed inset-0 z-[9999] bg-[#0c1322]/95 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300">
+    <div class="w-full max-w-md bg-[#16243e] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/80 text-white relative">
+      
+      <!-- Logo y Candado -->
+      <div class="flex flex-col items-center text-center mb-6">
+        <div class="relative mb-3">
+          <div class="h-16 w-16 rounded-2xl bg-white/10 p-2 shadow-lg border border-white/20 flex items-center justify-center overflow-hidden">
+            <img src="public/logo-perfect.png" alt="Navy Sport" class="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(255,0,127,0.4)]">
+          </div>
+          <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#FF007F] text-white flex items-center justify-center text-xs shadow-md border-2 border-[#16243e]">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black uppercase tracking-wide">Acceso Restringido</h2>
+        <p class="text-xs text-neutral-400 mt-1 max-w-xs">Panel Central de Operaciones &bull; Taller Navy Sport</p>
+      </div>
+
+      <!-- Formulario de PIN -->
+      <form id="workerPinForm" onsubmit="event.preventDefault(); handleWorkerPinSubmit();" class="space-y-4">
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-neutral-300 mb-1.5 text-center">
+            Ingresa el PIN de Seguridad
+          </label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="workerPinInput" 
+              inputmode="numeric" 
+              pattern="[0-9]*" 
+              placeholder="••••" 
+              maxlength="12" 
+              class="w-full text-center text-2xl font-mono tracking-[0.4em] py-3 px-10 rounded-2xl bg-white/5 border border-white/20 focus:border-[#FF007F] focus:bg-white/10 text-white placeholder-neutral-500 focus:outline-none transition shadow-inner"
+              autocomplete="current-password"
+            />
+            <button 
+              type="button" 
+              onclick="togglePinVisibility()" 
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white transition p-1.5 cursor-pointer"
+              title="Mostrar / Ocultar PIN"
+            >
+              <svg id="workerPinEyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+          <!-- Mensaje de error -->
+          <p id="workerPinError" class="hidden text-xs text-rose-400 font-bold text-center mt-2 flex items-center justify-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span id="workerPinErrorMsg">PIN incorrecto. Intenta nuevamente.</span>
+          </p>
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#FF007F] to-[#d6006b] hover:from-[#e00070] hover:to-[#b8005c] text-white font-extrabold uppercase tracking-wider text-xs shadow-lg shadow-[#FF007F]/30 hover:shadow-[#FF007F]/50 transition cursor-pointer flex items-center justify-center gap-2"
+        >
+          <span>Desbloquear Panel</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </form>
+
+      <!-- Pie del modal con ayuda y retorno a la tienda -->
+      <div class="mt-6 pt-5 border-t border-white/10 flex flex-col items-center gap-3 text-center">
+        <div class="flex items-center gap-1.5 text-[11px] text-neutral-400">
+          <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>PIN predeterminado inicial: <span class="font-mono font-bold text-sky-300">2026</span></span>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs font-semibold">
+          <a href="tienda-cliente.html" class="text-neutral-400 hover:text-white transition flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>Ir a Tienda de Clientes</span>
+          </a>
+          <span class="text-neutral-600">&bull;</span>
+          <button type="button" onclick="promptChangeWorkerPin()" class="text-neutral-400 hover:text-white transition underline cursor-pointer">
+            Cambiar PIN
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- TOAST NOTIFICACION -->
   <div id="toastNotification" class="fixed top-6 right-6 z-50 transform transition-all duration-300 translate-y-[-150%] opacity-0 pointer-events-none flex items-center gap-3 bg-neutral-900 border border-white/20 px-4 py-3 rounded-2xl shadow-2xl shadow-black text-xs font-bold text-white">
@@ -79,6 +174,11 @@
             <svg class="w-3.5 h-3.5 text-sky-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             <span>Ver Tienda</span>
           </a>
+          <!-- BOTON BLOQUEAR PANEL -->
+          <button type="button" onclick="lockWorkerPanel()" class="flex items-center gap-1 bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-rose-200 border border-rose-500/30 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition cursor-pointer" title="Bloquear Panel de Operaciones">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span class="hidden sm:inline">Bloquear</span>
+          </button>
 
           
         </div>
@@ -4698,7 +4798,134 @@
       }
     }
 
+    // ===================================================================
+    // SISTEMA DE SEGURIDAD Y ACCESO POR PIN (OPCION A)
+    // ===================================================================
+    const DEFAULT_WORKER_PIN = "2026";
+
+    function getWorkerPin() {
+      return localStorage.getItem("navy_sport_worker_pin") || DEFAULT_WORKER_PIN;
+    }
+
+    function checkWorkerAuth() {
+      const isAuth = sessionStorage.getItem("navy_worker_authenticated") === "true";
+      const lockScreen = document.getElementById("workerAuthLockScreen");
+      const pinInput = document.getElementById("workerPinInput");
+      const app = document.getElementById("workerApp");
+
+      if (isAuth) {
+        if (lockScreen) {
+          lockScreen.classList.add("hidden");
+          lockScreen.style.display = "none";
+        }
+        if (app) app.classList.remove("blur-sm", "pointer-events-none");
+        return true;
+      } else {
+        if (lockScreen) {
+          lockScreen.classList.remove("hidden");
+          lockScreen.style.display = "flex";
+        }
+        if (app) app.classList.add("blur-sm", "pointer-events-none");
+        if (pinInput) {
+          setTimeout(function() { pinInput.focus(); }, 150);
+        }
+        return false;
+      }
+    }
+
+    function handleWorkerPinSubmit() {
+      const pinInput = document.getElementById("workerPinInput");
+      const errorMsg = document.getElementById("workerPinError");
+      const currentPin = getWorkerPin();
+      const enteredPin = (pinInput ? pinInput.value : "").trim();
+
+      if (enteredPin === currentPin) {
+        sessionStorage.setItem("navy_worker_authenticated", "true");
+        if (errorMsg) errorMsg.classList.add("hidden");
+        
+        const lockScreen = document.getElementById("workerAuthLockScreen");
+        const app = document.getElementById("workerApp");
+        if (lockScreen) {
+          lockScreen.classList.add("opacity-0");
+          setTimeout(function() {
+            lockScreen.classList.add("hidden");
+            lockScreen.style.display = "none";
+            lockScreen.classList.remove("opacity-0");
+          }, 250);
+        }
+        if (app) app.classList.remove("blur-sm", "pointer-events-none");
+        
+        showToast("Acceso concedido al panel de taller", "success");
+        initWorkerDashboard();
+      } else {
+        if (errorMsg) {
+          errorMsg.classList.remove("hidden");
+          const errorText = document.getElementById("workerPinErrorMsg");
+          if (errorText) errorText.innerText = "PIN incorrecto. Intenta nuevamente.";
+        }
+        if (pinInput) {
+          pinInput.classList.add("shake-anim", "border-rose-500");
+          setTimeout(function() {
+            pinInput.classList.remove("shake-anim", "border-rose-500");
+            pinInput.value = "";
+            pinInput.focus();
+          }, 450);
+        }
+      }
+    }
+
+    function togglePinVisibility() {
+      const pinInput = document.getElementById("workerPinInput");
+      const eyeIcon = document.getElementById("workerPinEyeIcon");
+      if (!pinInput) return;
+      if (pinInput.type === "password") {
+        pinInput.type = "text";
+        if (eyeIcon) {
+          eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>';
+        }
+      } else {
+        pinInput.type = "password";
+        if (eyeIcon) {
+          eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+        }
+      }
+    }
+
+    function lockWorkerPanel() {
+      sessionStorage.removeItem("navy_worker_authenticated");
+      const pinInput = document.getElementById("workerPinInput");
+      if (pinInput) pinInput.value = "";
+      checkWorkerAuth();
+      showToast("Panel bloqueado de forma segura", "info");
+    }
+
+    function promptChangeWorkerPin() {
+      const currentPin = getWorkerPin();
+      const currentInput = prompt("Para cambiar el PIN, ingresa primero el PIN actual:");
+      if (!currentInput) return;
+      if (currentInput.trim() !== currentPin) {
+        alert("PIN actual incorrecto. No se realizaron cambios.");
+        return;
+      }
+      const newPin = prompt("Ingresa el nuevo PIN de seguridad (mínimo 4 dígitos):");
+      if (!newPin || newPin.trim().length < 4) {
+        alert("El PIN debe tener al menos 4 dígitos o caracteres.");
+        return;
+      }
+      const confirmPin = prompt("Confirma el nuevo PIN:");
+      if (confirmPin !== newPin) {
+        alert("Los PINs ingresados no coinciden.");
+        return;
+      }
+      localStorage.setItem("navy_sport_worker_pin", newPin.trim());
+      alert("¡PIN actualizado con éxito! Nuevo PIN configurado.");
+      showToast("PIN de seguridad actualizado", "success");
+    }
+
     function initWorkerDashboard() {
+      if (!checkWorkerAuth()) {
+        return;
+      }
       loadCategories();
       populateCategoriesSelect();
       loadSavedProductsAndStock();
