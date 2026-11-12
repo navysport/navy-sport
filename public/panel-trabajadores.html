@@ -3715,23 +3715,69 @@
       }
     }
 
+    // ===============================================================
+    // COMPRESIÓN INTELIGENTE DE IMÁGENES PARA NO SATURAR LOCALSTORAGE
+    // ===============================================================
+    function compressBase64Image(dataUrl, maxWidth, maxHeight, quality, callback) {
+      if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image')) {
+        return callback(dataUrl);
+      }
+      const img = new Image();
+      img.onload = function() {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          if (width / maxWidth > height / maxHeight) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convertir a JPEG optimizado ligero para localStorage (< 200 KB)
+        const compressed = canvas.toDataURL('image/jpeg', quality || 0.82);
+        callback(compressed);
+      };
+      img.onerror = function() {
+        callback(dataUrl);
+      };
+      img.src = dataUrl;
+    }
+
+    function compressImageFile(file, maxWidth, maxHeight, quality, callback) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        compressBase64Image(e.target.result, maxWidth, maxHeight, quality, callback);
+      };
+      reader.readAsDataURL(file);
+    }
+
     function processWireframeImageFile(file) {
       if (!file.type || !file.type.startsWith("image/")) {
         showToast("Por favor sube un archivo de imagen válido", false);
         return;
       }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        uploadedWireframeImageDataUrl = e.target.result;
+      showToast("Optimizando foto de la prenda...", true);
+      compressImageFile(file, 1000, 1000, 0.85, function(optimizedUrl) {
+        uploadedWireframeImageDataUrl = optimizedUrl;
         const previewImg = document.getElementById("wireframeImagePreview");
         const previewBox = document.getElementById("wireframeImagePreviewBox");
         const placeholder = document.getElementById("wireframeUploadPlaceholder");
         if (previewImg) previewImg.src = uploadedWireframeImageDataUrl;
         if (previewBox) previewBox.classList.remove("hidden");
         if (placeholder) placeholder.classList.add("hidden");
-        showToast("Foto de la prenda cargada correctamente", true);
-      };
-      reader.readAsDataURL(file);
+        showToast("Foto de la prenda cargada y optimizada", true);
+      });
     }
 
     function removeWireframeUploadedImage() {
@@ -4112,16 +4158,15 @@
         showToast("Por favor selecciona un archivo de imagen válido", false);
         return;
       }
-      const reader = new FileReader();
-      reader.onload = function(e) {
+      showToast("Optimizando y cargando imagen de portada...", true);
+      compressImageFile(file, 1920, 1080, 0.82, function(optimizedDataUrl) {
         const imgInput = document.getElementById("portadaBannerImageInput");
         if (imgInput) {
-          imgInput.value = e.target.result;
+          imgInput.value = optimizedDataUrl;
           updatePortadaBannerEditorLivePreview();
-          showToast("Foto cargada con éxito. Haz clic en Guardar para publicarla", true);
+          showToast("Foto optimizada con éxito. Haz clic en Guardar para publicarla", true);
         }
-      };
-      reader.readAsDataURL(file);
+      });
     }
 
     function setQuickPortadaBannerImage(path) {
@@ -4143,26 +4188,37 @@
 
     function savePortadaBannerForm(event) {
       if (event) event.preventDefault();
-      const image = document.getElementById("portadaBannerImageInput")?.value.trim() || "assets/hero_banner_models.jpg";
+      const rawImage = document.getElementById("portadaBannerImageInput")?.value.trim() || "assets/hero_banner_models.jpg";
       const ctaText = document.getElementById("portadaBannerBtnTextInput")?.value.trim() || "VER CATÁLOGO";
       const tag = document.getElementById("portadaBannerTagInput")?.value.trim() || "Haz clic para explorar todas las camisetas y equipaciones";
       const footerText = document.getElementById("portadaBannerFooterInput")?.value.trim() || "ELEVA TU LOOK CON ESTILO • CONFECCIÓN ECUATORIANA DE ALTA DENSIDAD";
 
-      const data = {
-        image: image,
-        ctaText: ctaText,
-        tag: tag,
-        footerText: footerText,
-        updatedAt: new Date().toISOString()
-      };
+      compressBase64Image(rawImage, 1600, 1000, 0.80, function(optimizedImage) {
+        const data = {
+          image: optimizedImage,
+          ctaText: ctaText,
+          tag: tag,
+          footerText: footerText,
+          updatedAt: new Date().toISOString()
+        };
 
-      try {
-        localStorage.setItem("navy_landing_banner", JSON.stringify(data));
-        updatePortadaBannerEditorLivePreview();
-        showToast("¡Banner de Portada guardado y publicado en la tienda!", true);
-      } catch (err) {
-        showToast("Error al guardar: " + err.message, false);
-      }
+        try {
+          localStorage.setItem("navy_landing_banner", JSON.stringify(data));
+          updatePortadaBannerEditorLivePreview();
+          showToast("¡Banner de Portada guardado y publicado en la tienda!", true);
+        } catch (err) {
+          compressBase64Image(rawImage, 1200, 750, 0.65, function(superOptimized) {
+            try {
+              data.image = superOptimized;
+              localStorage.setItem("navy_landing_banner", JSON.stringify(data));
+              updatePortadaBannerEditorLivePreview();
+              showToast("¡Banner de Portada guardado y optimizado con éxito!", true);
+            } catch (err2) {
+              showToast("Error al guardar: La imagen es demasiado pesada (" + err2.message + ")", false);
+            }
+          });
+        }
+      });
     }
 
     // --- BANNER DE LA PÁGINA PRINCIPAL (TIENDA Y CATÁLOGO) ---
@@ -4337,16 +4393,15 @@
         showToast("Por favor selecciona un archivo de imagen válido", false);
         return;
       }
-      const reader = new FileReader();
-      reader.onload = function(e) {
+      showToast("Optimizando y cargando imagen del banner...", true);
+      compressImageFile(file, 1920, 1080, 0.82, function(optimizedDataUrl) {
         const imageInput = document.getElementById("mainBannerImageInput");
         if (imageInput) {
-          imageInput.value = e.target.result;
+          imageInput.value = optimizedDataUrl;
           updateMainBannerEditorLivePreview();
-          showToast("Foto cargada con éxito. Haz clic en Guardar para publicarla", true);
+          showToast("Foto optimizada con éxito. Haz clic en Guardar para publicarla", true);
         }
-      };
-      reader.readAsDataURL(file);
+      });
     }
 
     function setQuickMainBannerImage(path) {
@@ -4374,7 +4429,7 @@
       const tag = document.getElementById("mainBannerTagInput")?.value.trim() || "🔥 NUEVA PRENDA EN OFERTA • EDICIÓN LIMITADA";
       const ctaText = document.getElementById("mainBannerCtaTextInput")?.value.trim() || "VER OFERTA";
       const ctaTarget = document.getElementById("mainBannerCtaTargetInput")?.value.trim() || "#card-cam-brasil-2026";
-      const image = document.getElementById("mainBannerImageInput")?.value.trim() || "assets/banner_destacado.jpg";
+      const rawImage = document.getElementById("mainBannerImageInput")?.value.trim() || "assets/banner_destacado.jpg";
       const status = document.getElementById("mainBannerStatusInput")?.value || "activo";
 
       if (!title) {
@@ -4382,24 +4437,35 @@
         return;
       }
 
-      const bannerData = {
-        title: title,
-        subtitle: subtitle,
-        tag: tag,
-        ctaText: ctaText,
-        ctaTarget: ctaTarget,
-        image: image,
-        status: status,
-        updatedAt: new Date().toISOString()
-      };
+      compressBase64Image(rawImage, 1600, 1000, 0.80, function(optimizedImage) {
+        const bannerData = {
+          title: title,
+          subtitle: subtitle,
+          tag: tag,
+          ctaText: ctaText,
+          ctaTarget: ctaTarget,
+          image: optimizedImage,
+          status: status,
+          updatedAt: new Date().toISOString()
+        };
 
-      try {
-        localStorage.setItem("navy_main_store_banner", JSON.stringify(bannerData));
-        updateMainBannerEditorLivePreview();
-        showToast("¡Banner de la Página Principal guardado y publicado en la tienda!", true);
-      } catch (err) {
-        showToast("Error al guardar: " + err.message, false);
-      }
+        try {
+          localStorage.setItem("navy_main_store_banner", JSON.stringify(bannerData));
+          updateMainBannerEditorLivePreview();
+          showToast("¡Banner de la Página Principal guardado y publicado en la tienda!", true);
+        } catch (err) {
+          compressBase64Image(rawImage, 1200, 750, 0.65, function(superOptimized) {
+            try {
+              bannerData.image = superOptimized;
+              localStorage.setItem("navy_main_store_banner", JSON.stringify(bannerData));
+              updateMainBannerEditorLivePreview();
+              showToast("¡Banner guardado y optimizado con éxito!", true);
+            } catch (err2) {
+              showToast("Error al guardar banner: " + err2.message, false);
+            }
+          });
+        }
+      });
     }
 
     function loadBanners() {
