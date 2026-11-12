@@ -453,11 +453,79 @@
             </div>
           </div>
 
+                    <!-- =============================================================== -->
+          <!-- BARRA DE CATEGORIAS PARA CELULARES (MENU DESPLEGABLE)          -->
+          <!-- IDÉNTICO AL PANEL DE TRABAJADORES                               -->
+          <!-- =============================================================== -->
+          <div class="lg:hidden shrink-0 sticky top-16 z-30 bg-[#16243e] rounded-2xl border border-white/10 px-3 py-2.5 shadow-lg w-full mb-3" id="mobileStoreDropdownWrapper">
+            <div class="relative w-full">
+              <!-- BOTON DISPARADOR DEL MENU DESPLEGABLE -->
+              <button
+                type="button"
+                id="mobileStoreMenuToggleBtn"
+                onclick="toggleMobileStoreDropdown(event)"
+                class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white shadow-sm transition active:scale-[0.99] cursor-pointer"
+              >
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span id="mobileStoreActiveIconBox" class="w-7 h-7 rounded-lg bg-[#FF007F]/20 border border-[#FF007F]/30 flex items-center justify-center text-[#FF007F] shrink-0 font-black text-xs">
+                    ★
+                  </span>
+                  <div class="text-left truncate">
+                    <div class="text-[9px] text-neutral-400 font-bold uppercase tracking-wider">Categoría</div>
+                    <div id="mobileStoreActiveLabel" class="text-xs font-black uppercase text-white truncate">Ver Todo</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <span id="mobileStoreActiveBadge" class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#FF007F] text-white font-black uppercase">TODOS</span>
+                  <svg id="mobileStoreChevronIcon" class="w-4 h-4 text-neutral-300 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+              </button>
+
+              <!-- MENU DESPLEGABLE FLOTANTE -->
+              <div
+                id="mobileStoreDropdownMenu"
+                class="hidden absolute left-0 right-0 top-full mt-1.5 bg-[#121c2e] border border-white/15 rounded-2xl shadow-2xl p-2 space-y-1 z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150"
+              >
+                <div class="text-[9px] font-black uppercase tracking-wider text-neutral-400 px-3 py-1 border-b border-white/5 flex items-center justify-between">
+                  <span>Filtrar por Categoría</span>
+                  <span class="text-[8px] text-neutral-500">Toca para filtrar</span>
+                </div>
+
+                <!-- CATEGORIAS -->
+                <div id="mobileStoreCategoriesContainer" class="space-y-1">
+                  <!-- Render dinámico con renderSidebarCategories() -->
+                </div>
+
+                <!-- ACCIONES ADICIONALES -->
+                <div class="pt-2 border-t border-white/10 space-y-1 mt-2">
+                  <a
+                    href="https://wa.me/593988898144?text=Hola%20Navy%20Sport,%20quisiera%20cotizar%20uniformes%20completos%20para%20mi%20equipo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-black text-xs uppercase tracking-wider text-center transition"
+                  >
+                    <span>Quiero cotizar para mi club &rarr;</span>
+                  </a>
+                  <div class="flex items-center justify-between px-2 pt-1 text-xs">
+                    <a href="panel-trabajadores.html" class="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition font-semibold">
+                      <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                      <span>Administrativo</span>
+                    </a>
+                    <a href="#" onclick="showLandingView(); closeMobileStoreDropdown(); return false;" class="text-slate-400 hover:text-[#FF007F] font-bold transition">
+                      &larr; Volver a Portada
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
           <!-- CONTENEDOR DE 2 COLUMNAS: MENU LATERAL ABIERTO + CUADRICULA DE PRODUCTOS -->
           <div class="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start">
             
             <!-- MENU DE CATEGORIAS OFICIALES (ABIERTO POR DEFECTO - NO REQUIERE TOCAR PARA ABRIR) -->
-            <aside id="catalogCategoriesSidebar" class="w-full lg:w-72 xl:w-80 shrink-0 bg-[#16243e] rounded-3xl p-5 sm:p-6 text-white shadow-xl space-y-6 lg:sticky lg:top-24 border border-white/10">
+            <aside id="catalogCategoriesSidebar" class="hidden lg:block lg:w-72 xl:w-80 shrink-0 bg-[#16243e] rounded-3xl p-5 sm:p-6 text-white shadow-xl space-y-6 lg:sticky lg:top-24 border border-white/10">
               
               <!-- Encabezado con Indicador de Marca -->
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -527,17 +595,17 @@
   <!-- MODAL DE DETALLE DE PRODUCTO (GALERIA 60 FPS & 2 OPCIONES DE COMPRA) -->
   <!-- =================================================================== -->
   <div id="productDetailModal" onclick="handleDetailBackdropClick(event)" class="fixed inset-0 z-50 bg-[#16243e]/60 backdrop-blur-sm hidden items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden transition-colors duration-300">
-    <div id="productDetailContainer" class="bg-white border border-[#16243e]/20 rounded-2xl sm:rounded-3xl w-[95vw] max-w-[95vw] h-[95vh] max-h-[95vh] overflow-hidden shadow-2xl relative my-auto text-[#16243e] flex flex-col">
+    <div id="productDetailContainer" class="bg-white border border-[#16243e]/20 rounded-2xl sm:rounded-3xl w-full sm:w-[95vw] sm:max-w-[95vw] lg:max-w-6xl h-full max-h-[96vh] sm:max-h-[94vh] lg:h-[90vh] overflow-hidden shadow-2xl relative my-auto text-[#16243e] flex flex-col">
       
       <!-- Boton Cerrar -->
       <button onclick="closeProductDetail()" class="absolute top-4 right-4 z-30 text-slate-500 hover:text-[#16243e] bg-slate-100 hover:bg-slate-200 border border-slate-300 p-2.5 rounded-full transition-all active:scale-90 cursor-pointer shadow-sm">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-0 flex-1 h-full overflow-hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-0 flex-1 h-full overflow-y-auto lg:overflow-hidden">
         
         <!-- COLUMNA IZQUIERDA: GALERIA DE IMAGENES & PREVISUALIZACION (6/12) -->
-        <div class="lg:col-span-6 bg-[#f8fafc] p-6 sm:p-8 lg:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#16243e]/15 relative overflow-hidden">
+        <div class="lg:col-span-6 bg-[#f8fafc] p-4 sm:p-6 lg:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#16243e]/15 relative shrink-0 lg:shrink lg:overflow-hidden">
           
           <!-- Encabezado de la Galeria -->
           <div class="relative z-10 flex items-center justify-between">
@@ -551,7 +619,7 @@
 
           <!-- ESCENARIO PRINCIPAL DE LA GALERIA -->
           <div class="relative z-10 my-auto flex items-center justify-center flex-1 w-full py-4 min-h-0">
-            <div id="detailStageCanvas" class="w-full h-full min-h-[360px] sm:min-h-[440px] lg:min-h-[500px] max-h-[580px] rounded-3xl flex flex-col items-center justify-center relative p-6 sm:p-8 transition-all duration-300 bg-white border border-[#16243e]/10 overflow-hidden shadow-sm">
+            <div id="detailStageCanvas" class="w-full h-full min-h-[220px] sm:min-h-[320px] lg:min-h-[480px] max-h-[580px] rounded-3xl flex flex-col items-center justify-center relative p-6 sm:p-8 transition-all duration-300 bg-white border border-[#16243e]/10 overflow-hidden shadow-sm">
               <!-- Render dinamico con animacion fluida .stage-animated -->
             </div>
           </div>
@@ -581,9 +649,9 @@
         </div>
 
         <!-- COLUMNA DERECHA: DESCRIPCION & 2 OPCIONES DE COMPRA (6/12) - FIJA Y SIN SCROLL EXTERNO -->
-        <div class="lg:col-span-6 p-4 sm:p-6 lg:p-8 flex flex-col justify-between overflow-hidden h-full max-h-full">
+        <div class="lg:col-span-6 p-4 sm:p-6 lg:p-8 flex flex-col justify-between overflow-y-visible lg:overflow-hidden lg:h-full lg:max-h-full">
           
-          <div class="flex-1 min-h-0 flex flex-col justify-start space-y-2 sm:space-y-3 overflow-hidden">
+          <div class="flex-1 min-h-0 flex flex-col justify-start space-y-2.5 sm:space-y-3 overflow-y-visible lg:overflow-hidden">
             <!-- TITULO Y SKU (shrink-0) -->
             <div class="space-y-1 shrink-0">
               <span id="detailSkuTag" class="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-widest block">COD: CAM-01-PRO</span>
@@ -721,7 +789,7 @@
           </div>
 
           <!-- BOTONES DE COMPRA Y ACCION (shrink-0 mt-auto) -->
-          <div class="pt-3 sm:pt-4 border-t border-[#16243e]/15 space-y-2 mt-auto shrink-0">
+          <div class="pt-3 sm:pt-4 border-t border-[#16243e]/15 space-y-2 mt-4 lg:mt-auto shrink-0 sticky bottom-0 bg-white/95 backdrop-blur-md pb-2 z-20">
             <div class="grid grid-cols-2 gap-3 sm:gap-4">
               <!-- BOTON 1: AGREGAR AL CARRITO -->
               <button
@@ -2619,7 +2687,64 @@
 
 
       nav.innerHTML = html;
+
+      // Renderizar también el menú desplegable rápido para celulares (estilo panel trabajadores)
+      const mobileContainer = document.getElementById("mobileStoreCategoriesContainer");
+      if (mobileContainer) {
+        let mobHtml = "";
+        categories.forEach(cat => {
+          const isActive = (currentCategory === cat.id);
+          mobHtml += 
+            <button
+              type="button"
+              onclick="setCategory(''); closeMobileStoreDropdown();"
+              class="mobile-dropdown-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold uppercase transition  cursor-pointer text-left"
+            >
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full "></span>
+                <span></span>
+              </div>
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded-full "></span>
+            </button>
+          ;
+        });
+        mobileContainer.innerHTML = mobHtml;
+      }
     }
+
+    // CONTROL DEL MENU DESPLEGABLE EN VISTA CELULAR (IDÉNTICO AL PANEL DE TRABAJADORES)
+    function toggleMobileStoreDropdown(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById("mobileStoreDropdownMenu");
+      const chevron = document.getElementById("mobileStoreChevronIcon");
+      if (!menu) return;
+      const isClosed = menu.classList.contains("hidden");
+      if (isClosed) {
+        menu.classList.remove("hidden");
+        if (chevron) chevron.classList.add("rotate-180");
+      } else {
+        menu.classList.add("hidden");
+        if (chevron) chevron.classList.remove("rotate-180");
+      }
+    }
+
+    function closeMobileStoreDropdown() {
+      const menu = document.getElementById("mobileStoreDropdownMenu");
+      const chevron = document.getElementById("mobileStoreChevronIcon");
+      if (menu) menu.classList.add("hidden");
+      if (chevron) chevron.classList.remove("rotate-180");
+    }
+
+    // CERRAR MENU FLOTANTE SI HACE CLICK AFUERA
+    document.addEventListener("click", function(event) {
+      const menu = document.getElementById("mobileStoreDropdownMenu");
+      const btn = document.getElementById("mobileStoreMenuToggleBtn");
+      if (menu && !menu.classList.contains("hidden")) {
+        if (!menu.contains(event.target) && (!btn || !btn.contains(event.target))) {
+          closeMobileStoreDropdown();
+        }
+      }
+    });
 
     // CONTROL DEL DRAWER / MENU DESPLEGABLE DE CATEGORIAS
     function openCategoryDrawer() {
@@ -2690,6 +2815,23 @@
           badge.textContent = found ? found.name : cat.toUpperCase();
         }
       }
+
+      // Actualizar botón del menú móvil para reflejar la categoría seleccionada
+      const mobLabel = document.getElementById("mobileStoreActiveLabel");
+      const mobBadge = document.getElementById("mobileStoreActiveBadge");
+      const catMap = {
+        "all": { name: "Ver Todo", tag: "TODOS" },
+        "nacional": { name: "Clubes Nacionales", tag: "NACIONAL" },
+        "internacional": { name: "Clubes Internacionales", tag: "CLUBES" },
+        "clubes": { name: "Clubes Internacionales", tag: "CLUBES" },
+        "buzos": { name: "Buzos", tag: "BUZOS" },
+        "uniformes": { name: "Uniformes Completos", tag: "UNIFORMES" },
+        "kits": { name: "Uniformes Completos", tag: "UNIFORMES" },
+        "liquidacion": { name: "Liquidación en Stock", tag: "LIQUIDACIÓN" }
+      };
+      const sel = catMap[cat] || { name: cat.toUpperCase(), tag: "CAT" };
+      if (mobLabel) mobLabel.textContent = sel.name;
+      if (mobBadge) mobBadge.textContent = sel.tag;
     }
 
     // FILTROS TECNICOS
