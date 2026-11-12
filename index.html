@@ -347,15 +347,7 @@
 
         </div>
 
-        <!-- PIE INFERIOR DEL HOME -->
-        <div class="relative z-20 flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-3.5 bg-[#16243e] border-t border-white/10 text-white text-xs gap-2">
-          <span id="landingHeroFooterText" class="font-black uppercase tracking-wider text-neutral-300">
-            ELEVA TU LOOK CON ESTILO &bull; CONFECCI&Oacute;N ECUATORIANA DE ALTA DENSIDAD
-          </span>
-          <span class="font-mono text-[#FF007F] font-bold tracking-widest uppercase">
-            NAVY SPORT OFICIAL &bull; EDICI&Oacute;N 2026
-          </span>
-        </div>
+
 
       </div>
 
@@ -511,9 +503,7 @@
                       <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                       <span>Administrativo</span>
                     </a>
-                    <a href="#" onclick="showLandingView(); closeMobileStoreDropdown(); return false;" class="text-slate-400 hover:text-[#FF007F] font-bold transition">
-                      &larr; Volver a Portada
-                    </a>
+
                   </div>
                 </div>
 
@@ -565,7 +555,7 @@
                     <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                     <span>Administrativo</span>
                   </a>
-                  <a href="#" onclick="showLandingView(); return false;" class="text-slate-400 hover:text-[#FF007F] font-bold transition-colors">&larr; Volver a Portada</a>
+
                 </div>
               </div>
 
@@ -1661,6 +1651,18 @@
       }
     }
 
+    // ===============================================================
+    // HELPER PARA CATEGORÍAS MÚLTIPLES
+    // ===============================================================
+    function getProductCategories(p) {
+      if (!p) return [];
+      if (Array.isArray(p.categories) && p.categories.length > 0) return p.categories.map(c => String(c).trim().toLowerCase()).filter(Boolean);
+      if (Array.isArray(p.category)) return p.category.map(c => String(c).trim().toLowerCase()).filter(Boolean);
+      if (typeof p.categories === "string" && p.categories.trim()) return p.categories.split(",").map(c => c.trim().toLowerCase()).filter(Boolean);
+      if (typeof p.category === "string" && p.category.trim()) return p.category.split(",").map(c => c.trim().toLowerCase()).filter(Boolean);
+      return [];
+    }
+
     function renderCatalog() {
       try {
         const grid = document.getElementById("catalogGrid");
@@ -1674,31 +1676,33 @@
         let filtered = PRODUCTS.filter(p => {
           if (!p) return false;
           let matchesCategory = false;
-            if (currentCategory === "all") {
-              matchesCategory = true;
-            } else if (currentCategory === "nacional") {
-              matchesCategory = (p.category === "nacional" || p.badgeText === "ECU" || (p.badge && p.badge.toLowerCase().includes("ecu")) || (p.name && (p.name.toLowerCase().includes("ecuador") || p.name.toLowerCase().includes("liga") || p.name.toLowerCase().includes("barcelona") || p.name.toLowerCase().includes("emelec") || p.name.toLowerCase().includes("aucas") || p.name.toLowerCase().includes("valle") || p.name.toLowerCase().includes("nacional"))));
-            } else if (currentCategory === "internacional" || currentCategory === "clubes") {
-              matchesCategory = (p.category === "internacional" || p.category === "clubes" || (p.badge && (p.badge.toLowerCase().includes("club") || p.badge.toLowerCase().includes("int") || p.badge.toLowerCase().includes("premier") || p.badge.toLowerCase().includes("ligue"))) || (p.name && (p.name.toLowerCase().includes("milan") || p.name.toLowerCase().includes("miami") || p.name.toLowerCase().includes("cruyff") || p.name.toLowerCase().includes("argentina") || p.name.toLowerCase().includes("espana") || p.name.toLowerCase().includes("italia") || p.name.toLowerCase().includes("brasil") || p.name.toLowerCase().includes("colombia") || p.name.toLowerCase().includes("liverpool") || p.name.toLowerCase().includes("manchester") || p.name.toLowerCase().includes("psg"))));
-            } else if (currentCategory === "buzos") {
-              const nameLower = (p.name || "").toLowerCase();
-              matchesCategory = (p.category === "buzos") || nameLower.includes("buzo") || nameLower.includes("manga larga") || nameLower.includes("termica") || nameLower.includes("hoodie") || p.sleeve === "larga";
-            } else if (currentCategory === "uniformes" || currentCategory === "kits") {
-              matchesCategory = true;
-            } else if (currentCategory === "liquidacion") {
-              const b = (p.badge || "").toLowerCase();
-              const n = (p.name || "").toLowerCase();
-              const price = p.priceShirt || p.price || 999;
-              matchesCategory = (p.category === "liquidacion") || b.includes("liquid") || b.includes("sale") || b.includes("oferta") || n.includes("retro") || price <= 28;
-            } else {
-              matchesCategory = (p.category === currentCategory);
-            }
+          const pCats = getProductCategories(p);
+          const nameLower = (p.name || "").toLowerCase();
+          const badgeLower = (p.badge || "").toLowerCase();
+
+          if (currentCategory === "all") {
+            matchesCategory = true;
+          } else if (currentCategory === "nacional") {
+            matchesCategory = pCats.includes("nacional") || p.badgeText === "ECU" || badgeLower.includes("ecu") || nameLower.includes("ecuador") || nameLower.includes("liga") || nameLower.includes("barcelona") || nameLower.includes("emelec") || nameLower.includes("aucas") || nameLower.includes("valle") || nameLower.includes("nacional");
+          } else if (currentCategory === "internacional" || currentCategory === "clubes") {
+            matchesCategory = pCats.includes("internacional") || pCats.includes("clubes") || badgeLower.includes("club") || badgeLower.includes("int") || badgeLower.includes("premier") || badgeLower.includes("ligue") || nameLower.includes("milan") || nameLower.includes("miami") || nameLower.includes("cruyff") || nameLower.includes("argentina") || nameLower.includes("espana") || nameLower.includes("italia") || nameLower.includes("brasil") || nameLower.includes("colombia") || nameLower.includes("liverpool") || nameLower.includes("manchester") || nameLower.includes("psg");
+          } else if (currentCategory === "retro") {
+            matchesCategory = pCats.includes("retro") || nameLower.includes("retro") || badgeLower.includes("retro") || nameLower.includes("2001") || nameLower.includes("2007") || nameLower.includes("1974") || nameLower.includes("1986") || nameLower.includes("cruyff") || nameLower.includes("champions");
+          } else if (currentCategory === "buzos") {
+            matchesCategory = pCats.includes("buzos") || nameLower.includes("buzo") || nameLower.includes("manga larga") || nameLower.includes("termica") || nameLower.includes("hoodie") || p.sleeve === "larga";
+          } else if (currentCategory === "uniformes" || currentCategory === "kits") {
+            matchesCategory = true;
+          } else if (currentCategory === "liquidacion") {
+            const price = p.priceShirt || p.price || 999;
+            matchesCategory = pCats.includes("liquidacion") || badgeLower.includes("liquid") || badgeLower.includes("sale") || badgeLower.includes("oferta") || price <= 28;
+          } else {
+            matchesCategory = pCats.includes(currentCategory);
+          }
           const matchesSearch = !searchQuery || 
                                 ((p.name && p.name.toLowerCase().includes(searchQuery.toLowerCase())) || 
                                  (p.fabric && p.fabric.toLowerCase().includes(searchQuery.toLowerCase())));
 
           let matchesSleeve = true;
-          const nameLower = (p.name || "").toLowerCase();
           if (currentSleeveFilter === 'corta') {
             matchesSleeve = !nameLower.includes('manga larga');
           } else if (currentSleeveFilter === 'larga') {
@@ -2676,6 +2680,7 @@
         { id: "all", name: "Ver Todo", tag: "TODOS" },
         { id: "nacional", name: "Clubes Nacionales", tag: "NACIONAL" },
         { id: "internacional", name: "Clubes Internacionales", tag: "CLUBES" },
+        { id: "retro", name: "Colección Retro", tag: "RETRO" },
         { id: "buzos", name: "Buzos", tag: "BUZOS" },
         { id: "uniformes", name: "Uniformes Completos", tag: "UNIFORMES" },
         { id: "liquidacion", name: "Liquidaci&oacute;n en Stock", tag: "LIQUIDACI&Oacute;N" }
