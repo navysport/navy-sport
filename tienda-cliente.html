@@ -368,7 +368,7 @@
         <!-- CONFIGURABLE Y EDITABLE DESDE EL PANEL DE TRABAJADORES          -->
         <!-- =============================================================== -->
         <div id="mainStoreBannerWrapper" class="w-full mb-3 sm:mb-6 transition-all duration-300">
-          <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-[#16243e]/15 bg-[#070c18] group min-h-[170px] sm:min-h-[210px] md:min-h-[230px] flex items-center">
+          <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-[#16243e]/15 bg-[#070c18] group min-h-[170px] sm:min-h-[210px] md:min-h-[230px] flex items-center cursor-pointer" onclick="goToBannerProduct(event)">
             
             <!-- Imagen de fondo completa con zoom interactivo -->
             <img 
@@ -410,7 +410,7 @@
                 <a 
                   id="mainStoreBannerCta" 
                   href="#card-cam-brasil-2026" 
-                  onclick="goToBrasilOffer(event)"
+                  onclick="goToBannerProduct(event)"
                   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl sm:rounded-2xl bg-[#FF007F] hover:bg-[#e00070] text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-lg shadow-[#FF007F]/30 hover:scale-105 active:scale-95 cursor-pointer"
                 >
                   <span id="mainStoreBannerCtaText">VER OFERTA</span>
@@ -2965,30 +2965,125 @@
       } catch(e) {}
     }
 
-    function goToBrasilOffer(event) {
+    function goToBannerProduct(event) {
       if (event) {
         try { event.preventDefault(); event.stopPropagation(); } catch (err) {}
       }
 
-      // 1. Si esta en la pantalla de bienvenida (landing), cambiar a la vista de catalogo
+      // 1. Cambiar a la vista de catalogo si esta en la portada
       if (typeof showCatalogView === 'function') {
         showCatalogView();
       }
 
-      // 2. Buscar prioritariamente la prenda que agrego el usuario en el panel
-      const targetProd = (typeof PRODUCTS !== 'undefined' && Array.isArray(PRODUCTS)) ? (
-        PRODUCTS.find(p => p.id === "CAM-NEW-1794410575264-PRO") ||
-        PRODUCTS.find(p => p.id && p.id.startsWith("CAM-NEW") && p.name && p.name.toUpperCase().includes("BRASIL")) ||
-        PRODUCTS.find(p => p.name && p.name.toUpperCase().includes("BRASIL CBF PRO 2026")) ||
-        PRODUCTS.find(p => p.name && p.name.toUpperCase().includes("BRASIL CBF")) ||
-        PRODUCTS.find(p => p.name && p.name.toUpperCase().includes("BRASIL") && p.id !== "cam-16") ||
-        PRODUCTS.find(p => p.name && p.name.toUpperCase().includes("BRASIL")) ||
-        PRODUCTS[0]
-      ) : null;
+      if (typeof PRODUCTS === 'undefined' || !Array.isArray(PRODUCTS) || PRODUCTS.length === 0) return;
+
+      // 2. Extraer el texto y titulo del banner
+      const titleEl = document.getElementById("mainStoreBannerTitle");
+      const ctaEl = document.getElementById("mainStoreBannerCta");
+      
+      let bannerTitle = titleEl ? titleEl.textContent.trim() : "";
+      let ctaTarget = ctaEl ? (ctaEl.getAttribute("href") || "") : "";
+
+      // Si existe configuracion guardada en localStorage
+      try {
+        const savedBanner = localStorage.getItem("navy_main_store_banner");
+        if (savedBanner) {
+          const parsed = JSON.parse(savedBanner);
+          if (parsed.title) bannerTitle = parsed.title;
+          if (parsed.ctaTarget) ctaTarget = parsed.ctaTarget;
+        }
+      } catch(e) {}
+
+      // Funcion normalizadora (sin acentos, minusculas, limpia)
+      function cleanText(str) {
+        return (str || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9\s]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      const cleanBanner = cleanText(bannerTitle);
+      const cleanTarget = cleanText(ctaTarget);
+
+      let targetProd = null;
+
+      // A. Intento 1: Deteccion por ID directo en ctaTarget (ej: #card-buzo-psg-2026, cam-01, etc.)
+      if (ctaTarget) {
+        targetProd = PRODUCTS.find(p => p.id && ctaTarget.includes(p.id));
+      }
+
+      // B. Intento 2: Coincidencia exacta o contenida por nombre completo
+      if (!targetProd && cleanBanner) {
+        // Coincidencia exacta
+        targetProd = PRODUCTS.find(p => cleanText(p.name) === cleanBanner);
+        
+        // Coincidencia si el nombre del producto esta contenido completo en el titulo del banner
+        if (!targetProd) {
+          targetProd = PRODUCTS.find(p => {
+            const cp = cleanText(p.name);
+            return cp.length > 3 && cleanBanner.includes(cp);
+          });
+        }
+
+        // Coincidencia inversa: si el titulo del banner esta contenido en el nombre del producto
+        if (!targetProd) {
+          targetProd = PRODUCTS.find(p => {
+            const cp = cleanText(p.name);
+            return cleanBanner.length > 3 && cp.includes(cleanBanner);
+          });
+        }
+      }
+
+      // C. Intento 3: Deteccion inteligente por palabras clave de equipos / selecciones
+      if (!targetProd && cleanBanner) {
+        const stopWords = new Set(["de", "la", "el", "en", "pro", "nueva", "camiseta", "buzo", "uniforme", "2026", "2025", "2024", "oficial", "edicion", "limitada", "prenda", "oferta", "titular", "termico", "termica"]);
+        const bannerWords = cleanBanner.split(" ").filter(w => w.length >= 3 && !stopWords.has(w));
+
+        let bestScore = 0;
+        let bestProd = null;
+
+        PRODUCTS.forEach(p => {
+          const prodClean = cleanText(p.name);
+          const prodWords = prodClean.split(" ").filter(w => w.length >= 3);
+          
+          let score = 0;
+          bannerWords.forEach(bw => {
+            if (prodWords.includes(bw) || prodClean.includes(bw)) {
+              score += 2;
+            }
+          });
+
+          // Puntos extra si el tipo de prenda coincide (buzo vs camiseta)
+          const isBannerBuzo = cleanBanner.includes("buzo");
+          const isProdBuzo = (p.category === 'buzos' || prodClean.includes("buzo"));
+          if (isBannerBuzo && isProdBuzo) score += 3;
+          if (!isBannerBuzo && !isProdBuzo) score += 1;
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestProd = p;
+          }
+        });
+
+        if (bestScore >= 2) {
+          targetProd = bestProd;
+        }
+      }
+
+      // D. Fallback seguro: Si menciona Brasil CBF, usar cam-brasil-cbf-2026; de lo contrario el primer producto
+      if (!targetProd) {
+        if (cleanBanner.includes("brasil")) {
+          targetProd = PRODUCTS.find(p => p.id === "cam-brasil-cbf-2026") || PRODUCTS.find(p => cleanText(p.name).includes("brasil"));
+        }
+        if (!targetProd) targetProd = PRODUCTS[0];
+      }
 
       if (!targetProd) return;
 
-      // 3. Abrir de una el modal de la camiseta
+      // 3. Abrir de inmediato el menu / modal de detalle del producto
       if (typeof openProductDetail === 'function') {
         openProductDetail(targetProd.id);
       }
@@ -3000,6 +3095,11 @@
           card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       }, 100);
+    }
+
+    // Alias para compatibilidad con llamadas existentes
+    function goToBrasilOffer(event) {
+      return goToBannerProduct(event);
     }
 
     function showCatalogView() {
