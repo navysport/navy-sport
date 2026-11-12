@@ -278,11 +278,7 @@
               <svg class="w-4 h-4 text-neutral-300 group-hover:text-[#FF007F] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
               <span id="headerCartCount" class="absolute -top-2.5 -right-2.5 bg-[#FF007F] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-md">0</span>
             </div>
-        <!-- BOTON ACCESO TALLER -->
-        <a href="panel-trabajadores.html" class="flex items-center gap-1.5 bg-white/5 hover:bg-white/10 border border-white/15 px-3 py-2.5 rounded-2xl text-xs font-semibold text-neutral-300 hover:text-white transition cursor-pointer" title="Panel de Taller">
-          <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span class="hidden md:inline text-[11px] font-bold uppercase tracking-wider">Taller</span>
-        </a>
+
             <span class="hidden sm:inline uppercase tracking-wider font-sans font-bold">Mi Carrito</span>
           </button>
         </div>
@@ -494,12 +490,14 @@
               </div>
 
               <!-- Pie del Menu: Politicas -->
+              <!-- Pie del Menu: Acceso Administrativo -->
               <div class="pt-4 border-t border-white/10 space-y-2">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Pol&iacute;ticas</h4>
-                <div class="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-slate-300">
-                  <a href="#" onclick="alert('Gu&iacute;a de tallas: Disponibles en XS, S, M, L, XL con corte ergon&oacute;mico y tela Dry-Fit.'); return false;" class="hover:text-white transition-colors">Tallas y Medidas</a>
-                  <a href="#" onclick="alert('Garant&iacute;a oficial Navy Sport: 100% sublimaci&oacute;n HD y costura reforzada.'); return false;" class="hover:text-white transition-colors">Garant&iacute;a de Calidad</a>
-                  <a href="#" onclick="showLandingView(); return false;" class="hover:text-[#FF007F] font-bold transition-colors">&larr; Volver a Portada</a>
+                <div class="flex flex-col gap-2.5 text-xs">
+                  <a href="panel-trabajadores.html" class="inline-flex items-center gap-2 text-slate-300 hover:text-white transition-colors font-semibold" title="Acceso Administrativo">
+                    <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <span>Administrativo</span>
+                  </a>
+                  <a href="#" onclick="showLandingView(); return false;" class="text-slate-400 hover:text-[#FF007F] font-bold transition-colors">&larr; Volver a Portada</a>
                 </div>
               </div>
 
