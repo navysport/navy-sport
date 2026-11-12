@@ -2706,19 +2706,19 @@
         let mobHtml = "";
         categories.forEach(cat => {
           const isActive = (currentCategory === cat.id);
-          mobHtml += 
+          mobHtml += `
             <button
               type="button"
-              onclick="setCategory(''); closeMobileStoreDropdown();"
-              class="mobile-dropdown-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold uppercase transition  cursor-pointer text-left"
+              onclick="setCategory('${cat.id}'); closeMobileStoreDropdown();"
+              class="mobile-dropdown-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold uppercase transition ${isActive ? 'bg-[#FF007F]/20 text-white border border-[#FF007F]/40 font-black' : 'text-neutral-200 hover:text-white hover:bg-white/10'} cursor-pointer text-left"
             >
               <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full "></span>
-                <span></span>
+                <span class="w-2 h-2 rounded-full ${isActive ? 'bg-[#FF007F] animate-pulse' : 'bg-white/30'}"></span>
+                <span>${cat.name}</span>
               </div>
-              <span class="text-[9px] font-mono px-2 py-0.5 rounded-full "></span>
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded-full ${isActive ? 'bg-[#FF007F] text-white font-black' : 'bg-white/10 text-neutral-300 font-bold'}">${cat.tag}</span>
             </button>
-          ;
+          `;
         });
         mobileContainer.innerHTML = mobHtml;
       }
@@ -3137,30 +3137,7 @@
             <p class="text-[11px] text-slate-500 max-w-[220px] mx-auto">Selecciona una prenda del catálogo para agregarla a tu pedido.</p>
             <button
               type="button"
-              onclick="      // Registrar pedido en la nube de Supabase para que aparezca de inmediato en el taller
-      if (window.NavySupabase && Array.isArray(cart) && cart.length > 0) {
-        const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
-        window.NavySupabase.createOrder({
-          id: orderId,
-          clientName: "Cliente Tienda Web",
-          phone: "WhatsApp",
-          city: "Ecuador",
-          total: total,
-          status: "pendiente",
-          items: cart.map(it => ({
-            productId: it.id,
-            productName: it.name,
-            mode: it.option === 'Kit Completo' ? 'kit_completo' : 'solo_camiseta',
-            size: it.size || 'M',
-            quantity: it.qty || 1,
-            unitPrice: it.price || 28,
-            subtotal: (it.price || 28) * (it.qty || 1),
-            shortsColor: it.shortsColorName || 'Oficial',
-            customPlayers: it.players || []
-          }))
-        });
-      }
-      closeCartDrawer(); showCatalogView();"
+              onclick="closeCartDrawer(); showCatalogView();"
               class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#16243e] hover:bg-[#FF007F] text-white text-xs font-black uppercase transition-all shadow-sm cursor-pointer mt-1"
             >
               <span>Ver Catálogo</span>
