@@ -1745,7 +1745,7 @@
                 <img
                   src="${p.image}"
                   alt="${p.name}"
-                  onload="normalizeCardShirtImage(this)"
+                  onload="normalizeCardShirtImage(this)" onerror="handleCardImageError(this, '${p.id}')"
                   class="card-shirt-img relative z-10 w-full h-full object-contain filter drop-shadow-[0_4px_10px_rgba(22,36,62,0.12)] sm:drop-shadow-[0_8px_16px_rgba(22,36,62,0.15)] group-hover:scale-108 transition-transform duration-500 ease-out pointer-events-none select-none"
                   loading="lazy"
                 />
@@ -1832,6 +1832,18 @@
         }, 50);
       } catch (errCatalog) {
         console.error("Error critico en renderCatalog:", errCatalog);
+      }
+    }
+
+    function handleCardImageError(imgEl, productId) {
+      if (!imgEl) return;
+      if (imgEl.dataset.fallbackApplied) return;
+      imgEl.dataset.fallbackApplied = "true";
+      const dp = (typeof DEFAULT_PRODUCTS !== 'undefined' && Array.isArray(DEFAULT_PRODUCTS)) ? DEFAULT_PRODUCTS.find(p => p.id === productId) : null;
+      if (dp && dp.image) {
+        imgEl.src = dp.image;
+      } else {
+        imgEl.src = "camisetas/brasil_cbf_pro_2026.png";
       }
     }
 
@@ -3511,7 +3523,7 @@
                   existing.image = dp.image;
                   existing.glow = dp.glow || '#FF007F';
                   existing.badge = dp.badge || 'OFICIAL';
-                  existing.name = dp.name || existing.name;
+                  existing.name = dp.name;
                   existing.category = dp.category || 'nacional';
                   existing.priceShirt = Number(existing.priceShirt || dp.priceShirt || dp.price || 28.00);
                   existing.priceKit = Number(existing.priceKit || dp.priceKit || (existing.priceShirt + 8.00));
@@ -3588,6 +3600,13 @@
         if (Array.isArray(supaProds) && supaProds.length > 0) {
           const merged = [...PRODUCTS];
           supaProds.forEach(sp => {
+            const dp = (typeof DEFAULT_PRODUCTS !== 'undefined' && Array.isArray(DEFAULT_PRODUCTS)) ? DEFAULT_PRODUCTS.find(p => p.id === sp.id) : null;
+            if (dp) {
+              if (!sp.image || sp.image.indexOf('/') === -1 || sp.image.endsWith('bsc.png') || sp.image.endsWith('colombia.png') || sp.image.endsWith('ecuador-retro.png')) {
+                sp.image = dp.image;
+                sp.name = dp.name;
+              }
+            }
             const idx = merged.findIndex(p => p.id === sp.id);
             if (idx >= 0) {
               merged[idx] = { ...merged[idx], ...sp };
