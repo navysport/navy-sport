@@ -115,23 +115,12 @@
         </button>
       </form>
 
-      <!-- Pie del modal con ayuda y retorno a la tienda -->
-      <div class="mt-6 pt-5 border-t border-white/10 flex flex-col items-center gap-3 text-center">
-        <div class="flex items-center gap-1.5 text-[11px] text-neutral-400">
-          <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span>PIN predeterminado inicial: <span class="font-mono font-bold text-sky-300">2026</span></span>
-        </div>
-
-        <div class="flex items-center gap-4 text-xs font-semibold">
-          <a href="tienda-cliente.html" class="text-neutral-400 hover:text-white transition flex items-center gap-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>Ir a Tienda de Clientes</span>
-          </a>
-          <span class="text-neutral-600">&bull;</span>
-          <button type="button" onclick="promptChangeWorkerPin()" class="text-neutral-400 hover:text-white transition underline cursor-pointer">
-            Cambiar PIN
-          </button>
-        </div>
+      <!-- Retorno a la tienda -->
+      <div class="mt-6 pt-5 border-t border-white/10 flex items-center justify-center text-center">
+        <a href="tienda-cliente.html" class="text-neutral-400 hover:text-white transition flex items-center gap-1.5 text-xs font-semibold">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          <span>Ir a Tienda de Clientes</span>
+        </a>
       </div>
 
     </div>
@@ -5044,10 +5033,10 @@
     // ===================================================================
     // SISTEMA DE SEGURIDAD Y ACCESO POR PIN (OPCION A)
     // ===================================================================
-    const DEFAULT_WORKER_PIN = "2026";
+    const DEFAULT_WORKER_PIN = "0987";
 
     function getWorkerPin() {
-      return localStorage.getItem("navy_sport_worker_pin") || DEFAULT_WORKER_PIN;
+      return DEFAULT_WORKER_PIN;
     }
 
     function checkWorkerAuth() {
@@ -5142,28 +5131,7 @@
       showToast("Panel bloqueado de forma segura", "info");
     }
 
-    function promptChangeWorkerPin() {
-      const currentPin = getWorkerPin();
-      const currentInput = prompt("Para cambiar el PIN, ingresa primero el PIN actual:");
-      if (!currentInput) return;
-      if (currentInput.trim() !== currentPin) {
-        alert("PIN actual incorrecto. No se realizaron cambios.");
-        return;
-      }
-      const newPin = prompt("Ingresa el nuevo PIN de seguridad (mínimo 4 dígitos):");
-      if (!newPin || newPin.trim().length < 4) {
-        alert("El PIN debe tener al menos 4 dígitos o caracteres.");
-        return;
-      }
-      const confirmPin = prompt("Confirma el nuevo PIN:");
-      if (confirmPin !== newPin) {
-        alert("Los PINs ingresados no coinciden.");
-        return;
-      }
-      localStorage.setItem("navy_sport_worker_pin", newPin.trim());
-      alert("¡PIN actualizado con éxito! Nuevo PIN configurado.");
-      showToast("PIN de seguridad actualizado", "success");
-    }
+
 
         // SINCRONIZACION BIDIRECCIONAL EN TIEMPO REAL CON SUPABASE (PANEL OPERACIONES)
     async function syncWorkerWithSupabase() {
