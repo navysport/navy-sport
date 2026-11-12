@@ -2761,6 +2761,7 @@
 
       order.status = "estampado";
       saveOrders();
+      if (window.NavySupabase && order && order.id) { window.NavySupabase.updateOrderStatus(order.id, order.status); }
       renderOrders();
       updateKPIs();
       logMovement("Estampado", order.productName, order.size, "Pedido #" + order.id + " avanzado a estampado (+593 98 778 1341)");
@@ -2788,6 +2789,7 @@
 
       order.status = "listo";
       saveOrders();
+      if (window.NavySupabase && order && order.id) { window.NavySupabase.updateOrderStatus(order.id, order.status); }
       renderOrders();
       updateKPIs();
       logMovement("Listo", order.productName, order.size, "Pedido #" + order.id + " marcado como LISTO y notificado al cliente");
@@ -2935,6 +2937,7 @@
       }
 
       saveOrders();
+      if (window.NavySupabase && order && order.id) { window.NavySupabase.updateOrderStatus(order.id, order.status); }
       renderOrders();
       updateKPIs();
     }
@@ -3047,6 +3050,7 @@
 
       ORDERS.unshift(newOrder);
       saveOrders();
+      if (window.NavySupabase && order && order.id) { window.NavySupabase.updateOrderStatus(order.id, order.status); }
       renderOrders();
       updateKPIs();
       closeNewOrderModal();
@@ -3738,6 +3742,7 @@
         stockMap[newId] = newProduct.stock;
         localStorage.setItem("navy_sport_inventory_db", JSON.stringify(stockMap));
       } catch(e) {}
+      if (window.NavySupabase) { window.NavySupabase.saveProduct(newProduct); }
 
       logMovement("INGRESO", name, "Lote Inicial", totalUnits + " unids. agregadas");
       populateInventoryModelSelect();
@@ -3854,6 +3859,7 @@
         stockMap[p.id] = p.stock;
         localStorage.setItem("navy_sport_inventory_db", JSON.stringify(stockMap));
       } catch(err) {}
+      if (window.NavySupabase) { window.NavySupabase.saveProduct(p); }
 
       logMovement("MODIFICACION", p.name, "EdiciÃ³n", "Datos y stock actualizados en bodega");
       renderInventoryVisual();
@@ -3908,7 +3914,8 @@
         }
       } catch(e) {}
 
-      logMovement("BAJA", deletedProd.name, "EliminaciÃ³n", "Prenda eliminada del inventario y tienda");
+      if (window.NavySupabase) { window.NavySupabase.deleteProduct(deletedProd.id, deletedProd.name); }
+      logMovement("BAJA", deletedProd.name, "Eliminación", "Prenda eliminada del inventario y tienda");
       renderInventoryVisual();
       populateInventoryModelSelect();
       updateKPIs();
@@ -5063,6 +5070,81 @@
       showToast("PIN de seguridad actualizado", "success");
     }
 
+        // SINCRONIZACION BIDIRECCIONAL EN TIEMPO REAL CON SUPABASE (PANEL OPERACIONES)
+    async function syncWorkerWithSupabase() {
+      if (!window.NavySupabase) return;
+      try {
+        // 1. Asegurar catálogo base en la nube
+        if (typeof DEFAULT_PRODUCTS !== 'undefined' && Array.isArray(DEFAULT_PRODUCTS)) {
+          await window.NavySupabase.syncInitialProducts(DEFAULT_PRODUCTS);
+        }
+
+        // 2. Traer productos de Supabase
+        const supaProds = await window.NavySupabase.getProducts();
+        if (Array.isArray(supaProds) && supaProds.length > 0) {
+          const merged = [...PRODUCTS];
+          supaProds.forEach(sp => {
+            const idx = merged.findIndex(p => p.id === sp.id);
+            if (idx >= 0) {
+              merged[idx] = { ...merged[idx], ...sp };
+            } else {
+              merged.unshift(sp);
+            }
+          });
+          PRODUCTS = merged;
+          persistProductsAndStock();
+          populateInventoryModelSelect();
+          renderInventoryVisual();
+          updateKPIs();
+          console.log("[Supabase] Inventario de taller sincronizado con la nube.");
+        }
+
+        // 3. Traer pedidos reales de la nube
+        const supaOrders = await window.NavySupabase.getOrders();
+        if (Array.isArray(supaOrders) && supaOrders.length > 0) {
+          const mergedOrders = [...ORDERS];
+          supaOrders.forEach(so => {
+            const idx = mergedOrders.findIndex(o => o.id === so.id);
+            if (idx >= 0) {
+              mergedOrders[idx] = { ...mergedOrders[idx], ...so };
+            } else {
+              mergedOrders.unshift(so);
+            }
+          });
+          ORDERS = mergedOrders;
+          saveOrders();
+          renderOrders();
+          updateKPIs();
+          console.log("[Supabase] Pedidos sincronizados con la nube:", supaOrders.length);
+        }
+
+        // 4. Suscripción en vivo a nuevos pedidos de clientes
+        window.NavySupabase.subscribeToOrders((newOrder) => {
+          if (newOrder && newOrder.id) {
+            const exists = ORDERS.some(o => o.id === newOrder.id);
+            if (!exists) {
+              const formattedOrder = {
+                id: newOrder.id,
+                client: newOrder.cliente_nombre || "Cliente Tienda",
+                phone: newOrder.cliente_telefono || "WhatsApp",
+                city: newOrder.cliente_ciudad || "Ecuador",
+                total: parseFloat(newOrder.total) || 0,
+                status: newOrder.estado || "pendiente",
+                items: []
+              };
+              ORDERS.unshift(formattedOrder);
+              saveOrders();
+              renderOrders();
+              updateKPIs();
+              showToast("¡Nuevo pedido #" + newOrder.id + " recibido en vivo desde la web!", true);
+            }
+          }
+        });
+      } catch (e) {
+        console.warn("[Supabase] Error en syncWorkerWithSupabase:", e);
+      }
+    }
+
     function initWorkerDashboard() {
       if (!checkWorkerAuth()) {
         return;
@@ -5088,6 +5170,7 @@
       } else {
         switchWorkerTab("newProduct");
       }
+      syncWorkerWithSupabase();
     }
 
     // INICIALIZACION AUTOMATICA INMEDIATA

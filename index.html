@@ -2439,6 +2439,29 @@
       }
       closeOrderConfirmModal();
       closeProductDetail();
+            // Registrar pedido en la nube de Supabase para que aparezca de inmediato en el taller
+      if (window.NavySupabase && Array.isArray(cart) && cart.length > 0) {
+        const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+        window.NavySupabase.createOrder({
+          id: orderId,
+          clientName: "Cliente Tienda Web",
+          phone: "WhatsApp",
+          city: "Ecuador",
+          total: total,
+          status: "pendiente",
+          items: cart.map(it => ({
+            productId: it.id,
+            productName: it.name,
+            mode: it.option === 'Kit Completo' ? 'kit_completo' : 'solo_camiseta',
+            size: it.size || 'M',
+            quantity: it.qty || 1,
+            unitPrice: it.price || 28,
+            subtotal: (it.price || 28) * (it.qty || 1),
+            shortsColor: it.shortsColorName || 'Oficial',
+            customPlayers: it.players || []
+          }))
+        });
+      }
       closeCartDrawer();
     }
 
@@ -2614,6 +2637,7 @@
         else clearBtn.classList.add("hidden");
       }
       renderCatalog();
+      syncStoreWithSupabase();
     }
 
     function clearSearch() {
@@ -2864,7 +2888,30 @@
             <p class="text-[11px] text-slate-500 max-w-[220px] mx-auto">Selecciona una prenda del catálogo para agregarla a tu pedido.</p>
             <button
               type="button"
-              onclick="closeCartDrawer(); showCatalogView();"
+              onclick="      // Registrar pedido en la nube de Supabase para que aparezca de inmediato en el taller
+      if (window.NavySupabase && Array.isArray(cart) && cart.length > 0) {
+        const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+        window.NavySupabase.createOrder({
+          id: orderId,
+          clientName: "Cliente Tienda Web",
+          phone: "WhatsApp",
+          city: "Ecuador",
+          total: total,
+          status: "pendiente",
+          items: cart.map(it => ({
+            productId: it.id,
+            productName: it.name,
+            mode: it.option === 'Kit Completo' ? 'kit_completo' : 'solo_camiseta',
+            size: it.size || 'M',
+            quantity: it.qty || 1,
+            unitPrice: it.price || 28,
+            subtotal: (it.price || 28) * (it.qty || 1),
+            shortsColor: it.shortsColorName || 'Oficial',
+            customPlayers: it.players || []
+          }))
+        });
+      }
+      closeCartDrawer(); showCatalogView();"
               class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#16243e] hover:bg-[#FF007F] text-white text-xs font-black uppercase transition-all shadow-sm cursor-pointer mt-1"
             >
               <span>Ver Catálogo</span>
@@ -3179,6 +3226,29 @@
       }
 
       const whatsappUrl = `https://wa.me/593998765432?text=${encodeURIComponent(msg)}`;
+            // Registrar pedido en la nube de Supabase para que aparezca de inmediato en el taller
+      if (window.NavySupabase && Array.isArray(cart) && cart.length > 0) {
+        const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+        window.NavySupabase.createOrder({
+          id: orderId,
+          clientName: "Cliente Tienda Web",
+          phone: "WhatsApp",
+          city: "Ecuador",
+          total: total,
+          status: "pendiente",
+          items: cart.map(it => ({
+            productId: it.id,
+            productName: it.name,
+            mode: it.option === 'Kit Completo' ? 'kit_completo' : 'solo_camiseta',
+            size: it.size || 'M',
+            quantity: it.qty || 1,
+            unitPrice: it.price || 28,
+            subtotal: (it.price || 28) * (it.qty || 1),
+            shortsColor: it.shortsColorName || 'Oficial',
+            customPlayers: it.players || []
+          }))
+        });
+      }
       closeCartDrawer();
       const win = window.open(whatsappUrl, "_blank");
       if (!win || win.closed || typeof win.closed === 'undefined') {
@@ -3267,6 +3337,60 @@
 
         // CONTROL DEL PRELOADER DE BIENVENIDA NAVY SPORT
     function startNavyPreloader() {}
+        // SINCRONIZACION BIDIRECCIONAL EN TIEMPO REAL CON SUPABASE
+    async function syncStoreWithSupabase() {
+      if (!window.NavySupabase) return;
+      try {
+        // 1. Asegurar catálogo inicial en la nube si está vacío
+        if (typeof DEFAULT_PRODUCTS !== 'undefined' && Array.isArray(DEFAULT_PRODUCTS)) {
+          await window.NavySupabase.syncInitialProducts(DEFAULT_PRODUCTS);
+        }
+
+        // 2. Cargar productos actualizados desde Supabase
+        const supaProds = await window.NavySupabase.getProducts();
+        if (Array.isArray(supaProds) && supaProds.length > 0) {
+          const merged = [...PRODUCTS];
+          supaProds.forEach(sp => {
+            const idx = merged.findIndex(p => p.id === sp.id);
+            if (idx >= 0) {
+              merged[idx] = { ...merged[idx], ...sp };
+            } else {
+              merged.unshift(sp);
+            }
+          });
+          PRODUCTS = merged;
+          localStorage.setItem("navy_sport_products_list", JSON.stringify(PRODUCTS));
+          if (typeof renderSidebarCategories === 'function') renderSidebarCategories();
+          if (typeof renderCatalog === 'function') renderCatalog();
+          console.log("[Supabase] Tienda de clientes sincronizada en vivo (" + supaProds.length + " productos).");
+        }
+
+        // 3. Suscripción en tiempo real: Si el taller agrega o modifica prendas, se actualiza sin recargar
+        window.NavySupabase.subscribeToProducts(() => {
+          console.log("[Supabase Realtime] Detectado cambio en catálogo, actualizando vista...");
+          window.NavySupabase.getProducts().then(fresh => {
+            if (Array.isArray(fresh) && fresh.length > 0) {
+              const merged = [...PRODUCTS];
+              fresh.forEach(sp => {
+                const idx = merged.findIndex(p => p.id === sp.id);
+                if (idx >= 0) {
+                  merged[idx] = { ...merged[idx], ...sp };
+                } else {
+                  merged.unshift(sp);
+                }
+              });
+              PRODUCTS = merged;
+              localStorage.setItem("navy_sport_products_list", JSON.stringify(PRODUCTS));
+              if (typeof renderSidebarCategories === 'function') renderSidebarCategories();
+              if (typeof renderCatalog === 'function') renderCatalog();
+            }
+          });
+        });
+      } catch (e) {
+        console.warn("[Supabase] No se pudo conectar a la nube:", e);
+      }
+    }
+
     function initClientApp() {
       const sortSelect = document.getElementById("sortSelect");
       if (sortSelect) sortSelect.value = "name-asc";
@@ -3276,6 +3400,7 @@
       loadLiveProducts();
       renderSidebarCategories();
       renderCatalog();
+      syncStoreWithSupabase();
     }
 
     if (document.readyState === "loading") {
