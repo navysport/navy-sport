@@ -159,12 +159,6 @@
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span>Operador: Neli Caisapanta</span>
           </div>
-          <!-- BOTON CODIGO QR -->
-          <button type="button" onclick="openQrModal()" class="flex items-center gap-1.5 bg-[#FF007F]/20 hover:bg-[#FF007F]/30 text-white border border-[#FF007F]/40 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition cursor-pointer shadow-sm shadow-[#FF007F]/20" title="Ver y Descargar Código QR del Catálogo">
-            <svg class="w-3.5 h-3.5 text-[#FF007F]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-            <span class="hidden sm:inline">Código QR</span>
-            <span class="sm:hidden">QR</span>
-          </button>
           <a href="tienda-cliente.html" target="_blank" class="flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition cursor-pointer" title="Abrir Tienda Cliente">
             <svg class="w-3.5 h-3.5 text-sky-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             <span>Ver Tienda</span>
@@ -296,26 +290,18 @@
             <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/10 text-neutral-300 font-bold">HISTORIAL</span>
           </button>
 
-          <div class="pt-2 mt-1 border-t border-white/10 flex items-center gap-1.5">
-            <button
-              type="button"
-              onclick="openQrModal()"
-              class="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-xl bg-[#FF007F]/20 hover:bg-[#FF007F]/30 text-white border border-[#FF007F]/30 text-[11px] font-bold uppercase transition cursor-pointer"
-            >
-              <svg class="w-3.5 h-3.5 text-[#FF007F]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-              <span>QR Catálogo</span>
-            </button>
+          <div class="pt-2 mt-1 border-t border-white/10 flex items-center gap-2">
             <a
               href="tienda-cliente.html"
-              class="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white text-[11px] font-bold uppercase transition"
+              class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white text-[11px] font-bold uppercase transition"
             >
               <svg class="w-3.5 h-3.5 text-sky-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-              <span>Tienda</span>
+              <span>Ver Tienda</span>
             </a>
             <button
               type="button"
               onclick="lockWorkerPanel()"
-              class="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 text-[11px] font-bold uppercase transition cursor-pointer"
+              class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 text-[11px] font-bold uppercase transition cursor-pointer"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
               <span>Bloquear</span>
@@ -485,23 +471,6 @@
                 <span>Movimiento</span>
               </div>
               <span class="tab-badge text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-[#16243e] font-bold">Bodega</span>
-            </button>
-          </div>
-
-          <!-- 4. TARJETA: CODIGO QR DEL CATALOGO -->
-          <div class="bg-white rounded-3xl p-5 shadow-xl text-[#16243e] border border-slate-200/80">
-            <button
-              type="button"
-              onclick="openQrModal()"
-              class="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold uppercase transition-all text-[#16243e] hover:bg-pink-50/60 border border-[#FF007F]/25 hover:border-[#FF007F] cursor-pointer group bg-gradient-to-r from-pink-50/50 to-white"
-            >
-              <div class="flex items-center gap-2.5">
-                <div class="w-6 h-6 rounded-lg bg-[#FF007F]/15 border border-[#FF007F]/30 flex items-center justify-center text-[#FF007F] font-black text-sm group-hover:scale-110 transition-transform">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-                </div>
-                <span class="tracking-wider">Código QR</span>
-              </div>
-              <span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#FF007F] text-white font-black">ABRIR</span>
             </button>
           </div>
 
@@ -2088,105 +2057,6 @@
     </div>
   </div>
 
-  <!-- =================================================================== -->
-  <!-- MODAL: CODIGO QR DEL CATALOGO PARA CLIENTES Y MOSTRADOR            -->
-  <!-- =================================================================== -->
-  <div id="qrCodeModal" class="fixed inset-0 z-50 bg-[#16243e]/75 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4" onclick="if(event.target===this) closeQrModal()">
-    <div class="bg-white border border-[#16243e]/20 rounded-3xl max-w-lg w-full p-5 sm:p-7 space-y-5 shadow-2xl relative max-h-[94vh] overflow-y-auto text-[#16243e] animate-in fade-in zoom-in-95 duration-150">
-      
-      <!-- HEADER MODAL -->
-      <div class="flex items-start justify-between pb-3 border-b border-slate-100">
-        <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#FF007F] animate-pulse"></span>
-            <span class="text-[10px] font-black uppercase tracking-widest text-[#FF007F] font-mono">Tienda Oficial en Internet</span>
-          </div>
-          <h3 class="text-lg sm:text-xl font-black uppercase text-[#16243e] tracking-tight">Código QR del Catálogo</h3>
-          <p class="text-xs text-slate-500">Apunta con la cámara de cualquier celular para entrar directo a las camisetas.</p>
-        </div>
-        <button type="button" onclick="closeQrModal()" class="text-slate-400 hover:text-[#16243e] p-1.5 rounded-xl hover:bg-slate-100 transition cursor-pointer">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-
-      <!-- TARJETA VISUAL DEL QR LISTA PARA MOSTRAR / IMPRIMIR -->
-      <div id="printableQrCard" class="bg-gradient-to-b from-[#16243e] to-[#0f1a2c] p-6 rounded-3xl text-center space-y-4 shadow-xl border border-[#16243e]/40 relative overflow-hidden">
-        
-        <!-- Detalle decorativo esquina -->
-        <div class="absolute -top-12 -right-12 w-32 h-32 bg-[#FF007F]/20 rounded-full blur-2xl pointer-events-none"></div>
-
-        <!-- Marca superior -->
-        <div class="flex flex-col items-center justify-center">
-          <span class="text-white text-base sm:text-lg font-black tracking-wider uppercase">NAVY SPORT</span>
-          <span class="text-[10px] text-[#FF007F] font-extrabold tracking-widest uppercase">Catálogo Oficial 2026</span>
-        </div>
-
-        <!-- Marco blanco del QR -->
-        <div class="bg-white p-4 rounded-2xl inline-block shadow-2xl mx-auto border-4 border-[#FF007F]/20">
-          <img
-            id="qrCodeDisplayImg"
-            src="assets/qr_catalogo_navy_sport.png"
-            alt="Código QR Catálogo Navy Sport"
-            class="w-56 h-56 sm:w-64 sm:h-64 object-contain mx-auto select-none"
-            onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=https%3A%2F%2Fnavy-sport-proyecto-nextjs.vercel.app%2F%3Fview%3Dcatalogo&margin=10'"
-          />
-        </div>
-
-        <!-- Subtexto llamada a la accion -->
-        <div class="space-y-1">
-          <div class="text-xs sm:text-sm font-black uppercase text-white tracking-wide">Escanea para abrir el catálogo</div>
-          <div class="text-[10px] text-slate-300 font-medium">Envíos seguros a todo el Ecuador • Confección de alta densidad</div>
-        </div>
-
-      </div>
-
-      <!-- LINK DIRECTO EDITABLE / COPIABLE -->
-      <div class="space-y-1.5">
-        <label class="block text-slate-700 text-xs font-bold">Enlace del Catálogo en Vivo</label>
-        <div class="flex items-center gap-2">
-          <input
-            type="text"
-            id="qrCatalogUrlInput"
-            readonly
-            value="https://navy-sport-proyecto-nextjs.vercel.app/?view=catalogo"
-            class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-700 select-all focus:outline-none"
-          />
-          <button
-            type="button"
-            onclick="copyCatalogQrUrl()"
-            id="btnCopyQrUrl"
-            class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#16243e] text-xs font-bold uppercase transition flex items-center gap-1.5 border border-slate-300 cursor-pointer shrink-0"
-          >
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-            <span id="copyQrBtnText">Copiar</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- BOTONES DE ACCION PRINCIPAL -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
-        <a
-          href="assets/qr_catalogo_navy_sport.png"
-          download="QR_Catalogo_Navy_Sport.png"
-          class="w-full py-3 px-4 rounded-xl bg-[#16243e] hover:bg-[#1f3358] text-white font-black text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          <span>Descargar QR (PNG)</span>
-        </a>
-
-        <a
-          href="assets/tarjeta_qr_navy_sport.png"
-          download="Tarjeta_QR_Imprimir_Navy_Sport.png"
-          class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#FF007F] to-[#E60073] hover:from-[#ff1a8c] hover:to-[#FF007F] text-white font-black text-xs uppercase tracking-wider transition shadow-lg shadow-[#FF007F]/25 flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-          <span>Tarjeta para Imprimir</span>
-        </a>
-      </div>
-
-    </div>
-  </div>
-
   <!-- JAVASCRIPT ROBUSTO -->
   <script>
     // VALIDACION ESTRICTA DE ENTRADA: SOLO NUMEROS EN DORSAL, SOLO LETRAS EN NOMBRE
@@ -3216,49 +3086,6 @@
         totalInput.value = (p.priceKit || p.price || 43).toFixed(2);
       } else {
         totalInput.value = (p.priceShirt || (p.price ? p.price - 8 : 28)).toFixed(2);
-      }
-    }
-
-    // ===================================================================
-    // MODAL Y GESTION DEL CODIGO QR DEL CATALOGO
-    // ===================================================================
-    function openQrModal() {
-      const m = document.getElementById("qrCodeModal");
-      if (m) {
-        m.classList.remove("hidden");
-        m.classList.add("flex");
-      }
-    }
-
-    function closeQrModal() {
-      const m = document.getElementById("qrCodeModal");
-      if (m) {
-        m.classList.add("hidden");
-        m.classList.remove("flex");
-      }
-    }
-
-    function copyCatalogQrUrl() {
-      const input = document.getElementById("qrCatalogUrlInput");
-      const btnText = document.getElementById("copyQrBtnText");
-      if (!input) return;
-      
-      const textToCopy = input.value || "https://navy-sport-proyecto-nextjs.vercel.app/?view=catalogo";
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          if (btnText) btnText.innerText = "¡Copiado!";
-          setTimeout(() => { if (btnText) btnText.innerText = "Copiar"; }, 2000);
-        }).catch(() => {
-          input.select();
-          document.execCommand("copy");
-          if (btnText) btnText.innerText = "¡Copiado!";
-          setTimeout(() => { if (btnText) btnText.innerText = "Copiar"; }, 2000);
-        });
-      } else {
-        input.select();
-        document.execCommand("copy");
-        if (btnText) btnText.innerText = "¡Copiado!";
-        setTimeout(() => { if (btnText) btnText.innerText = "Copiar"; }, 2000);
       }
     }
 
